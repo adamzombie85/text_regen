@@ -1,72 +1,83 @@
-/**
- * 41 研究室 - Cloudflare Pages Worker
- * 代替 Python app.py 處理 AI 生成與 API 請求
- */
-
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 1. 處理 API: 獲取配額 (Cloudflare 環境下暫時設為固定值，或搭配 KV 使用)
+    // 1. 處理 API: 獲取配額 (使用 KV 進行持久化)
     if (url.pathname === "/api/quota") {
-      return new Response(JSON.stringify({ remaining: 99, total: 100 }), {
+      let remaining = await env.KV.get("remaining_quota") || 100;
+      return new Response(JSON.stringify({ remaining: parseInt(remaining), total: 100 }), {
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // 2. 處理 API: 獲取統計數據
+    // 2. 處理 API: 獲取統計數據 (使用 KV 進行持久化)
     if (url.pathname === "/api/stats") {
+      let visitors = await env.KV.get("total_visitors") || 0;
+      let historyJson = await env.KV.get("analysis_history") || "[]";
+      
+      // 每次進入統計頁面，人數 +1
+      visitors = parseInt(visitors) + 1;
+      await env.KV.put("total_visitors", visitors.toString());
+
       return new Response(JSON.stringify({ 
-        visitors: 1258, 
-        history: [{ time: "2026-05-04", preview: "41 研究室文本分析測試...", count: 450 }] 
+        visitors: visitors, 
+        history: JSON.parse(historyJson) 
       }), {
         headers: { "Content-Type": "application/json" },
       });
     }
 
-    // 3. 處理 API: AI 生成 (核心功能)
+    // 3. 處理 API: 記錄分析紀錄
+    if (url.pathname === "/api/log_analysis" && request.method === "POST") {
+        const { preview, count } = await request.json();
+        let history = JSON.parse(await env.KV.get("analysis_history") || "[]");
+        history.unshift({ time: new Date().toLocaleString(), preview: preview.substring(0, 20) + "...", count });
+        await env.KV.put("analysis_history", JSON.stringify(history.slice(0, 10)));
+        return new Response(JSON.stringify({ success: true }));
+    }
+
+    // 4. 處理 API: AI 文本生成
     if (url.pathname === "/api/generate" && request.method === "POST") {
       const { text, lang, freq_limit, word_count } = await request.json();
       const apiKey = env.GEMINI_API_KEY;
 
       if (!apiKey) {
-        return new Response(JSON.stringify({ error: "請在 Cloudflare 設定 GEMINI_API_KEY 變數" }), { status: 500 });
+        return new Response(JSON.stringify({ text: "錯誤：找不到 API 金鑰，請在 Cloudflare 設定 Environment Variables。" }), { status: 500 });
       }
 
-      const langName = lang === 'tw' ? "台語 (Taiwanese)" : "中語 (Mandarin)";
-      const systemPrompt = `你是一位專業的語文教學助理。將給定文章改寫成更簡單的版本。
-規則：
-1. **絕對禁止跨語言翻譯**：目標是 ${langName}，請完全使用 ${langName}。
-2. **難度門檻**：漢字難度不得超過『中語字頻前 ${freq_limit} 名』。
-3. **長度**：約 ${word_count} 字。
-4. **格式**：只輸出改寫後的文本。`;
+      const prompt = `你是一個專業的台語教材改寫專家。
+請將以下文章改寫為 [${lang}]。
+要求：
+1. 目標字數約為 ${word_count} 字。
+2. 盡量使用中語 5021 字頻排名在前 ${freq_limit} 名的常用字。
+3. 語氣要自然、道地。
+
+原文：
+${text}`;
 
       try {
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            contents: [{ parts: [{ text: `系統提示：${systemPrompt}\n\n原文：${text}` }] }]
+            contents: [{ parts: [{ text: prompt }] }]
           })
         });
 
         const data = await response.json();
         const generatedText = data.candidates[0].content.parts[0].text;
+        
+        // 扣除配額
+        let remaining = parseInt(await env.KV.get("remaining_quota") || 100) - 1;
+        await env.KV.put("remaining_quota", remaining.toString());
 
-        return new Response(JSON.stringify({ text: generatedText, remaining: "充足" }), {
-          headers: { "Content-Type": "application/json" },
-        });
-      } catch (err) {
-        return new Response(JSON.stringify({ error: "AI 生成失敗" }), { status: 500 });
+        return new Response(JSON.stringify({ text: generatedText }));
+      } catch (error) {
+        return new Response(JSON.stringify({ text: "AI 生成失敗，請檢查 API Key 或稍後再試。" }), { status: 500 });
       }
     }
 
-    // 4. 處理 API: 紀錄分析 (Cloudflare 環境下暫時空回傳)
-    if (url.pathname === "/api/log_analysis") {
-      return new Response(JSON.stringify({ status: "ok" }));
-    }
-
-    // 5. 預設：交給 Cloudflare Pages 處理靜態檔案
+    // 5. 靜態檔案路由
     return env.ASSETS.fetch(request);
-  },
+  }
 };
