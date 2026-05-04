@@ -4,7 +4,7 @@ export default {
 
     // 1. 處理 API: 獲取配額
     if (url.pathname === "/api/quota") {
-      let remaining = await env.KV.get("remaining_quota") || 100;
+      let remaining = await env.KV.get("remaining_quota") || 914;
       return new Response(JSON.stringify({ remaining: parseInt(remaining), total: 100 }), {
         headers: { "Content-Type": "application/json" },
       });
@@ -87,7 +87,7 @@ ${text}`;
         const generatedText = data.candidates[0].content.parts[0].text;
         
         // 扣除配額
-        let remaining = parseInt(await env.KV.get("remaining_quota") || 100) - 1;
+        let remaining = parseInt(await env.KV.get("remaining_quota") || 914) - 1;
         await env.KV.put("remaining_quota", remaining.toString());
 
         return new Response(JSON.stringify({ text: generatedText }));
