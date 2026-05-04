@@ -15,7 +15,7 @@ const uiTranslations = {
         view1Title: "第一步：貼上原文", clear: "清除", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "常用字上限", start: "開始文本分析",
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", goToGenerateBtn: "開始 AI 文本生成",
+        aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 文本生成",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", loadingStatus: "正在調用中語腦...", loadingHint: "請稍候，我們正在為您產出道地的文本",
@@ -28,7 +28,7 @@ const uiTranslations = {
         view1Title: "第一步：貼原文", clear: "清空", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "常用字上限", start: "開始分析文本",
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", goToGenerateBtn: "開始 AI 生成",
+        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", loadingStatus: "當咧調用台語腦...", loadingHint: "請小等一下，當咧為您產出道地的文本",
@@ -197,7 +197,12 @@ async function generateText() {
         const res = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: get('inputText').value, lang: get('langSelect').value, freq_limit: parseInt(get('freqLimit').value), word_count: targetWords })
+            body: JSON.stringify({ 
+                text: get('inputText').value, 
+                lang: get('langSelect').value, 
+                freq_limit: parseInt(get('aiFreqLimit').value), 
+                word_count: targetWords 
+            })
         });
         const data = await res.json();
         bar.style.width = wheel.style.left = '100%';

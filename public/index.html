@@ -119,7 +119,11 @@
                             <span id="estWordCount" class="est-hint">(約 0 字)</span>
                         </div>
                     </div>
-                    <button id="goToGenerateBtn" class="btn-secondary">開始 AI 文本生成</button>
+                    <div class="control-group">
+                        <label id="lblAiFreqLimit">常用字上限 (5021排名)</label>
+                        <input type="number" id="aiFreqLimit" value="1000" step="100" min="100" max="5021">
+                    </div>
+                    <button id="goToGenerateBtn" class="btn-secondary ui-goToGenerateBtn">開始 AI 文本生成</button>
                 </div>
             </div>
 
