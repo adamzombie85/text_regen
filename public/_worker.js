@@ -39,10 +39,10 @@ export default {
     // 4. 處理 API: AI 文本生成
     if (url.pathname === "/api/generate" && request.method === "POST") {
       const { text, lang, freq_limit, word_count } = await request.json();
-      const apiKey = env.GEMINI_API_KEY;
+      const apiKey = (env.GEMINI_API_KEY || "").trim();
 
       if (!apiKey) {
-        return new Response(JSON.stringify({ text: "錯誤：找不到 API 金鑰，請在 Cloudflare 設定 Environment Variables。" }), { status: 500 });
+        return new Response(JSON.stringify({ text: "錯誤：找不到 API 金鑰，請在 Cloudflare 設定 Variables and Secrets。" }), { status: 500 });
       }
 
       const prompt = `你是一個專業的台語教材改寫專家。
@@ -55,8 +55,10 @@ export default {
 原文：
 ${text}`;
 
+      const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
       try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${apiKey}`, {
+        const response = await fetch(targetUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -67,7 +69,7 @@ ${text}`;
         const data = await response.json();
         
         if (!response.ok) {
-            return new Response(JSON.stringify({ text: `Google AI 報錯：${JSON.stringify(data)}` }), { status: 500 });
+            return new Response(JSON.stringify({ text: `Google AI 報錯 (URL: ${targetUrl.substring(0, 60)}...)：${JSON.stringify(data)}` }), { status: 500 });
         }
 
         if (!data.candidates || !data.candidates[0]) {
