@@ -1,0 +1,13 @@
+# API Keys
+api_key.txt
+
+# Data & Cache
+__pycache__/
+*.pyc
+data/usage.json
+data/stats.json
+.DS_Store
+
+# Virtual Environment
+venv/
+.env

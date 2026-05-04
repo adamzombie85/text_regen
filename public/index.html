@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>41研究室 文本分析助手</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Import Iansui Font (芫荽體) via CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/iansui@5.0.1/index.css">
+</head>
+<body>
+    <div class="glass-bg"></div>
+    
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <button id="btnShowStats" class="ui-stats-btn">📊 網站數據統計</button>
+                <div class="ui-lang-switch">
+                    <button id="uiLangMd" class="active">中語介面</button>
+                    <button id="uiLangTw">台語介面</button>
+                </div>
+            </div>
+            <h1>41研究室 <span id="uiTitleMain">文本分析助手</span></h1>
+            <div class="stepper">
+                <div class="step active" id="step1Text">1. 輸入文本</div>
+                <div class="step" id="step2Text">2. 分析報告</div>
+                <div class="step" id="step3Text">3. AI 改寫結果</div>
+            </div>
+        </header>
+
+        <!-- View 1: Editor -->
+        <section id="viewEditor" class="view card">
+            <div class="card-header">
+                <h2 id="view1Title">第一步：貼上原文</h2>
+                <button id="clearBtn" class="btn-outline ui-clear">清除</button>
+            </div>
+            <textarea id="inputText" placeholder="在此貼上您的文章..."></textarea>
+            
+            <div class="controls">
+                <div class="control-group">
+                    <label id="lblLang">目標語言</label>
+                    <select id="langSelect">
+                        <option value="tw" id="optTw">台語 (Taiwanese)</option>
+                        <option value="md" id="optMd">中語 (Mandarin)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label id="lblInterval">統計字距</label>
+                    <select id="intervalSize">
+                        <option value="50">50</option>
+                        <option value="100" selected>100</option>
+                        <option value="150">150</option>
+                        <option value="200">200</option>
+                        <option value="250">250</option>
+                        <option value="500">500</option>
+                        <option value="1000">1000</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label id="lblLimit">常用字上限</label>
+                    <div class="input-with-hint">
+                        <input type="number" id="freqLimit" value="5021" min="1" max="10000">
+                        <span id="limitHint" class="est-hint">(中語 5021 基準)</span>
+                    </div>
+                </div>
+            </div>
+            <button id="analyzeBtn" class="btn-primary full-width ui-start-analyze">開始文本分析</button>
+        </section>
+
+        <!-- View 2: Analysis Report -->
+        <section id="viewReport" class="view card hidden">
+            <div class="card-header">
+                <h2 id="view2Title">第二步：分析報告</h2>
+                <div class="actions">
+                    <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>
+                    <button id="downloadExcelBtn" class="btn-outline ui-dl-report">下載分析報表</button>
+                </div>
+            </div>
+
+            <div class="report-summary-box">
+                <div class="summary-item"><span id="lblTotalA">總字數(A)</span>: <span id="totalWords">0</span></div>
+                <div class="summary-item"><span id="lblUniqueB">相異字數(B)</span>: <span id="uniqueWords">0</span></div>
+            </div>
+
+            <div class="distribution-table-container">
+                <table id="distTable" class="styled-table">
+                    <thead>
+                        <tr>
+                            <th id="thRange">字距範圍</th>
+                            <th id="thTotalC">總字數(C)</th>
+                            <th id="thUniqueD">相異字數(D)</th>
+                            <th id="thRatioE">總字數佔全文比 (E=C/A)%</th>
+                            <th id="thCumF">總字數累積比 (F)%</th>
+                            <th id="thRatioG">相異字數佔全文比 (G=D/B)%</th>
+                            <th id="thCumH">相異字數累積比 (H)%</th>
+                            <th id="thLookup" class="word-list-col">字庫查詢 (出現次數)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="distTableBody"></tbody>
+                </table>
+            </div>
+
+            <div class="ai-trigger-banner">
+                <p id="aiBannerMsg">分析完成！準備好進行 AI 改寫了嗎？</p>
+                <div class="ai-controls">
+                    <div class="control-group">
+                        <label id="lblTargetLength">目標長度 (原文的 %)</label>
+                        <div class="percentage-input-group">
+                            <select id="targetPercent">
+                                <option value="30">30%</option>
+                                <option value="40">40%</option>
+                                <option value="50" selected>50%</option>
+                                <option value="60">60%</option>
+                                <option value="70">70%</option>
+                                <option value="80">80%</option>
+                                <option value="90">90%</option>
+                            </select>
+                            <span id="estWordCount" class="est-hint">(約 0 字)</span>
+                        </div>
+                    </div>
+                    <button id="goToGenerateBtn" class="btn-secondary">開始 AI 文本生成</button>
+                </div>
+            </div>
+
+            <div class="card-header" style="margin-top: 3rem;">
+                <h3 id="lblDetailList">詳細字頻清單</h3>
+            </div>
+            <div class="table-container">
+                <table id="freqTable">
+                    <thead>
+                        <tr>
+                            <th id="thChar">字</th>
+                            <th id="thCount">出現次數</th>
+                            <th id="thRank">資料庫序號 (排名)</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- View 3: AI Result -->
+        <section id="viewResult" class="view card hidden">
+            <div id="loading" class="loading-overlay hidden">
+                <div class="liantng-progress-container">
+                    <div class="progress-track">
+                        <div id="progressBar" class="progress-fill"></div>
+                        <div id="wheelWrapper" class="wheel-progress-wrapper">
+                            <img src="images/wheel.png" alt="Spinning Wheel" class="liantng-wheel">
+                        </div>
+                    </div>
+                </div>
+                <h3 id="loadingStatus">當咧調用台語腦...</h3>
+                <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
+            </div>
+            <div class="card-header">
+                <h2 id="view3Title">第三步：AI 生成結果</h2>
+                <div class="actions">
+                    <button class="btn-outline back-to-report-btn ui-back-report">返回分析報告</button>
+                    <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>
+                    <button id="downloadBtn" class="btn-primary ui-dl-txt">下載文本</button>
+                </div>
+            </div>
+            
+            <div id="aiOutputContainer" class="hidden">
+                <div id="aiOutput" class="output-box"></div>
+                <div class="output-footer" style="text-align: right; margin-top: 1rem;">
+                    <button id="regenerateBtn" class="btn-outline ui-regen">重新生成 (再扣 1 次額度)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- View 4: Statistics -->
+        <section id="viewStats" class="view card hidden">
+            <div class="card-header">
+                <h2 id="lblStatsTitle">📊 網站數據統計</h2>
+                <button class="btn-secondary ui-reset ui-start-analyze">開始分析文本</button>
+            </div>
+            <div class="stats-grid">
+                <div class="stats-card">
+                    <h3 id="lblTotalVisitors">累積造訪人次</h3>
+                    <div id="visitorCount" class="stats-num">--</div>
+                </div>
+                <div class="stats-card">
+                    <h3 id="lblRecentHistory">最近分析動態</h3>
+                    <div class="history-list" id="statsHistory">
+                        <!-- History items injected here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <div class="quota-info"><span id="lblQuota">今日剩餘 AI 配額</span>：<span id="remainingQuota">--</span> <span id="lblTimes">次</span></div>
+            <p id="copyright">&copy; 2026 41 研究室 | 版權所有</p>
+        </footer>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
