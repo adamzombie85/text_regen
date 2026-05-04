@@ -2,12 +2,20 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 1. 處理 API: 獲取配額 (使用 KV 進行持久化)
+    // 1. 處理 API: 獲取配額
     if (url.pathname === "/api/quota") {
       let remaining = await env.KV.get("remaining_quota") || 100;
       return new Response(JSON.stringify({ remaining: parseInt(remaining), total: 100 }), {
         headers: { "Content-Type": "application/json" },
       });
+    }
+
+    // 新增：偵錯用 - 列出所有可用模型
+    if (url.pathname === "/api/list_models") {
+        const apiKey = (env.GEMINI_API_KEY || "").trim();
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
+        const data = await res.json();
+        return new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json" } });
     }
 
     // 2. 處理 API: 獲取統計數據 (使用 KV 進行持久化)
