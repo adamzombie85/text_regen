@@ -9,7 +9,7 @@ export default {
 
     // 1. 處理 API: 獲取配額 (Cloudflare 環境下暫時設為固定值，或搭配 KV 使用)
     if (url.pathname === "/api/quota") {
-      return new Response(JSON.stringify({ remaining: "充足", total: 100 }), {
+      return new Response(JSON.stringify({ remaining: 99, total: 100 }), {
         headers: { "Content-Type": "application/json" },
       });
     }
@@ -17,8 +17,8 @@ export default {
     // 2. 處理 API: 獲取統計數據
     if (url.pathname === "/api/stats") {
       return new Response(JSON.stringify({ 
-        visitors: "熱烈使用中", 
-        history: [{ time: "2026-05-04", preview: "歡迎使用 41 研究室...", count: 0 }] 
+        visitors: 1258, 
+        history: [{ time: "2026-05-04", preview: "41 研究室文本分析測試...", count: 450 }] 
       }), {
         headers: { "Content-Type": "application/json" },
       });
