@@ -63,7 +63,7 @@ export default {
 原文：
 ${text}`;
 
-      const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
       try {
         const response = await fetch(targetUrl, {
