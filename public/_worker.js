@@ -65,6 +65,15 @@ ${text}`;
         });
 
         const data = await response.json();
+        
+        if (!response.ok) {
+            return new Response(JSON.stringify({ text: `Google AI 報錯：${JSON.stringify(data)}` }), { status: 500 });
+        }
+
+        if (!data.candidates || !data.candidates[0]) {
+            return new Response(JSON.stringify({ text: `AI 沒有產生結果。完整回應：${JSON.stringify(data)}` }), { status: 500 });
+        }
+
         const generatedText = data.candidates[0].content.parts[0].text;
         
         // 扣除配額
@@ -73,7 +82,7 @@ ${text}`;
 
         return new Response(JSON.stringify({ text: generatedText }));
       } catch (error) {
-        return new Response(JSON.stringify({ text: `AI 生成失敗。原因：${error.message}。請確認 KV 綁定與 API Key 是否正確生效。` }), { status: 500 });
+        return new Response(JSON.stringify({ text: `執行發生錯誤：${error.message}` }), { status: 500 });
       }
     }
 
