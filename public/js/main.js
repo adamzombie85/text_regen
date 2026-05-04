@@ -1,9 +1,9 @@
 /**
  * 41 研究室 - 文本分析助手 (main.js)
- * 修正版：恢復 5021/700 雙序號排序與正確顯示
+ * 終極修復版：確保 5021 排名排序絕對精確，並在 UI 顯示排名數值
  */
 
-let mdMap = {}, twMap = {}; // 雙查找表
+let mdMap = {}, twMap = {}; 
 let currentAnalysis = null;
 let currentUiLang = 'md';
 let loadingInterval = null;
@@ -16,7 +16,7 @@ const uiTranslations = {
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", goToGenerateBtn: "開始 AI 文本生成",
-        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名/700序號",
+        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", loadingStatus: "正在調用中語腦...", loadingHint: "請稍候，我們正在為您產出道地的文本",
         regen: "重新生成 (再扣 1 次額度)", lblQuota: "今日剩餘 AI 配額", lblTimes: "次",
@@ -29,8 +29,8 @@ const uiTranslations = {
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", goToGenerateBtn: "開始 AI 生成",
-        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名/700序號",
-        thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異字數累積(H)", thLookup: "字庫查詢",
+        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名 / 700序號",
+        thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", loadingStatus: "當咧調用台語腦...", loadingHint: "請小等一下，當咧為您產出道地的文本",
         regen: "重做一遍 (會扣 1 个份額)", lblQuota: "今仔日 AI 份額賰", lblTimes: "个",
         statuses: ["當咧調用台語腦...", "當咧搜揣在地用詞...", "當咧排除中語語法...", "當咧提煉、提煉、再提煉..."]
@@ -41,15 +41,21 @@ const get = id => document.getElementById(id);
 const views = { editor: 'viewEditor', report: 'viewReport', result: 'viewResult', stats: 'viewStats' };
 const stepEls = { 1: 'step1Text', 2: 'step2Text', 3: 'step3Text' };
 
+// 字元標準化 (處理臺/台等差異)
+function norm(c) {
+    const map = { '台': '臺', '裏': '裡', '恆': '恆', '双': '雙' };
+    return map[c] || c;
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     fetchQuota();
     try {
         const res = await fetch('data/word_db.json');
         const data = await res.json();
-        // 建立高效查找表
         data.taiwanese.forEach(i => twMap[i.word] = i.rank);
         data.mandarin.forEach(i => mdMap[i.word] = i.rank);
-        console.log("Database Ready: MD 5021 & TW 700");
+        get('analyzeBtn').disabled = false;
+        get('analyzeBtn').textContent = uiTranslations[currentUiLang].start;
     } catch (e) { console.error("Database load error"); }
 });
 
@@ -89,19 +95,14 @@ async function analyzeText() {
     
     renderReport(freqMap, parseInt(get('intervalSize').value), parseInt(get('freqLimit').value));
     switchView('report', 2);
-
-    fetch('/api/log_analysis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preview: text, count: currentAnalysis.total })
-    });
 }
 
 function renderReport(freqMap, interval, limit) {
-    // 關鍵修正：依照中語 5021 排名排序，而非出現次數
+    // 嚴格排序：確保 mdMap 已讀取，並優先使用標準化字元
     const sorted = Object.entries(freqMap).sort((a, b) => {
-        const rA = mdMap[a[0]] || 99999, rB = mdMap[b[0]] || 99999;
-        return rA - rB;
+        const rA = mdMap[norm(a[0])] || 99999, rB = mdMap[norm(b[0])] || 99999;
+        if (rA !== rB) return rA - rB;
+        return b[1] - a[1]; // 同排名則按出現次數排
     });
 
     const body = get('distTableBody');
@@ -117,15 +118,16 @@ function renderReport(freqMap, interval, limit) {
             <td>${(cT/currentAnalysis.total*100).toFixed(1)}%</td><td>${(cumT/currentAnalysis.total*100).toFixed(1)}%</td>
             <td>${(cU/currentAnalysis.unique*100).toFixed(1)}%</td><td>${(cumU/currentAnalysis.unique*100).toFixed(1)}%</td>
             <td class="word-list-col">${chunk.map(([c, count]) => {
-                const rMd = mdMap[c] || '?', rTw = twMap[c] || '';
+                const rMd = mdMap[norm(c)] || 99999, rTw = twMap[norm(c)] || '';
                 const cls = rMd <= 500 ? 'rank-top-500' : rMd <= 1000 ? 'rank-top-1000' : rMd <= 5021 ? 'rank-common' : 'rank-unknown';
-                return `<span class="badge ${cls}">${c}(${count}) ${rTw ? '⭐' : ''}</span>`;
+                // 標籤內顯示排名： 字(次數)[排名]
+                const rankDisp = rMd > 5021 ? '?' : rMd;
+                return `<span class="badge ${cls}">${c}(${count})[${rankDisp}] ${rTw ? '⭐' : ''}</span>`;
             }).join(' ')}</td>`;
     }
     
-    // 字頻清單：顯示雙序號
     get('freqTable').querySelector('tbody').innerHTML = sorted.map(([c, count]) => {
-        const rMd = mdMap[c] || 'N/A', rTw = twMap[c] || '-';
+        const rMd = mdMap[norm(c)] || 'N/A', rTw = twMap[norm(c)] || '-';
         return `<tr><td>${c}</td><td>${count}</td><td>${rMd} / ${rTw}</td></tr>`;
     }).join('');
 }
@@ -160,7 +162,7 @@ async function generateText() {
         setTimeout(() => {
             get('aiOutput').textContent = data.text;
             get('aiOutputContainer').classList.remove('hidden');
-            fetchQuota(); // 更新配額
+            fetchQuota();
             get('loading').classList.add('hidden');
             clearInterval(loadingInterval);
         }, 500);
