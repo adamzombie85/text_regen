@@ -73,7 +73,7 @@ ${text}`;
 
         return new Response(JSON.stringify({ text: generatedText }));
       } catch (error) {
-        return new Response(JSON.stringify({ text: "AI 生成失敗，請檢查 API Key 或稍後再試。" }), { status: 500 });
+        return new Response(JSON.stringify({ text: `AI 生成失敗。原因：${error.message}。請確認 KV 綁定與 API Key 是否正確生效。` }), { status: 500 });
       }
     }
 
