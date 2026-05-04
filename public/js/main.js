@@ -87,7 +87,8 @@ async function analyzeText() {
     const text = get('inputText').value.trim();
     if (!text) return alert('請輸入文本');
     
-    const chars = text.split('').filter(c => /\S/.test(c));
+    // 關鍵修正：只保留中文字進行分析 (CJK 範圍)
+    const chars = text.split('').filter(c => /[\u4E00-\u9FFF]/.test(c));
     const freqMap = {};
     chars.forEach(c => {
         const n = norm(c);
