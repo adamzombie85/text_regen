@@ -1,6 +1,6 @@
 /**
  * 41 研究室 - 文本分析助手 (main.js)
- * 真正完整版：恢復原始精確分析邏輯與視覺效果
+ * 恢復原始專業版：撤銷精簡化，恢復絕對排名分區邏輯
  */
 
 let mdMap = {}, twMap = {}; 
@@ -16,7 +16,7 @@ const uiTranslations = {
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", goToGenerateBtn: "開始 AI 文本生成",
-        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "資料庫序號 (排名)",
+        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", loadingStatus: "正在調用中語腦...", loadingHint: "請稍候，我們正在為您產出道地的文本",
         regen: "重新生成 (再扣 1 次額度)", lblQuota: "今日剩餘 AI 配額", lblTimes: "次",
@@ -29,8 +29,8 @@ const uiTranslations = {
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", goToGenerateBtn: "開始 AI 生成",
-        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "資料庫編號 (排名)",
-        thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢 (出現回數)",
+        lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名 / 700序號",
+        thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", loadingStatus: "當咧調用台語腦...", loadingHint: "請小等一下，當咧為您產出道地的文本",
         regen: "重做一遍 (會扣 1 个份額)", lblQuota: "今仔日 AI 份額賰", lblTimes: "个",
         statuses: ["當咧調用台語腦...", "當咧搜揣在地用詞...", "當咧排除中語語法...", "當咧提煉、提煉、再提煉...", "當咧愛台灣..."]
@@ -53,6 +53,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const data = await res.json();
         data.taiwanese.forEach(i => twMap[i.word] = i.rank);
         data.mandarin.forEach(i => mdMap[i.word] = i.rank);
+        console.log("Original Logic Re-initialized");
     } catch (e) {}
 });
 
@@ -66,7 +67,7 @@ function switchUiLanguage(lang) {
             else el.textContent = t[id];
         }
     });
-    // 恢復綠光效果
+    // 強制點亮綠光
     get('uiLangMd').classList.toggle('active', lang === 'md');
     get('uiLangTw').classList.toggle('active', lang === 'tw');
     
@@ -88,7 +89,10 @@ async function analyzeText() {
     
     const chars = text.split('').filter(c => /\S/.test(c));
     const freqMap = {};
-    chars.forEach(c => freqMap[norm(c)] = (freqMap[norm(c)] || 0) + 1);
+    chars.forEach(c => {
+        const n = norm(c);
+        freqMap[n] = (freqMap[n] || 0) + 1;
+    });
     
     currentAnalysis = { total: chars.length, unique: Object.keys(freqMap).length, freqMap };
     get('totalWords').textContent = currentAnalysis.total;
@@ -96,63 +100,79 @@ async function analyzeText() {
     
     renderReport(freqMap, parseInt(get('intervalSize').value));
     switchView('report', 2);
-
-    fetch('/api/log_analysis', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ preview: text, count: currentAnalysis.total })
-    });
 }
 
 function renderReport(freqMap, interval) {
     const body = get('distTableBody');
     body.innerHTML = '';
     
-    // 恢復「區間分桶」邏輯：依照 5021 排名劃分 (1-100, 101-200...)
-    const buckets = {};
+    // 【核心邏輯回歸】：絕對排名分桶
+    const bucketSize = interval;
     const maxKnownRank = 5021;
+    const buckets = {}; // 用絕對排名分組
+    const unknownBucket = []; // 不在資料庫內的字
     
     Object.entries(freqMap).forEach(([word, count]) => {
-        const rMd = mdMap[word] || 99999;
-        const bucketIdx = Math.floor((rMd - 1) / interval);
-        if (!buckets[bucketIdx]) buckets[bucketIdx] = [];
-        buckets[bucketIdx].push({ word, count, rMd });
+        const rMd = mdMap[word];
+        if (rMd && rMd <= maxKnownRank) {
+            const bIdx = Math.floor((rMd - 1) / bucketSize);
+            if (!buckets[bIdx]) buckets[bIdx] = [];
+            buckets[bIdx].push({ word, count, rMd });
+        } else {
+            unknownBucket.push({ word, count, rMd: rMd || 99999 });
+        }
     });
 
-    const sortedBucketKeys = Object.keys(buckets).sort((a, b) => a - b);
     let cumT = 0, cumU = 0;
-
-    sortedBucketKeys.forEach(idx => {
-        const start = idx * interval + 1;
-        const end = (parseInt(idx) + 1) * interval;
-        const bucketWords = buckets[idx].sort((a, b) => a.rMd - b.rMd);
+    // 渲染資料庫內的區間
+    for (let b = 0; b <= Math.floor((maxKnownRank-1)/bucketSize); b++) {
+        if (!buckets[b]) continue;
         
-        const cT = bucketWords.reduce((s, x) => s + x.count, 0);
-        const cU = bucketWords.length;
+        const start = b * bucketSize + 1;
+        const end = (b + 1) * bucketSize;
+        const words = buckets[b].sort((a, b) => a.rMd - b.rMd);
+        
+        const cT = words.reduce((s, x) => s + x.count, 0);
+        const cU = words.length;
         cumT += cT; cumU += cU;
 
-        const rangeLabel = start > maxKnownRank ? "超出 5021" : `${start}-${end}`;
-        
         const row = body.insertRow();
         row.innerHTML = `
-            <td>${rangeLabel}</td>
-            <td>${cT}</td>
-            <td>${cU}</td>
-            <td>${(cT/currentAnalysis.total*100).toFixed(1)}%</td>
-            <td>${(cumT/currentAnalysis.total*100).toFixed(1)}%</td>
-            <td>${(cU/currentAnalysis.unique*100).toFixed(1)}%</td>
-            <td>${(cumU/currentAnalysis.unique*100).toFixed(1)}%</td>
-            <td class="word-list-col">${bucketWords.map(w => {
+            <td>${start}-${end}</td>
+            <td>${cT}</td><td>${cU}</td>
+            <td>${(cT/currentAnalysis.total*100).toFixed(1)}%</td><td>${(cumT/currentAnalysis.total*100).toFixed(1)}%</td>
+            <td>${(cU/currentAnalysis.unique*100).toFixed(1)}%</td><td>${(cumU/currentAnalysis.unique*100).toFixed(1)}%</td>
+            <td class="word-list-col">${words.map(w => {
                 const rTw = twMap[w.word] || '';
-                const cls = w.rMd <= 500 ? 'rank-top-500' : w.rMd <= 1000 ? 'rank-top-1000' : w.rMd <= 5021 ? 'rank-common' : 'rank-unknown';
-                return `<span class="badge ${cls}">${w.word}(${w.count})[${w.rMd > 5021 ? '?' : w.rMd}] ${rTw ? '⭐' : ''}</span>`;
+                const cls = w.rMd <= 500 ? 'rank-top-500' : w.rMd <= 1000 ? 'rank-top-1000' : 'rank-common';
+                return `<span class="badge ${cls}">${w.word}(${w.count})[${w.rMd}] ${rTw ? '⭐' : ''}</span>`;
             }).join(' ')}</td>
         `;
-    });
-    
-    // 詳細清單：依照排名排序
-    const allWords = Object.entries(freqMap).sort((a, b) => (mdMap[a[0]] || 99999) - (mdMap[b[0]] || 99999));
-    get('freqTable').querySelector('tbody').innerHTML = allWords.map(([c, count]) => {
+    }
+
+    // 渲染超出區間或不明字 (攏 會出現在這裡)
+    if (unknownBucket.length > 0) {
+        const words = unknownBucket.sort((a, b) => a.rMd - b.rMd);
+        const cT = words.reduce((s, x) => s + x.count, 0);
+        const cU = words.length;
+        cumT += cT; cumU += cU;
+
+        const row = body.insertRow();
+        row.innerHTML = `
+            <td>超出排名/未知</td>
+            <td>${cT}</td><td>${cU}</td>
+            <td>${(cT/currentAnalysis.total*100).toFixed(1)}%</td><td>${(cumT/currentAnalysis.total*100).toFixed(1)}%</td>
+            <td>${(cU/currentAnalysis.unique*100).toFixed(1)}%</td><td>${(cumU/currentAnalysis.unique*100).toFixed(1)}%</td>
+            <td class="word-list-col">${words.map(w => {
+                const rTw = twMap[w.word] || '';
+                return `<span class="badge rank-unknown">${w.word}(${w.count})[${w.rMd > maxKnownRank ? '?' : w.rMd}] ${rTw ? '⭐' : ''}</span>`;
+            }).join(' ')}</td>
+        `;
+    }
+
+    // 詳細清單依排名排
+    const all = Object.entries(freqMap).sort((a, b) => (mdMap[a[0]] || 99999) - (mdMap[b[0]] || 99999));
+    get('freqTable').querySelector('tbody').innerHTML = all.map(([c, count]) => {
         const rMd = mdMap[c] || 'N/A', rTw = twMap[c] || '-';
         return `<tr><td>${c}</td><td>${count}</td><td>${rMd} / ${rTw}</td></tr>`;
     }).join('');
