@@ -124,8 +124,8 @@ async function analyzeText() {
     
     renderReport(freqMap, parseInt(get('intervalSize').value));
     
-    // 自動同步到雲端試算表
-    logToGoogleSheets(freqMap, mdMap, twMap);
+    // 自動同步到雲端試算表 (傳入分析數據)
+    logToGoogleSheets(freqMap, 'analysis');
     
     switchView('report', 2);
 }
@@ -260,24 +260,31 @@ function handleSort(col) {
     renderReport(currentAnalysis.freqMap, parseInt(get('intervalSize').value));
 }
 
-async function logToGoogleSheets(freqMap, mdMap, twMap) {
+async function logToGoogleSheets(data, type = 'analysis') {
     if (!GOOGLE_SHEETS_URL) return;
     
-    const payload = Object.entries(freqMap).map(([char, count]) => ({
-        char,
-        count,
-        mdRank: mdMap[char] || '',
-        twRank: twMap[char] || ''
-    }));
+    let payload = { type: type, timestamp: new Date().toISOString() };
+    
+    if (type === 'analysis') {
+        payload.data = Object.entries(data).map(([char, count]) => ({
+            char,
+            count,
+            mdRank: mdMap[char] || '',
+            twRank: twMap[char] || ''
+        }));
+    } else if (type === 'error') {
+        payload.message = data.message;
+        payload.details = data.details || '';
+    }
 
     try {
         await fetch(GOOGLE_SHEETS_URL, {
             method: 'POST',
-            mode: 'no-cors', // 跨網域存取
+            mode: 'no-cors',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
-        console.log("數據已發送至 Google 試算表");
+        console.log(`數據(${type})已發送至 Google 試算表`);
     } catch (e) {
         console.error("雲端同步失敗:", e);
     }
@@ -366,8 +373,12 @@ async function generateText() {
             clearInterval(loadingInterval);
         }, 500);
     } catch (error) {
-        get('loading').classList.add('hidden');
-        
+        // 紀錄錯誤到雲端
+        logToGoogleSheets({ 
+            message: `生成失敗: ${error.message}`, 
+            details: `目標字數: ${targetWords}, 語言: ${get('langSelect').value}` 
+        }, 'error');
+
         if (error.name === 'AbortError') {
             console.log('生成已取消');
             return;
