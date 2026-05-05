@@ -378,3 +378,37 @@ get('downloadBtn').onclick = () => {
     a.href = URL.createObjectURL(new Blob([get('aiOutput').textContent], { type: 'text/plain' }));
     a.download = 'ai_rewrite.txt'; a.click();
 };
+
+get('downloadExcelBtn').onclick = () => {
+    if (!currentAnalysis) return;
+
+    // 1. 準備詳細清單數據
+    const freqData = Object.entries(currentAnalysis.freqMap).map(([char, count]) => ({
+        "字": char,
+        "出現次數": count,
+        "中語 5021 排名": mdMap[char] || 'N/A',
+        "台語 700 序號": twMap[char] || '-'
+    }));
+    
+    // 依出現次數降序排列
+    freqData.sort((a, b) => b["出現次數"] - a["出現次數"]);
+
+    // 2. 準備統計總結數據
+    const summaryData = [
+        { "項目": "分析時間", "數值": new Date().toLocaleString() },
+        { "項目": "總字數(A)", "數值": currentAnalysis.total },
+        { "項目": "相異字數(B)", "數值": currentAnalysis.unique },
+        { "項目": "目標語言", "數值": get('langSelect').value === 'tw' ? '台語' : '中語' }
+    ];
+
+    // 3. 建立活頁簿
+    const wb = XLSX.utils.book_new();
+    const wsFreq = XLSX.utils.json_to_sheet(freqData);
+    const wsSum = XLSX.utils.json_to_sheet(summaryData);
+
+    XLSX.utils.book_append_sheet(wb, wsFreq, "詳細字頻清單");
+    XLSX.utils.book_append_sheet(wb, wsSum, "統計總結");
+
+    // 4. 下載檔案
+    XLSX.writeFile(wb, `41研究室_文本分析報告_${new Date().getTime()}.xlsx`);
+};
