@@ -92,9 +92,27 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
 .report-summary-box { display: flex; gap: 2rem; background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 0.8rem; margin-bottom: 1.5rem; font-weight: 600; font-size: 1.1rem; }
 
 /* Distribution Table RWD */
-.distribution-table-container { width: 100%; overflow-x: auto; margin-bottom: 2rem; border-radius: 0.8rem; }
+.distribution-table-container { 
+    width: 100%; 
+    max-height: 450px; 
+    overflow-y: auto; 
+    overflow-x: auto; 
+    margin-bottom: 2rem; 
+    border-radius: 0.8rem; 
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--card-border);
+}
 .styled-table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 0.85rem; background: rgba(255,255,255,0.02); }
-.styled-table th { background: var(--table-header-bg); color: var(--table-header-text); padding: 12px; text-align: center; border: 1px solid rgba(0,0,0,0.1); }
+.styled-table th { 
+    position: sticky; 
+    top: 0; 
+    z-index: 10;
+    background: #1e1b4b; 
+    color: var(--table-header-text); 
+    padding: 12px; 
+    text-align: center; 
+    border: 1px solid rgba(0,0,0,0.1); 
+}
 .styled-table td { padding: 10px; border: 1px solid var(--card-border); text-align: center; }
 .styled-table .word-list-col { text-align: left; min-width: 300px; font-family: monospace; line-height: 1.8; color: #e2e8f0; }
 

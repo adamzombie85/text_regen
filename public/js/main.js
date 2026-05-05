@@ -21,14 +21,16 @@ const uiTranslations = {
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 文本生成",
         lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
         lblPrivacyNotice: "您的金鑰僅儲存於本機瀏覽器，系統不會記錄。",
-        instr1Title: "貼上原文", instr1Desc: "在輸入框貼上您想分析的文章。",
-        instr2Title: "文本分析", instr2Desc: "系統自動統計字頻與 5021 排名，標註常用字分佈。",
-        instr3Title: "AI 產出", instr3Desc: "設定目標長度與常用字上限，生成適合的中語/台語文章。",
+        instr1Title: "1. 貼上原文", instr1Desc: "將您想分析的文章<br>貼進輸入框內。",
+        instr2Title: "2. 文本分析", instr2Desc: "系統自動統計字頻排名<br>標註常用字分佈。",
+        instr3Title: "3. AI 產出", instr3Desc: "設定目標長度與上限<br>生成適合的改寫文章。",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
-        view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", loadingStatus: "正在調用中語腦...", loadingHint: "請稍候，我們正在為您產出道地的文本",
+        view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", 
+        loadingHint: "請稍候，我們正在為您產出道地的文本",
         regen: "重新生成 (再扣 1 次額度)", lblQuota: "今日剩餘 AI 配額", lblTimes: "次",
-        statuses: ["正在調用中語腦...", "正在搜尋在地用詞...", "正在排除冗餘語法...", "正在提煉、提煉、再提煉...", "正在愛台灣..."]
+        statuses_md: ["正在調用中語腦...", "正在搜尋中語用詞...", "正在優化中語語法...", "正在提煉、提煉、再提煉..."],
+        statuses_tw: ["正在調用台語腦...", "正在搜揣台語用詞...", "正在排除中語語法...", "正在提煉、提煉、再提煉..."]
     },
     tw: {
         uiTitleMain: "文本分析助手", step1Text: "1. 輸入文本", step2Text: "2. 分析報告", step3Text: "3. AI 改寫文本",
@@ -38,15 +40,17 @@ const uiTranslations = {
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
-        lblPrivacyNotice: "您的金鑰干焦儲佇您的瀏覽器，系統袂記錄。",
-        instr1Title: "貼原文", instr1Desc: "共您想欲分析的文章貼佇輸入格仔內。",
-        instr2Title: "分析報告", instr2Desc: "系統自動統計字頻佮排名，標示捷用字分佈。",
-        instr3Title: "AI 改寫", instr3Desc: "設定目標長度佮捷用字上限，生成適合的中語/台語文章。",
+        lblPrivacyNotice: "你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。",
+        instr1Title: "1. 貼原文", instr1Desc: "共您想欲分析的文章<br>貼佇輸入格仔內。",
+        instr2Title: "2. 分析報告", instr2Desc: "系統自動統計字頻佮排名<br>標示捷用字分佈。",
+        instr3Title: "3. AI 改寫", instr3Desc: "設定目標長度佮捷用字上限<br>生成適合的改寫文章。",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
-        view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", loadingStatus: "當咧調用台語腦...", loadingHint: "請小等一下，當咧為您產出道地的文本",
+        view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", 
+        loadingHint: "請小等一下，當咧為您產出道地的文本",
         regen: "重做一遍 (會扣 1 个份額)", lblQuota: "今仔日 AI 份額賰", lblTimes: "个",
-        statuses: ["當咧調用台語腦...", "當咧搜揣在地用詞...", "當咧排除中語語法...", "當咧提煉、提煉、再提煉...", "當咧愛台灣..."]
+        statuses_md: ["當咧調用中語腦...", "當咧揣中語的詞...", "當咧調整中語句型...", "當咧提煉、提煉、閣再提煉..."],
+        statuses_tw: ["當咧調用台語腦...", "當咧搜揣在地用詞...", "當咧排除中語語法...", "當咧提煉、提煉、閣再提煉..."]
     }
 };
 
@@ -87,7 +91,7 @@ function switchUiLanguage(lang) {
         const el = get(id);
         if (el) {
             if (el.tagName === 'TEXTAREA') el.placeholder = t[id];
-            else el.textContent = t[id];
+            else el.innerHTML = t[id]; // 使用 innerHTML 支援換行
         }
     });
     // 強制點亮綠光
@@ -129,8 +133,29 @@ async function analyzeText() {
         logToGoogleSheets(freqMap, 'analysis').catch(e => console.error(e));
         
         switchView('report', 2);
+        updateQuotaDisplay();
+        updateWordCountEstimation(); // 分析完立刻算出預估字數
     } catch (e) {
         alert("分析過程發生錯誤: " + e.message);
+    }
+}
+
+function updateWordCountEstimation() {
+    if (!currentAnalysis) return;
+    const percent = parseInt(get('targetPercent').value);
+    const est = Math.round(currentAnalysis.total * (percent / 100));
+    get('estWordCount').textContent = `(約 ${est} 字)`;
+}
+
+async function updateQuotaDisplay() {
+    try {
+        const res = await fetch('/api/quota');
+        const data = await res.json();
+        const t = uiTranslations[currentUiLang];
+        const label = currentUiLang === 'tw' ? `(免金鑰額度賰：${data.remaining} 次)` : `(免金鑰額度剩餘：${data.remaining} 次)`;
+        get('quotaInfo').textContent = label;
+    } catch (e) {
+        console.error("無法取得配額資訊", e);
     }
 }
 
@@ -311,14 +336,19 @@ async function generateText() {
     let progress = 0;
     const bar = get('progressBar'), wheel = get('wheelWrapper');
     let secondsElapsed = 0;
+    
+    // 根據「目標改寫語言」選擇對應的腦部訊息 (不論介面語系)
+    const targetLang = get('langSelect').value; // 'md' or 'tw'
+    const statusKey = targetLang === 'tw' ? 'statuses_tw' : 'statuses_md';
+    const statusList = uiTranslations[currentUiLang][statusKey];
 
     loadingInterval = setInterval(() => {
         secondsElapsed++;
         if (progress < 90) progress += (90 - progress) / (estSec * 0.5); // 動態進度
         bar.style.width = wheel.style.left = Math.min(95, progress) + '%';
         
-        const ss = uiTranslations[currentUiLang].statuses;
-        get('loadingStatus').textContent = ss[Math.floor(Math.random()*ss.length)];
+        // 從選定的清單中隨機取樣
+        get('loadingStatus').textContent = statusList[Math.floor(Math.random() * statusList.length)];
 
         // 30 秒提醒 (強化視覺)
         if (secondsElapsed === 30) {
@@ -436,6 +466,8 @@ function cancelGeneration() {
 // 事件綁定
 get('uiLangMd').onclick = () => switchUiLanguage('md');
 get('uiLangTw').onclick = () => switchUiLanguage('tw');
+get('mainTitle').onclick = () => switchView('editor', 1);
+get('targetPercent').onchange = updateWordCountEstimation; // 連動更新預估字數
 get('analyzeBtn').onclick = analyzeText;
 get('clearBtn').onclick = () => get('inputText').value = '';
 get('goToGenerateBtn').onclick = () => { switchView('result', 3); generateText(); };
@@ -471,33 +503,85 @@ get('downloadBtn').onclick = () => {
 get('downloadExcelBtn').onclick = () => {
     if (!currentAnalysis) return;
 
-    // 1. 準備詳細清單數據
+    // 1. 準備：統計總結數據
+    const summaryData = [
+        { "項目": "分析時間", "數值": new Date().toLocaleString() },
+        { "項目": "總字數 (A)", "數值": currentAnalysis.total },
+        { "項目": "相異字數 (B)", "數值": currentAnalysis.unique },
+        { "項目": "目標語言", "數值": get('langSelect').value === 'tw' ? '台語' : '中語' }
+    ];
+
+    // 2. 準備：區間分佈分析數據 (重新計算桶子邏輯)
+    const intervalData = [];
+    const bucketSize = parseInt(get('intervalSize').value);
+    const maxKnownRank = 5021;
+    const buckets = {};
+    const unknownBucket = [];
+    
+    Object.entries(currentAnalysis.freqMap).forEach(([word, count]) => {
+        const rMd = mdMap[word];
+        if (rMd && rMd <= maxKnownRank) {
+            const bIdx = Math.floor((rMd - 1) / bucketSize);
+            if (!buckets[bIdx]) buckets[bIdx] = [];
+            buckets[bIdx].push({ word, count, rMd });
+        } else {
+            unknownBucket.push({ word, count, rMd: rMd || 99999 });
+        }
+    });
+
+    let cumT = 0, cumU = 0;
+    for (let b = 0; b <= Math.floor((maxKnownRank-1)/bucketSize); b++) {
+        if (!buckets[b]) continue;
+        const start = b * bucketSize + 1, end = (b + 1) * bucketSize;
+        const words = buckets[b];
+        const cT = words.reduce((s, x) => s + x.count, 0);
+        const cU = words.length;
+        cumT += cT; cumU += cU;
+
+        intervalData.push({
+            "字距範圍": `${start}-${end}`,
+            "總字數(C)": cT,
+            "相異字數(D)": cU,
+            "總字數比(E)%": (cT/currentAnalysis.total*100).toFixed(1),
+            "總字數累積(F)%": (cumT/currentAnalysis.total*100).toFixed(1),
+            "相異字數比(G)%": (cU/currentAnalysis.unique*100).toFixed(1),
+            "相異累積比(H)%": (cumU/currentAnalysis.unique*100).toFixed(1)
+        });
+    }
+    if (unknownBucket.length > 0) {
+        const cT = unknownBucket.reduce((s, x) => s + x.count, 0);
+        const cU = unknownBucket.length;
+        cumT += cT; cumU += cU;
+        intervalData.push({
+            "字距範圍": "超出排名/未知",
+            "總字數(C)": cT,
+            "相異字數(D)": cU,
+            "總字數比(E)%": (cT/currentAnalysis.total*100).toFixed(1),
+            "總字數累積(F)%": (cumT/currentAnalysis.total*100).toFixed(1),
+            "相異字數比(G)%": (cU/currentAnalysis.unique*100).toFixed(1),
+            "相異累積比(H)%": (cumU/currentAnalysis.unique*100).toFixed(1)
+        });
+    }
+
+    // 3. 準備：詳細字頻清單數據
     const freqData = Object.entries(currentAnalysis.freqMap).map(([char, count]) => ({
         "字": char,
         "出現次數": count,
         "中語 5021 排名": mdMap[char] || 'N/A',
         "台語 700 序號": twMap[char] || '-'
     }));
-    
-    // 依出現次數降序排列
     freqData.sort((a, b) => b["出現次數"] - a["出現次數"]);
 
-    // 2. 準備統計總結數據
-    const summaryData = [
-        { "項目": "分析時間", "數值": new Date().toLocaleString() },
-        { "項目": "總字數(A)", "數值": currentAnalysis.total },
-        { "項目": "相異字數(B)", "數值": currentAnalysis.unique },
-        { "項目": "目標語言", "數值": get('langSelect').value === 'tw' ? '台語' : '中語' }
-    ];
-
-    // 3. 建立活頁簿
+    // 4. 建立活頁簿與工作表
     const wb = XLSX.utils.book_new();
-    const wsFreq = XLSX.utils.json_to_sheet(freqData);
     const wsSum = XLSX.utils.json_to_sheet(summaryData);
+    const wsInterval = XLSX.utils.json_to_sheet(intervalData);
+    const wsFreq = XLSX.utils.json_to_sheet(freqData);
 
-    XLSX.utils.book_append_sheet(wb, wsFreq, "詳細字頻清單");
     XLSX.utils.book_append_sheet(wb, wsSum, "統計總結");
+    XLSX.utils.book_append_sheet(wb, wsInterval, "區間分佈分析");
+    XLSX.utils.book_append_sheet(wb, wsFreq, "詳細字頻清單");
 
-    // 4. 下載檔案
+    // 5. 下載檔案
     XLSX.writeFile(wb, `41研究室_文本分析報告_${new Date().getTime()}.xlsx`);
 };

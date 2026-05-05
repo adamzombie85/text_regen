@@ -37,7 +37,19 @@ export default {
         return new Response(JSON.stringify({ success: true }));
     }
 
-    // 4. 處理 API: AI 文本生成
+    // 4. 處理 API: 查詢剩餘免費配額
+    if (url.pathname === "/api/quota" && request.method === "GET") {
+        const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+        const today = new Date().toISOString().split('T')[0];
+        const ipKey = `ip_usage:${today}:${clientIp}`;
+        const usage = parseInt(await env.KV.get(ipKey) || "0");
+        const remaining = Math.max(0, 3 - usage);
+        return new Response(JSON.stringify({ remaining }), {
+            headers: { "Content-Type": "application/json" }
+        });
+    }
+
+    // 5. 處理 API: AI 文本生成
     if (url.pathname === "/api/generate" && request.method === "POST") {
       const { text, lang, freq_limit, word_count, user_api_key } = await request.json();
       const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";

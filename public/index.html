@@ -23,7 +23,7 @@
                     <button id="uiLangTw">台語介面</button>
                 </div>
             </div>
-            <h1>41研究室 <span id="uiTitleMain">文本分析助手</span></h1>
+            <h1 id="mainTitle" style="cursor: pointer; display: inline-block;">41研究室 <span id="uiTitleMain">文本分析助手</span></h1>
             <div class="stepper">
                 <div class="step active" id="step1Text">1. 輸入文本</div>
                 <div class="step" id="step2Text">2. 分析報告</div>
@@ -35,18 +35,18 @@
         <div class="instruction-section">
             <div class="instruction-card">
                 <div class="instr-icon">📋</div>
-                <h4 id="instr1Title">貼上原文</h4>
-                <p id="instr1Desc">在輸入框貼上您想分析的文章。</p>
+                <h4 id="instr1Title">1. 貼上原文</h4>
+                <p id="instr1Desc">將您想分析的文章<br>貼進輸入框內。</p>
             </div>
             <div class="instruction-card">
                 <div class="instr-icon">📊</div>
-                <h4 id="instr2Title">文本分析</h4>
-                <p id="instr2Desc">系統自動統計字頻與 5021 排名，標註常用字分佈。</p>
+                <h4 id="instr2Title">2. 文本分析</h4>
+                <p id="instr2Desc">系統自動統計字頻排名<br>標註常用字分佈。</p>
             </div>
             <div class="instruction-card">
                 <div class="instr-icon">✨</div>
-                <h4 id="instr3Title">AI 產出</h4>
-                <p id="instr3Desc">設定目標長度與常用字上限，生成適合的中語/台語文章。</p>
+                <h4 id="instr3Title">3. AI 產出</h4>
+                <p id="instr3Desc">設定目標長度與上限<br>生成適合的改寫文章。</p>
             </div>
         </div>
 
@@ -145,12 +145,12 @@
                         <input type="number" id="aiFreqLimit" value="1000" step="100" min="100" max="5021">
                     </div>
                     <div class="control-group">
-                        <label id="lblUserApiKey">個人 Gemini API Key</label>
+                        <label id="lblUserApiKey">個人 Gemini API Key <span id="quotaInfo" style="font-size: 0.8em; color: var(--secondary); font-weight: normal; margin-left: 0.5rem;"></span></label>
                         <input type="password" id="userApiKey" placeholder="在此貼上您的 API Key" 
                                autocomplete="new-password" spellcheck="false" data-lpignore="true"
                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.5rem; border-radius: 8px;">
                         <div id="privacyHint" style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem; line-height: 1.4;">
-                            <i class="fas fa-user-secret"></i> <span id="lblPrivacyNotice">您的金鑰僅儲存於本機瀏覽器，系統不會記錄。</span>
+                            <i class="fas fa-user-secret"></i> <span id="lblPrivacyNotice">你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。</span>
                         </div>
                     </div>
                     <button id="goToGenerateBtn" class="btn-secondary ui-goToGenerateBtn">開始 AI 文本生成</button>
