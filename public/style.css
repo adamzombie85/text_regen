@@ -183,6 +183,27 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     z-index: 10;
     border-bottom: 2px solid var(--secondary);
 }
+
+/* 針對字距範圍欄位優化 */
+.styled-table th:first-child, 
+.styled-table td:first-child {
+    white-space: nowrap !important;
+    min-width: 100px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+
+/* 針對字庫查詢欄位優化 */
+.styled-table .word-list-col { 
+    text-align: left; 
+    max-width: 50vw; /* 限制最大寬度為螢幕的一半 */
+    font-family: monospace; 
+    line-height: 1.8; 
+    color: #e2e8f0; 
+    font-size: 0.8rem;
+}
+
+.styled-table td { padding: 10px; border: 1px solid var(--card-border); text-align: center; }
 #freqTable th.sortable {
     cursor: pointer;
     transition: background 0.3s;
