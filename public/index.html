@@ -123,6 +123,10 @@
                         <label id="lblAiFreqLimit">常用字上限 (5021排名)</label>
                         <input type="number" id="aiFreqLimit" value="1000" step="100" min="100" max="5021">
                     </div>
+                    <div class="control-group">
+                        <label id="lblUserApiKey">個人 Gemini API Key (可選)</label>
+                        <input type="password" id="userApiKey" placeholder="留空則使用系統預設" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.5rem; border-radius: 8px;">
+                    </div>
                     <button id="goToGenerateBtn" class="btn-secondary ui-goToGenerateBtn">開始 AI 文本生成</button>
                 </div>
             </div>
@@ -151,7 +155,7 @@
                     <div class="progress-track">
                         <div id="progressBar" class="progress-fill"></div>
                         <div id="wheelWrapper" class="wheel-progress-wrapper">
-                            <img src="images/wheel.png" alt="Spinning Wheel" class="liantng-wheel">
+                            <img src="images/wheel2.png" alt="Spinning Wheel" class="liantng-wheel">
                         </div>
                     </div>
                 </div>
@@ -159,7 +163,7 @@
                 <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
             </div>
             <div class="card-header">
-                <h2 id="view3Title">第三步：AI 生成結果</h2>
+                <h2 id="view3Title">第三步：AI 生成結果 <span id="generatedWordCount" style="font-size: 0.7em; font-weight: normal; opacity: 0.8; margin-left: 1rem;"></span></h2>
                 <div class="actions">
                     <button class="btn-outline back-to-report-btn ui-back-report">返回分析報告</button>
                     <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>

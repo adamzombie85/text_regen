@@ -46,11 +46,13 @@ export default {
 
     // 4. 處理 API: AI 文本生成
     if (url.pathname === "/api/generate" && request.method === "POST") {
-      const { text, lang, freq_limit, word_count } = await request.json();
-      const apiKey = (env.GEMINI_API_KEY || "").trim();
+      const { text, lang, freq_limit, word_count, user_api_key } = await request.json();
+      
+      // 優先使用使用者提供的 API Key，否則使用系統預設
+      const apiKey = (user_api_key || env.GEMINI_API_KEY || "").trim();
 
       if (!apiKey) {
-        return new Response(JSON.stringify({ text: "錯誤：找不到 API 金鑰，請在 Cloudflare 設定 Variables and Secrets。" }), { status: 500 });
+        return new Response(JSON.stringify({ text: "錯誤：找不到 API 金鑰。請在網頁上填寫您的個人 API Key，或在 Cloudflare 設定預設金鑰。" }), { status: 500 });
       }
 
       const prompt = `你是一個專業的台語教材改寫專家。
@@ -59,6 +61,8 @@ export default {
 1. 目標字數約為 ${word_count} 字。
 2. 盡量使用中語 5021 字頻排名在前 ${freq_limit} 名的常用字。
 3. 語氣要自然、道地。
+4. **絕對禁止輸出任何前言或結語**（例如：這是一份改寫好的文本...）。
+5. **直接輸出改寫後的正文內容**。
 
 原文：
 ${text}`;

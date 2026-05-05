@@ -48,6 +48,18 @@ function norm(c) {
 
 document.addEventListener('DOMContentLoaded', async () => {
     fetchQuota();
+    
+    // 讀取記憶的 API Key
+    const savedKey = localStorage.getItem('gemini_api_key');
+    if (savedKey && get('userApiKey')) {
+        get('userApiKey').value = savedKey;
+    }
+
+    // 監聽 API Key 輸入，自動儲存
+    get('userApiKey').onchange = (e) => {
+        localStorage.setItem('gemini_api_key', e.target.value.trim());
+    };
+
     try {
         const res = await fetch('data/word_db.json');
         const data = await res.json();
@@ -194,6 +206,7 @@ async function generateText() {
     }, 2000);
 
     try {
+        const userKey = get('userApiKey').value.trim();
         const res = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -201,13 +214,23 @@ async function generateText() {
                 text: get('inputText').value, 
                 lang: get('langSelect').value, 
                 freq_limit: parseInt(get('aiFreqLimit').value), 
-                word_count: targetWords 
+                word_count: targetWords,
+                user_api_key: userKey // 傳遞個人 API Key
             })
         });
         const data = await res.json();
         bar.style.width = wheel.style.left = '100%';
         setTimeout(() => {
-            get('aiOutput').textContent = data.text;
+            // 清洗文本：移除常見的前言廢話
+            let cleanedText = data.text.replace(/^(這是一份|這是一篇|好的|根據您的要求|這份台語教材).*?\n+/i, '');
+            cleanedText = cleanedText.trim();
+            
+            get('aiOutput').textContent = cleanedText;
+            
+            // 更新字數顯示
+            const count = cleanedText.length;
+            get('generatedWordCount').textContent = `(生成字數 ${count} 字)`;
+            
             get('aiOutputContainer').classList.remove('hidden');
             fetchQuota();
             get('loading').classList.add('hidden');
