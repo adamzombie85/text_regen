@@ -127,7 +127,7 @@ async function analyzeText() {
     // 自動同步到雲端試算表
     logToGoogleSheets(freqMap, mdMap, twMap);
     
-    switchView('report', 2);
+    switchView('viewReport', 2);
 }
 
 function renderReport(freqMap, interval) {
@@ -342,7 +342,7 @@ async function generateText() {
         if (data.text === "FREE_QUOTA_EXCEEDED") {
             clearInterval(loadingInterval);
             alert(currentUiLang === 'tw' ? '您今仔日的 3 次免金鑰額度已經用完矣，請填入您的個人 API Key 繼續使用。' : '您今日的 3 次免金鑰額度已用完，請填入您的個人 API Key 繼續使用。');
-            switchView('report', 2);
+            switchView('viewReport', 2);
             get('userApiKey').focus();
             get('userApiKey').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
@@ -374,12 +374,12 @@ async function generateText() {
 
         if (error.message === "BUSY") {
             alert('您目前已有一個生成任務正在進行中。請等待目前的任務完成，或稍後再試。');
-            switchView('report', 2);
+            switchView('viewReport', 2);
             return;
         }
 
         alert(`執行發生錯誤：${error.message}`);
-        switchView('report', 2);
+        switchView('viewReport', 2);
     } finally {
         genController = null;
         clearInterval(loadingInterval);
@@ -390,7 +390,7 @@ function cancelGeneration() {
     if (genController) {
         genController.abort();
         clearInterval(loadingInterval);
-        switchView('report', 2);
+        switchView('viewReport', 2);
         alert('已取消文本生成。');
     }
 }
@@ -400,18 +400,18 @@ get('uiLangMd').onclick = () => switchUiLanguage('md');
 get('uiLangTw').onclick = () => switchUiLanguage('tw');
 get('analyzeBtn').onclick = analyzeText;
 get('clearBtn').onclick = () => get('inputText').value = '';
-get('goToGenerateBtn').onclick = () => { switchView('result', 3); generateText(); };
-document.querySelectorAll('.ui-reset').forEach(b => b.onclick = () => switchView('editor', 1));
-document.querySelectorAll('.ui-back-report').forEach(b => b.onclick = () => switchView('report', 2));
+get('goToGenerateBtn').onclick = () => { switchView('viewResult', 3); generateText(); };
+document.querySelectorAll('.ui-reset').forEach(b => b.onclick = () => switchView('viewEditor', 1));
+document.querySelectorAll('.ui-back-report').forEach(b => b.onclick = () => switchView('viewReport', 2));
 get('regenerateBtn').onclick = generateText;
 get('cancelGenBtn').onclick = cancelGeneration;
 get('btnShowStats').onclick = () => {
     const isStats = !get('viewStats').classList.contains('hidden');
-    isStats ? switchView('editor', 1) : (switchView('stats', 0), fetchStats());
+    isStats ? switchView('viewEditor', 1) : (switchView('viewStats', 0), fetchStats());
 };
-get('step1Text').onclick = () => switchView('editor', 1);
-get('step2Text').onclick = () => currentAnalysis && switchView('report', 2);
-get('step3Text').onclick = () => get('aiOutput').textContent && switchView('result', 3);
+get('step1Text').onclick = () => switchView('viewEditor', 1);
+get('step2Text').onclick = () => currentAnalysis && switchView('viewReport', 2);
+get('step3Text').onclick = () => get('aiOutput').textContent && switchView('viewResult', 3);
 get('thCount').onclick = () => handleSort('count');
 get('thMdRank').onclick = () => handleSort('mdRank');
 get('thTwRank').onclick = () => handleSort('twRank');
