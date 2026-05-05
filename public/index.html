@@ -31,24 +31,34 @@
             </div>
         </header>
         
-        <!-- 視覺化使用說明 -->
+        <!-- 視覺化使用說明 (改為按鈕) -->
         <div class="instruction-section">
-            <div class="instruction-card">
+            <button class="instruction-btn" id="btnInstr1">
                 <div class="instr-icon">📋</div>
-                <h4 id="instr1Title">1. 貼上原文</h4>
-                <p id="instr1Desc">將您想分析的文章<br>貼進輸入框內。</p>
-            </div>
-            <div class="instruction-card">
+                <h4 id="instr1TitleBtn">1. 貼上原文</h4>
+            </button>
+            <button class="instruction-btn" id="btnInstr2">
                 <div class="instr-icon">📊</div>
-                <h4 id="instr2Title">2. 文本分析</h4>
-                <p id="instr2Desc">系統自動統計字頻排名<br>標註常用字分佈。</p>
-            </div>
-            <div class="instruction-card">
+                <h4 id="instr2TitleBtn">2. 文本分析</h4>
+            </button>
+            <button class="instruction-btn" id="btnInstr3">
                 <div class="instr-icon">✨</div>
-                <h4 id="instr3Title">3. AI 產出</h4>
-                <p id="instr3Desc">設定目標長度與上限<br>生成適合的改寫文章。</p>
-            </div>
+                <h4 id="instr3TitleBtn">3. AI 產出</h4>
+            </button>
         </div>
+
+        <!-- 詳細說明彈出視窗 -->
+        <dialog id="instructionModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="modalTitle">操作說明</h3>
+                    <button id="closeModalBtn" class="close-btn">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modalDesc" style="line-height: 1.8; font-size: 1.1rem; color: var(--text-secondary);"></p>
+                </div>
+            </div>
+        </dialog>
 
         <!-- View 1: Editor -->
         <section id="viewEditor" class="view card">

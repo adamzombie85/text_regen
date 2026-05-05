@@ -21,9 +21,9 @@ const uiTranslations = {
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 文本生成",
         lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
         lblPrivacyNotice: "您的金鑰僅儲存於本機瀏覽器，系統不會記錄。",
-        instr1Title: "1. 貼上原文", instr1Desc: "將您想分析的文章<br>貼進輸入框內。",
-        instr2Title: "2. 文本分析", instr2Desc: "系統自動統計字頻排名<br>標註常用字分佈。",
-        instr3Title: "3. AI 產出", instr3Desc: "設定目標長度與上限<br>生成適合的改寫文章。",
+        instr1TitleBtn: "1. 貼上原文",
+        instr2TitleBtn: "2. 文本分析",
+        instr3TitleBtn: "3. AI 產出",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", 
@@ -41,9 +41,9 @@ const uiTranslations = {
         aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
         lblPrivacyNotice: "你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。",
-        instr1Title: "1. 貼原文", instr1Desc: "共您想欲分析的文章<br>貼佇輸入格仔內。",
-        instr2Title: "2. 分析報告", instr2Desc: "系統自動統計字頻佮排名<br>標示捷用字分佈。",
-        instr3Title: "3. AI 改寫", instr3Desc: "設定目標長度佮捷用字上限<br>生成適合的改寫文章。",
+        instr1TitleBtn: "1. 貼原文",
+        instr2TitleBtn: "2. 分析報告",
+        instr3TitleBtn: "3. AI 改寫",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", 
@@ -504,6 +504,33 @@ get('step3Text').onclick = () => get('aiOutput').textContent && switchView('resu
 get('thCount').onclick = () => handleSort('count');
 get('thMdRank').onclick = () => handleSort('mdRank');
 get('thTwRank').onclick = () => handleSort('twRank');
+
+const modalTranslations = {
+    md: [
+        { title: "1. 貼上原文", desc: "請在首頁的輸入框中，貼上您準備做為教材或是需要進行難度分析的原始文章。系統目前支援純文字格式，您可以貼上整篇短文或新聞，完成後點擊「開始文本分析」即可進入下一步。" },
+        { title: "2. 文本分析", desc: "系統會自動為您的文章進行字頻統計，並對照「中語 5021 常用字表」及「台語 700 常用字表」進行排名。您可以透過數據總表與區間分佈表，快速評估該文本對於學習者的難易度。表格的表頭也支援點擊排序，方便您找出最艱澀的字彙！" },
+        { title: "3. AI 產出", desc: "根據前一步的分析結果，您可以設定希望 AI 改寫的「目標長度百分比」與「常用字排名上限」。系統將會調用專屬的 AI 語料庫（中語腦 / 台語腦），為您產出符合特定難度且語氣道地的改寫文章，大幅節省備課時間。" }
+    ],
+    tw: [
+        { title: "1. 貼原文", desc: "請佇首頁的輸入格仔內，貼上您準備欲提來做教材，抑是需要分析難度的原始文章。系統目前支援純文字，您會當貼上規篇短文抑是新聞，貼好勢了後，點擊「開始分析文本」就會當落去下一步。" },
+        { title: "2. 分析報告", desc: "系統會自動替您的文章做字頻統計，閣會對照「中語 5021 捷用字表」佮「台語 700 捷用字表」落去排順序。您可以透過數據總表佮區間分佈表，緊掠出這篇文章對學習者會袂傷𠢕。表格的頂懸嘛會當點擊重排順序喔！" },
+        { title: "3. AI 改寫", desc: "照頂一步的分析結果，您可以設定希望 AI 改寫的「目標長度百分比」佮「捷用字排名上限」。系統會去調用專屬的 AI 語料庫（中語腦 / 台語腦），替您寫出一篇合適程度閣道地的文章，替您省落濟濟備課的時間。" }
+    ]
+};
+
+[1, 2, 3].forEach(step => {
+    get(`btnInstr${step}`).onclick = () => {
+        const t = modalTranslations[currentUiLang][step-1];
+        get('modalTitle').textContent = t.title;
+        get('modalDesc').innerHTML = t.desc;
+        get('instructionModal').showModal();
+    };
+});
+
+get('closeModalBtn').onclick = () => get('instructionModal').close();
+get('instructionModal').addEventListener('click', (e) => {
+    if (e.target === get('instructionModal')) get('instructionModal').close();
+});
 
 async function fetchStats() {
     try {
