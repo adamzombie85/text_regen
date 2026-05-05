@@ -160,6 +160,13 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     transform: rotate(180deg);
 }
 
+/* 展開後恢復捲軸 */
+.distribution-table-container:not(.collapsed), 
+.table-container:not(.collapsed) {
+    overflow-y: auto !important;
+    overflow-x: auto !important;
+}
+
 .styled-table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 0.85rem; background: rgba(255,255,255,0.02); }
 #freqTable { 
     width: 100%; 
