@@ -2,14 +2,6 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 1. 處理 API: 獲取配額
-    if (url.pathname === "/api/quota") {
-      let remaining = await env.KV.get("remaining_quota") || 914;
-      return new Response(JSON.stringify({ remaining: parseInt(remaining), total: 100 }), {
-        headers: { "Content-Type": "application/json" },
-      });
-    }
-
     // 新增：偵錯用 - 列出所有可用模型
     if (url.pathname === "/api/list_models") {
         const apiKey = (env.GEMINI_API_KEY || "").trim();
@@ -48,11 +40,11 @@ export default {
     if (url.pathname === "/api/generate" && request.method === "POST") {
       const { text, lang, freq_limit, word_count, user_api_key } = await request.json();
       
-      // 優先使用使用者提供的 API Key，否則使用系統預設
-      const apiKey = (user_api_key || env.GEMINI_API_KEY || "").trim();
+      // 強制要求使用者提供 API Key
+      const apiKey = (user_api_key || "").trim();
 
       if (!apiKey) {
-        return new Response(JSON.stringify({ text: "錯誤：找不到 API 金鑰。請在網頁上填寫您的個人 API Key，或在 Cloudflare 設定預設金鑰。" }), { status: 500 });
+        return new Response(JSON.stringify({ text: "錯誤：請先在網頁填入您的個人 Gemini API Key 才能使用 AI 改寫功能。" }), { status: 401 });
       }
 
       const prompt = `你是一個專業的台語教材改寫專家。
@@ -90,10 +82,6 @@ ${text}`;
 
         const generatedText = data.candidates[0].content.parts[0].text;
         
-        // 扣除配額
-        let remaining = parseInt(await env.KV.get("remaining_quota") || 914) - 1;
-        await env.KV.put("remaining_quota", remaining.toString());
-
         return new Response(JSON.stringify({ text: generatedText }));
       } catch (error) {
         return new Response(JSON.stringify({ text: `執行發生錯誤：${error.message}` }), { status: 500 });

@@ -28,6 +28,25 @@
                 <div class="step" id="step3Text">3. AI 改寫結果</div>
             </div>
         </header>
+        
+        <!-- 視覺化使用說明 -->
+        <div class="instruction-section">
+            <div class="instruction-card">
+                <div class="instr-icon">📋</div>
+                <h4 id="instr1Title">貼上原文</h4>
+                <p id="instr1Desc">在輸入框貼上您想分析的文章。</p>
+            </div>
+            <div class="instruction-card">
+                <div class="instr-icon">📊</div>
+                <h4 id="instr2Title">文本分析</h4>
+                <p id="instr2Desc">系統自動統計字頻與 5021 排名，標註常用字分佈。</p>
+            </div>
+            <div class="instruction-card">
+                <div class="instr-icon">✨</div>
+                <h4 id="instr3Title">AI 產出</h4>
+                <p id="instr3Desc">設定目標長度與常用字上限，生成適合的中語/台語文章。</p>
+            </div>
+        </div>
 
         <!-- View 1: Editor -->
         <section id="viewEditor" class="view card">
@@ -200,7 +219,6 @@
         </section>
 
         <footer>
-            <div class="quota-info"><span id="lblQuota">今日剩餘 AI 配額</span>：<span id="remainingQuota">--</span> <span id="lblTimes">次</span></div>
             <p id="copyright">&copy; 2026 41 研究室 | 版權所有</p>
         </footer>
     </div>

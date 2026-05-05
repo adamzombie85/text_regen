@@ -119,6 +119,53 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     to { transform: rotate(360deg); }
 }
 
+/* 視覺化使用說明 */
+.instruction-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.instruction-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: transform 0.3s ease, background 0.3s ease;
+}
+
+.instruction-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.instr-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.instruction-card h4 {
+    color: #fff;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.instruction-card p {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .instruction-section {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* Loading Status */
 #loadingStatus { font-weight: 700; font-size: 1.5rem; transition: opacity 0.5s; background: linear-gradient(90deg, #fff, var(--secondary), #fff); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shine 2s linear infinite; }
 .fade-out { opacity: 0; }

@@ -16,6 +16,10 @@ const uiTranslations = {
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 文本生成",
+        lblUserApiKey: "個人 Gemini API Key (必填)",
+        instr1Title: "貼上原文", instr1Desc: "在輸入框貼上您想分析的文章。",
+        instr2Title: "文本分析", instr2Desc: "系統自動統計字頻與 5021 排名，標註常用字分佈。",
+        instr3Title: "AI 產出", instr3Desc: "設定目標長度與常用字上限，生成適合的中語/台語文章。",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現次數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", loadingStatus: "正在調用中語腦...", loadingHint: "請稍候，我們正在為您產出道地的文本",
@@ -25,10 +29,14 @@ const uiTranslations = {
     tw: {
         uiTitleMain: "文本分析助手", step1Text: "1. 輸入文本", step2Text: "2. 分析報告", step3Text: "3. AI 改寫文本",
         btnShowStats: "📊 統計專區", lblStatsTitle: "📊 網站數據統計", lblTotalVisitors: "累積造訪人次", lblRecentHistory: "最近分析動態",
-        view1Title: "第一步：貼原文", clear: "清空", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "常用字上限", start: "開始分析文本",
+        view1Title: "第一步：貼原文", clear: "清空", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "捷用字上限", start: "開始分析文本",
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
+        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
+        lblUserApiKey: "個人 Gemini API Key (必填)",
+        instr1Title: "貼原文", instr1Desc: "共您想欲分析的文章貼佇輸入格仔內。",
+        instr2Title: "分析報告", instr2Desc: "系統自動統計字頻佮排名，標示捷用字分佈。",
+        instr3Title: "AI 改寫", instr3Desc: "設定目標長度佮捷用字上限，生成適合的中語/台語文章。",
         lblDetailList: "詳細字頻清單", thChar: "字", thCount: "出現回數", thRank: "5021排名 / 700序號",
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", loadingStatus: "當咧調用台語腦...", loadingHint: "請小等一下，當咧為您產出道地的文本",
@@ -47,8 +55,6 @@ function norm(c) {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    fetchQuota();
-    
     // 讀取記憶的 API Key
     const savedKey = localStorage.getItem('gemini_api_key');
     if (savedKey && get('userApiKey')) {
@@ -192,6 +198,13 @@ function renderReport(freqMap, interval) {
 }
 
 async function generateText() {
+    const userKey = get('userApiKey').value.trim();
+    if (!userKey) {
+        alert(currentUiLang === 'tw' ? '請先填入您的個人 Gemini API Key 才有法度使用 AI 改寫功能喔！' : '請先填入您的個人 Gemini API Key 才能使用 AI 改寫功能喔！');
+        get('userApiKey').focus();
+        return;
+    }
+
     const targetWords = Math.round(currentAnalysis.total * (parseInt(get('targetPercent').value) / 100));
     get('aiOutputContainer').classList.add('hidden');
     get('loading').classList.remove('hidden');
@@ -232,7 +245,6 @@ async function generateText() {
             get('generatedWordCount').textContent = `(生成字數 ${count} 字)`;
             
             get('aiOutputContainer').classList.remove('hidden');
-            fetchQuota();
             get('loading').classList.add('hidden');
             clearInterval(loadingInterval);
         }, 500);
@@ -265,13 +277,6 @@ async function fetchStats() {
         const data = await res.json();
         get('visitorCount').textContent = data.visitors;
         get('statsHistory').innerHTML = data.history.map(h => `<div class="history-item"><span class="hist-time">${h.time}</span><span class="hist-preview">${h.preview}</span><span class="hist-count">${h.count} 字</span></div>`).join('');
-    } catch(e) {}
-}
-async function fetchQuota() {
-    try {
-        const res = await fetch('/api/quota');
-        const data = await res.json();
-        get('remainingQuota').textContent = data.remaining;
     } catch(e) {}
 }
 get('downloadBtn').onclick = () => {
