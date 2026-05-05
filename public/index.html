@@ -192,15 +192,16 @@
             </div>
         </section>
 
-        <!-- View 4: Loading -->
         <section id="loading" class="view card hidden">
-            <div id="wheelWrapper">
-                <img id="wheel" src="images/wheel2.png" alt="Loading...">
-            </div>
-            <div class="progress-container">
-                <div id="progressBar"></div>
-            </div>
             <h2 id="loadingStatus">正在調用中語腦...</h2>
+            <div class="loading-progress-box">
+                <div id="wheelWrapper">
+                    <img id="wheel" src="images/wheel2.png" alt="Loading...">
+                </div>
+                <div class="progress-container">
+                    <div id="progressBar"></div>
+                </div>
+            </div>
             <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
             <p id="estTimeDisplay" style="margin-top: 1rem; color: var(--secondary); font-weight: 600;"></p>
             <button id="cancelGenBtn" class="btn-outline" style="margin-top: 2rem; color: #ef4444; border-color: #ef4444;">取消生成</button>

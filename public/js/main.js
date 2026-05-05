@@ -298,24 +298,25 @@ async function generateText() {
     get('estTimeDisplay').textContent = `預估處理時間：約 ${estSec} 秒`;
 
     let progress = 0;
-    const bar = get('progressBar');
+    const bar = get('progressBar'), wheel = get('wheelWrapper');
     let secondsElapsed = 0;
 
     loadingInterval = setInterval(() => {
         secondsElapsed++;
         if (progress < 90) progress += (90 - progress) / (estSec * 0.5); // 動態進度
-        bar.style.width = Math.min(95, progress) + '%';
+        bar.style.width = wheel.style.left = Math.min(95, progress) + '%';
         
         const ss = uiTranslations[currentUiLang].statuses;
         get('loadingStatus').textContent = ss[Math.floor(Math.random()*ss.length)];
 
-        // 30 秒提醒
+        // 30 秒提醒 (強化視覺)
         if (secondsElapsed === 30) {
-            get('loadingHint').innerHTML = '<span style="color: #fbbf24;">⚠️ 伺服器回應稍慢，可能是長文本或網路波動，請再稍候...</span>';
+            get('loadingHint').innerHTML = '<span style="color: #fbbf24; font-size: 1.1rem; font-weight: bold;">⚠️ 伺服器正在努力中，請稍候...</span>';
         }
-        // 60 秒提醒
-        if (secondsElapsed === 60) {
-            alert('生成時間已超過一分鐘。這通常是因為 Google API 配額吃緊或文章過長。您可以選擇繼續等待，或是取消後重試。');
+        // 90 秒強制超時 (防卡死)
+        if (secondsElapsed === 90) {
+            cancelGeneration();
+            alert('抱歉，此次生成逾時 (90秒)。可能是因為文本過長或網路不穩，建議您將文章拆分後重試，或是稍後再試。');
         }
     }, 1000);
 
