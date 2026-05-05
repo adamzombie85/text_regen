@@ -55,7 +55,7 @@ const uiTranslations = {
 };
 
 const get = id => document.getElementById(id);
-const views = { editor: 'viewEditor', report: 'viewReport', result: 'viewResult', stats: 'viewStats', loading: 'loading' };
+const views = { editor: 'viewEditor', report: 'viewReport', result: 'viewResult', loading: 'loading' };
 const stepEls = { 1: 'step1Text', 2: 'step2Text', 3: 'step3Text' };
 
 function norm(c) {
@@ -82,6 +82,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         data.mandarin.forEach(i => mdMap[i.word] = i.rank);
         console.log("Original Logic Re-initialized");
     } catch (e) {}
+
+    // 預設語言與初始資訊載入
+    switchUiLanguage('md');
+    updateQuotaDisplay();
+    fetchStats();
 });
 
 function switchUiLanguage(lang) {
@@ -492,10 +497,7 @@ document.querySelectorAll('.ui-reset').forEach(b => b.onclick = () => switchView
 document.querySelectorAll('.ui-back-report').forEach(b => b.onclick = () => switchView('report', 2));
 get('regenerateBtn').onclick = generateText;
 get('cancelGenBtn').onclick = cancelGeneration;
-get('btnShowStats').onclick = () => {
-    const isStats = !get('viewStats').classList.contains('hidden');
-    isStats ? switchView('editor', 1) : (switchView('stats', 0), fetchStats());
-};
+
 get('step1Text').onclick = () => switchView('editor', 1);
 get('step2Text').onclick = () => currentAnalysis && switchView('report', 2);
 get('step3Text').onclick = () => get('aiOutput').textContent && switchView('result', 3);
@@ -507,9 +509,10 @@ async function fetchStats() {
     try {
         const res = await fetch('/api/stats');
         const data = await res.json();
-        get('visitorCount').textContent = data.visitors;
-        get('statsHistory').innerHTML = data.history.map(h => `<div class="history-item"><span class="hist-time">${h.time}</span><span class="hist-preview">${h.preview}</span><span class="hist-count">${h.count} 字</span></div>`).join('');
-    } catch(e) {}
+        get('footerVisitorCount').textContent = data.visitors;
+    } catch(e) {
+        console.error("無法取得造訪人次", e);
+    }
 }
 get('downloadBtn').onclick = () => {
     const a = document.createElement('a');

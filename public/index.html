@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/iansui@5.0.1/index.css">
     <!-- Import SheetJS for Excel export -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
 </head>
 <body>
     <div class="glass-bg"></div>
@@ -17,7 +18,6 @@
     <div class="container">
         <header>
             <div class="header-top">
-                <button id="btnShowStats" class="ui-stats-btn">📊 網站數據統計</button>
                 <div class="ui-lang-switch">
                     <button id="uiLangMd" class="active">中語介面</button>
                     <button id="uiLangTw">台語介面</button>
@@ -210,21 +210,10 @@
             <button id="cancelGenBtn" class="btn-outline" style="margin-top: 2rem; color: #ef4444; border-color: #ef4444;">取消生成</button>
         </section>
 
-        <!-- View 5: Statistics -->
-        <section id="viewStats" class="view card hidden">
-            <h2 id="lblStatsTitle">📊 網站數據統計</h2>
-            <div class="stats-grid">
-                <div class="stats-item">
-                    <span class="stats-label" id="lblTotalVisitors">累積造訪人次</span>
-                    <span class="stats-value" id="visitorCount">--</span>
-                </div>
-            </div>
-            <h3 id="lblRecentHistory" style="margin-top: 2rem; margin-bottom: 1rem;">最近分析動態</h3>
-            <div id="statsHistory"></div>
-        </section>
+
 
         <footer>
-            <p id="copyright">&copy; 2026 41 研究室 | 版權所有</p>
+            <p id="copyright">&copy; 2026 41 研究室 | 版權所有 <span style="margin: 0 10px; color: rgba(255,255,255,0.3);">|</span> <span id="lblFooterVisitors">累積來訪人數</span>: <span id="footerVisitorCount" style="color: var(--secondary); font-weight: 700;">--</span></p>
             <p id="lastUpdated" style="font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 0.5rem;">網站更新日期：2026-05-05</p>
         </footer>
     </div>
