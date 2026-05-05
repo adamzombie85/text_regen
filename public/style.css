@@ -196,11 +196,22 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
 /* 針對字庫查詢欄位優化 */
 .styled-table .word-list-col { 
     text-align: left; 
-    max-width: 50vw; /* 限制最大寬度為螢幕的一半 */
+    max-width: 50vw;
     font-family: monospace; 
-    line-height: 1.8; 
+    line-height: 2.2; /* 稍微增加行高讓視覺更清晰 */
     color: #e2e8f0; 
     font-size: 0.8rem;
+    padding: 1rem !important;
+}
+
+.word-unit {
+    display: inline-block;
+    background: rgba(255,255,255,0.05);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin: 2px 4px;
+    white-space: nowrap; /* 強制不換行 */
+    border: 1px solid rgba(255,255,255,0.1);
 }
 
 .styled-table td { padding: 10px; border: 1px solid var(--card-border); text-align: center; }
