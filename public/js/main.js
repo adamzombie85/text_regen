@@ -118,16 +118,20 @@ async function analyzeText() {
         freqMap[n] = (freqMap[n] || 0) + 1;
     });
     
-    currentAnalysis = { total: chars.length, unique: Object.keys(freqMap).length, freqMap };
-    get('totalWords').textContent = currentAnalysis.total;
-    get('uniqueWords').textContent = currentAnalysis.unique;
-    
-    renderReport(freqMap, parseInt(get('intervalSize').value));
-    
-    // 自動同步到雲端試算表 (傳入分析數據)
-    logToGoogleSheets(freqMap, 'analysis');
-    
-    switchView('report', 2);
+    try {
+        currentAnalysis = { total: chars.length, unique: Object.keys(freqMap).length, freqMap };
+        get('totalWords').textContent = currentAnalysis.total;
+        get('uniqueWords').textContent = currentAnalysis.unique;
+        
+        renderReport(freqMap, parseInt(get('intervalSize').value));
+        
+        // 非同步同步到雲端，不等待它完成以免卡住 UI
+        logToGoogleSheets(freqMap, 'analysis').catch(e => console.error(e));
+        
+        switchView('report', 2);
+    } catch (e) {
+        alert("分析過程發生錯誤: " + e.message);
+    }
 }
 
 function renderReport(freqMap, interval) {
@@ -328,23 +332,35 @@ async function generateText() {
     }, 1000);
 
     try {
-        const res = await fetch('/api/generate', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            signal: genController.signal, // 綁定取消信號
-            body: JSON.stringify({ 
-                text: get('inputText').value, 
-                lang: get('langSelect').value, 
-                freq_limit: parseInt(get('aiFreqLimit').value), 
-                word_count: targetWords,
-                user_api_key: userKey
-            })
-        });
+        // 建立一個 60 秒的超時 Promise
+        const timeoutPromise = new Promise((_, reject) => 
+            setTimeout(() => reject(new Error("TIMEOUT")), 60000)
+        );
+
+        // 使用 Promise.race 讓 API 請求與超時鬧鐘比賽
+        const res = await Promise.race([
+            fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                signal: genController.signal,
+                body: JSON.stringify({ 
+                    text: get('inputText').value, 
+                    lang: get('langSelect').value, 
+                    freq_limit: parseInt(get('aiFreqLimit').value), 
+                    word_count: targetWords,
+                    user_api_key: userKey
+                })
+            }),
+            timeoutPromise
+        ]);
         
-        const data = await res.json();
-        
-        if (res.status === 429) { // BUSY
-            throw new Error("BUSY");
+        if (res.status === 429) throw new Error("BUSY");
+
+        let data;
+        try {
+            data = await res.json();
+        } catch (e) {
+            throw new Error("伺服器回傳格式錯誤 (可能連線不穩)");
         }
 
         if (data.text === "FREE_QUOTA_EXCEEDED") {
@@ -384,6 +400,12 @@ async function generateText() {
             return;
         }
 
+        if (error.message === "TIMEOUT") {
+            alert('抱歉，伺服器回應過慢 (超過60秒)。這可能是因為目前 Google API 負載較重，或您的文章篇幅較長。建議您稍後再試，或嘗試減少目標改寫字數。');
+            switchView('report', 2);
+            return;
+        }
+
         if (error.message === "BUSY") {
             alert('您目前已有一個生成任務正在進行中。請等待目前的任務完成，或稍後再試。');
             switchView('report', 2);
@@ -395,6 +417,10 @@ async function generateText() {
     } finally {
         genController = null;
         clearInterval(loadingInterval);
+        // 重要修正：確保載入畫面一定會隱藏，不管成功或失敗
+        if (get('loading').classList.contains('active') || !get('loading').classList.contains('hidden')) {
+            switchView('report', 2);
+        }
     }
 }
 
