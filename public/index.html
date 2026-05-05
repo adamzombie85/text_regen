@@ -114,7 +114,11 @@
                 <div class="summary-item"><span id="lblUniqueB">相異字數(B)</span>: <span id="uniqueWords">0</span></div>
             </div>
 
-            <div class="distribution-table-container">
+            <div class="collapsible-header" id="toggleDistTable">
+                <h3 id="lblDistTableTitle">分段字頻分佈表</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="distribution-table-container collapsed" id="distTableContainer">
                 <table id="distTable" class="styled-table">
                     <thead>
                         <tr>
@@ -132,7 +136,26 @@
                 </table>
             </div>
 
-            <div class="ai-trigger-banner">
+
+            <div class="collapsible-header" id="toggleFreqTable" style="margin-top: 3rem;">
+                <h3 id="lblDetailList">詳細字頻清單</h3>
+                <span class="toggle-icon">▼</span>
+            </div>
+            <div class="table-container collapsed" id="freqTableContainer">
+                <table id="freqTable">
+                    <thead>
+                        <tr>
+                            <th id="thChar">字</th>
+                            <th id="thCount" class="sortable">出現次數 <i class="fas fa-sort"></i></th>
+                            <th id="thMdRank" class="sortable">中語 5021 <i class="fas fa-sort"></i></th>
+                            <th id="thTwRank" class="sortable">台語 700 <i class="fas fa-sort"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+
+            <div class="ai-trigger-banner" style="margin-top: 4rem;">
                 <p id="aiBannerMsg">分析完成！準備好進行 AI 改寫了嗎？</p>
                 <div class="ai-controls-grid">
                     <div class="ai-controls-left">
@@ -190,23 +213,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="card-header" style="margin-top: 3rem;">
-                <h3 id="lblDetailList">詳細字頻清單</h3>
-            </div>
-            <div class="table-container">
-                <table id="freqTable">
-                    <thead>
-                        <tr>
-                            <th id="thChar">字</th>
-                            <th id="thCount" class="sortable">出現次數 <i class="fas fa-sort"></i></th>
-                            <th id="thMdRank" class="sortable">中語 5021 <i class="fas fa-sort"></i></th>
-                            <th id="thTwRank" class="sortable">台語 700 <i class="fas fa-sort"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
         </section>
 
         <!-- View 3: AI Result -->
@@ -223,7 +229,7 @@
             <div id="aiOutputContainer" class="hidden">
                 <pre id="aiOutput" class="output-box"></pre>
                 <div class="output-footer" style="text-align: right; margin-top: 1rem;">
-                    <button id="regenerateBtn" class="btn-outline ui-regen">重新生成 (再扣 1 次額度)</button>
+                    <button id="regenerateBtn" class="btn-outline ui-regen">重新生成</button>
                 </div>
             </div>
         </section>
