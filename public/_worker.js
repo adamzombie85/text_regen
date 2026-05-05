@@ -107,8 +107,10 @@ ${text}`;
         const data = await response.json();
         
         if (!response.ok) {
-            await env.KV.delete(lockKey);
-            return new Response(JSON.stringify({ text: `Google AI 報錯：${JSON.stringify(data)}` }), { status: 500 });
+            const errMsg = data.error ? data.error.message : JSON.stringify(data);
+            return new Response(JSON.stringify({ 
+                text: `Google AI 報錯 (404/400)：${errMsg}\n\n[診斷資訊]\n呼叫網址: models/${requestedModel}\nAPI 版本: v1beta` 
+            }), { status: 500 });
         }
 
         if (!data.candidates || !data.candidates[0]) {
