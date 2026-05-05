@@ -118,7 +118,7 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
 
 /* Detailed Table */
 .table-container { 
-    max-height: 500px; 
+    max-height: 1000px; 
     overflow-y: auto; 
     overflow-x: auto; 
     border-radius: 0.8rem; 

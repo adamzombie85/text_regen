@@ -417,12 +417,11 @@ async function generateText() {
         }
 
         bar.style.width = '100%';
-        setTimeout(() => {
-            // 清洗文本：移除常見的前言廢話
-            let cleanedText = data.text.replace(/^(這是一份|這是一篇|好的|根據您的要求|這份台語教材).*?\n+/i, '');
-            cleanedText = cleanedText.trim();
-            
-            // 紀錄效能數據到雲端
+        // 清洗文本：移除常見的前言廢話
+        let cleanedText = data.text.replace(/^(這是一份|這是一篇|好的|根據您的要求|這份台語教材).*?\n+/i, '');
+        cleanedText = cleanedText.trim();
+        
+        // 紀錄效能數據到雲端
         logToGoogleSheets({ 
             estSec: estSec, 
             actualSec: secondsElapsed, 
@@ -431,15 +430,13 @@ async function generateText() {
         }, 'performance');
 
         get('aiOutput').textContent = cleanedText;
-            
-            // 更新字數顯示
-            const count = cleanedText.length;
-            get('generatedWordCount').textContent = `(生成字數 ${count} 字)`;
-            
-            get('aiOutputContainer').classList.remove('hidden');
-            get('loading').classList.add('hidden');
-            clearInterval(loadingInterval);
-        }, 500);
+        
+        // 更新字數顯示
+        const count = cleanedText.length;
+        get('generatedWordCount').textContent = `(生成字數 ${count} 字)`;
+        
+        get('aiOutputContainer').classList.remove('hidden');
+        switchView('result', 3);
     } catch (error) {
         // 紀錄錯誤到雲端
         logToGoogleSheets({ 
@@ -469,8 +466,8 @@ async function generateText() {
     } finally {
         genController = null;
         clearInterval(loadingInterval);
-        // 重要修正：確保載入畫面一定會隱藏，不管成功或失敗
-        if (get('loading').classList.contains('active') || !get('loading').classList.contains('hidden')) {
+        // 如果還停留在 loading 且沒有成功切換到 result，才退回 report
+        if (get('loading').classList.contains('active')) {
             switchView('report', 2);
         }
     }
@@ -592,7 +589,8 @@ get('downloadExcelBtn').onclick = () => {
             "總字數比(E)%": (cT/currentAnalysis.total*100).toFixed(1),
             "總字數累積(F)%": (cumT/currentAnalysis.total*100).toFixed(1),
             "相異字數比(G)%": (cU/currentAnalysis.unique*100).toFixed(1),
-            "相異累積比(H)%": (cumU/currentAnalysis.unique*100).toFixed(1)
+            "相異累積比(H)%": (cumU/currentAnalysis.unique*100).toFixed(1),
+            "字庫文字": words.map(x => `${x.char}(${x.count})`).join(", ")
         });
     }
     if (unknownBucket.length > 0) {
@@ -606,9 +604,11 @@ get('downloadExcelBtn').onclick = () => {
             "總字數比(E)%": (cT/currentAnalysis.total*100).toFixed(1),
             "總字數累積(F)%": (cumT/currentAnalysis.total*100).toFixed(1),
             "相異字數比(G)%": (cU/currentAnalysis.unique*100).toFixed(1),
-            "相異累積比(H)%": (cumU/currentAnalysis.unique*100).toFixed(1)
+            "相異累積比(H)%": (cumU/currentAnalysis.unique*100).toFixed(1),
+            "字庫文字": unknownBucket.map(x => `${x.char}(${x.count})`).join(", ")
         });
     }
+
 
     // 3. 準備：詳細字頻清單數據
     const freqData = Object.entries(currentAnalysis.freqMap).map(([char, count]) => ({
