@@ -94,7 +94,7 @@ export default {
 原文：
 ${text}`;
 
-        const targetUrl = `https://generativelanguage.googleapis.com/v1/models/${requestedModel}:generateContent?key=${apiKey}`;
+        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${requestedModel}:generateContent?key=${apiKey}`;
 
         const response = await fetch(targetUrl, {
           method: "POST",
