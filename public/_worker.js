@@ -51,29 +51,32 @@ export default {
 
     // 5. 處理 API: AI 文本生成
     if (url.pathname === "/api/generate" && request.method === "POST") {
-      const { text, lang, freq_limit, word_count, user_api_key } = await request.json();
-      const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
-      const today = new Date().toISOString().split('T')[0];
-      const ipKey = `ip_usage:${today}:${clientIp}`;
-      const lockKey = `active_gen:${clientIp}`;
-
-      // 1. 檢查是否有正在進行的任務 (併發控制)
-      const isLocked = await env.KV.get(lockKey);
-      if (isLocked) {
-        return new Response(JSON.stringify({ 
-          text: "BUSY", 
-          error: "您目前已有一個生成任務正在進行中，請稍候再試。" 
-        }), { status: 429 });
-      }
-
-      // 2. 設定鎖定 (有效期 5 分鐘，避免異常鎖死)
-      await env.KV.put(lockKey, "true", { expirationTtl: 300 });
-
       try {
+        const body = await request.json();
+        const { text, lang, freq_limit, word_count, user_api_key, model } = body;
+        const requestedModel = model || "gemini-3.1-flash-lite";
+        
+        const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+        const today = new Date().toISOString().split('T')[0];
+        const ipKey = `ip_usage:${today}:${clientIp}`;
+        const lockKey = `active_gen:${clientIp}`;
+
+        // 1. 檢查是否有正在進行的任務 (併發控制)
+        const isLocked = await env.KV.get(lockKey);
+        if (isLocked) {
+          return new Response(JSON.stringify({ 
+            text: "BUSY", 
+            error: "您目前已有一個生成任務正在進行中，請稍候再試。" 
+          }), { status: 429 });
+        }
+
+        // 2. 設定鎖定 (有效期 5 分鐘，避免異常鎖死)
+        await env.KV.put(lockKey, "true", { expirationTtl: 300 });
+
         let apiKey = (user_api_key || "").trim();
         let isUsingSystemKey = false;
 
-        // 3. 檢查 IP 額度
+        // 3. 檢查 IP 額度 (只有在沒提供個人金鑰時才檢查)
         if (!apiKey) {
             let usage = parseInt(await env.KV.get(ipKey) || "0");
             if (usage >= 3) {
@@ -103,7 +106,7 @@ export default {
 原文：
 ${text}`;
 
-        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${requestedModel}:generateContent?key=${apiKey}`;
 
         const response = await fetch(targetUrl, {
           method: "POST",

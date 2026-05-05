@@ -94,7 +94,7 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
 /* Distribution Table RWD */
 .distribution-table-container { 
     width: 100%; 
-    max-height: 450px; 
+    max-height: 700px; 
     overflow-y: auto; 
     overflow-x: auto; 
     margin-bottom: 2rem; 
@@ -118,7 +118,7 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
 
 /* Detailed Table */
 .table-container { 
-    max-height: 1000px; 
+    max-height: 700px; 
     overflow-y: auto; 
     overflow-x: auto; 
     border-radius: 0.8rem; 

@@ -114,6 +114,7 @@ def generate():
     lang = data.get('lang', 'tw')
     freq_limit = data.get('freq_limit', 3000)
     word_count = data.get('word_count', 100)
+    requested_model = data.get('model', 'gemini-3.1-flash-lite')
     
     lang_name = "台語 (Taiwanese)" if lang == 'tw' else "中語 (Mandarin)"
     
@@ -161,15 +162,9 @@ def generate():
 """
 
     try:
-        # Using the exact stable model names available in your environment
-        model_name = 'gemini-flash-latest'
-        try:
-            model = genai.GenerativeModel(model_name)
-            response = model.generate_content(system_prompt)
-        except Exception:
-            # Fallback to the latest pro model
-            model = genai.GenerativeModel('gemini-pro-latest')
-            response = model.generate_content(system_prompt)
+        # Using the requested model from the frontend
+        model = genai.GenerativeModel(requested_model)
+        response = model.generate_content(system_prompt)
             
         new_text = response.text
         
