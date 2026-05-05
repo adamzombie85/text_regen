@@ -143,7 +143,7 @@
                         <input type="number" id="aiFreqLimit" value="1000" step="100" min="100" max="5021">
                     </div>
                     <div class="control-group">
-                        <label id="lblUserApiKey">個人 Gemini API Key (必填)</label>
+                        <label id="lblUserApiKey">個人 Gemini API Key</label>
                         <input type="password" id="userApiKey" placeholder="在此貼上您的 API Key" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.5rem; border-radius: 8px;">
                         <div id="privacyHint" style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 0.5rem; line-height: 1.4;">
                             <i class="fas fa-user-secret"></i> <span id="lblPrivacyNotice">您的金鑰僅儲存於本機瀏覽器，系統不會記錄。</span>
@@ -161,8 +161,9 @@
                     <thead>
                         <tr>
                             <th id="thChar">字</th>
-                            <th id="thCount">出現次數</th>
-                            <th id="thRank">資料庫序號 (排名)</th>
+                            <th id="thCount" class="sortable">出現次數 <i class="fas fa-sort"></i></th>
+                            <th id="thMdRank" class="sortable">中語 5021 <i class="fas fa-sort"></i></th>
+                            <th id="thTwRank" class="sortable">台語 700 <i class="fas fa-sort"></i></th>
                         </tr>
                     </thead>
                     <tbody></tbody>

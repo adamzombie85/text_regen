@@ -40,12 +40,29 @@ export default {
     // 4. 處理 API: AI 文本生成
     if (url.pathname === "/api/generate" && request.method === "POST") {
       const { text, lang, freq_limit, word_count, user_api_key } = await request.json();
-      
-      // 強制要求使用者提供 API Key
-      const apiKey = (user_api_key || "").trim();
+      const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+      const today = new Date().toISOString().split('T')[0];
+      const ipKey = `ip_usage:${today}:${clientIp}`;
 
+      let apiKey = (user_api_key || "").trim();
+      let isUsingSystemKey = false;
+
+      // 如果使用者沒填金鑰，檢查 IP 額度
       if (!apiKey) {
-        return new Response(JSON.stringify({ text: "錯誤：請先在網頁填入您的個人 Gemini API Key 才能使用 AI 改寫功能。" }), { status: 401 });
+        let usage = parseInt(await env.KV.get(ipKey) || "0");
+        if (usage >= 3) {
+          return new Response(JSON.stringify({ 
+            text: "FREE_QUOTA_EXCEEDED", 
+            error: "您今日的 3 次免金鑰額度已用完，請填入您個人的 API Key 繼續使用。" 
+          }), { status: 403 });
+        }
+        // 使用系統預設金鑰
+        apiKey = (env.GEMINI_API_KEY || "").trim();
+        isUsingSystemKey = true;
+
+        if (!apiKey) {
+            return new Response(JSON.stringify({ text: "錯誤：系統金鑰未設定，請填入您的個人 API Key。" }), { status: 500 });
+        }
       }
 
       const prompt = `你是一個專業的台語教材改寫專家。
@@ -74,15 +91,21 @@ ${text}`;
         const data = await response.json();
         
         if (!response.ok) {
-            return new Response(JSON.stringify({ text: `Google AI 報錯 (URL: ${targetUrl.substring(0, 60)}...)：${JSON.stringify(data)}` }), { status: 500 });
+            return new Response(JSON.stringify({ text: `Google AI 報錯：${JSON.stringify(data)}` }), { status: 500 });
         }
 
         if (!data.candidates || !data.candidates[0]) {
-            return new Response(JSON.stringify({ text: `AI 沒有產生結果。完整回應：${JSON.stringify(data)}` }), { status: 500 });
+            return new Response(JSON.stringify({ text: `AI 沒有產生結果。` }), { status: 500 });
         }
 
         const generatedText = data.candidates[0].content.parts[0].text;
         
+        // 如果使用的是系統金鑰，則增加該 IP 的計數
+        if (isUsingSystemKey) {
+            let usage = parseInt(await env.KV.get(ipKey) || "0") + 1;
+            await env.KV.put(ipKey, usage.toString(), { expirationTtl: 86400 });
+        }
+
         return new Response(JSON.stringify({ text: generatedText }));
       } catch (error) {
         return new Response(JSON.stringify({ text: `執行發生錯誤：${error.message}` }), { status: 500 });

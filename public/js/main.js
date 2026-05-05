@@ -7,6 +7,7 @@ let mdMap = {}, twMap = {};
 let currentAnalysis = null;
 let currentUiLang = 'md';
 let loadingInterval = null;
+let currentSort = { col: 'count', dir: 'desc' }; // 預設依出現次數降序
 
 const uiTranslations = {
     md: {
@@ -16,7 +17,7 @@ const uiTranslations = {
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 文本生成",
-        lblUserApiKey: "個人 Gemini API Key (必填)",
+        lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
         lblPrivacyNotice: "您的金鑰僅儲存於本機瀏覽器，系統不會記錄。",
         instr1Title: "貼上原文", instr1Desc: "在輸入框貼上您想分析的文章。",
         instr2Title: "文本分析", instr2Desc: "系統自動統計字頻與 5021 排名，標註常用字分佈。",
@@ -34,7 +35,7 @@ const uiTranslations = {
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
-        lblUserApiKey: "個人 Gemini API Key (必填)",
+        lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
         lblPrivacyNotice: "您的金鑰干焦儲佇您的瀏覽器，系統袂記錄。",
         instr1Title: "貼原文", instr1Desc: "共您想欲分析的文章貼佇輸入格仔內。",
         instr2Title: "分析報告", instr2Desc: "系統自動統計字頻佮排名，標示捷用字分佈。",
@@ -191,22 +192,72 @@ function renderReport(freqMap, interval) {
         `;
     }
 
-    // 詳細清單依排名排
-    const all = Object.entries(freqMap).sort((a, b) => (mdMap[a[0]] || 99999) - (mdMap[b[0]] || 99999));
-    get('freqTable').querySelector('tbody').innerHTML = all.map(([c, count]) => {
-        const rMd = mdMap[c] || 'N/A', rTw = twMap[c] || '-';
-        return `<tr><td>${c}</td><td>${count}</td><td>${rMd} / ${rTw}</td></tr>`;
+    // --- 詳細清單排序與渲染 ---
+    const tbody = get('freqTable').querySelector('tbody');
+    tbody.innerHTML = '';
+    
+    // 建立基礎資料陣列
+    const sortedData = Object.entries(freqMap).map(([char, count]) => ({
+        char,
+        count,
+        mdRank: mdMap[char] || 99999,
+        twRank: twMap[char] || 99999
+    }));
+
+    // 執行排序
+    sortedData.sort((a, b) => {
+        let valA = a[currentSort.col], valB = b[currentSort.col];
+        if (currentSort.dir === 'asc') return valA - valB;
+        return valB - valA;
+    });
+
+    // 渲染表格
+    tbody.innerHTML = sortedData.map(item => {
+        const rMd = item.mdRank === 99999 ? 'N/A' : item.mdRank;
+        const rTw = item.twRank === 99999 ? '-' : item.twRank;
+        return `<tr>
+            <td>${item.char}</td>
+            <td>${item.count}</td>
+            <td>${rMd}</td>
+            <td>${rTw}</td>
+        </tr>`;
     }).join('');
+
+    // 更新 Header 視覺狀態
+    updateSortHeaders();
+}
+
+function updateSortHeaders() {
+    const headers = { count: 'thCount', mdRank: 'thMdRank', twRank: 'thTwRank' };
+    Object.entries(headers).forEach(([col, id]) => {
+        const el = get(id);
+        if (!el) return;
+        el.classList.toggle('active-sort', currentSort.col === col);
+        const icon = el.querySelector('i');
+        if (icon) {
+            if (currentSort.col === col) {
+                icon.className = currentSort.dir === 'desc' ? 'fas fa-sort-down' : 'fas fa-sort-up';
+            } else {
+                icon.className = 'fas fa-sort';
+            }
+        }
+    });
+}
+
+function handleSort(col) {
+    if (currentSort.col === col) {
+        currentSort.dir = currentSort.dir === 'desc' ? 'asc' : 'desc';
+    } else {
+        currentSort.col = col;
+        currentSort.dir = 'desc';
+    }
+    renderReport(currentAnalysis.freqMap, parseInt(get('intervalSize').value));
 }
 
 async function generateText() {
     const userKey = get('userApiKey').value.trim();
-    if (!userKey) {
-        alert(currentUiLang === 'tw' ? '請先填入您的個人 Gemini API Key 才有法度使用 AI 改寫功能喔！' : '請先填入您的個人 Gemini API Key 才能使用 AI 改寫功能喔！');
-        get('userApiKey').focus();
-        return;
-    }
-
+    // 取消強制攔截，讓後端判斷 IP 額度
+    
     const targetWords = Math.round(currentAnalysis.total * (parseInt(get('targetPercent').value) / 100));
     get('aiOutputContainer').classList.add('hidden');
     get('loading').classList.remove('hidden');
@@ -234,6 +285,16 @@ async function generateText() {
             })
         });
         const data = await res.json();
+        
+        if (data.text === "FREE_QUOTA_EXCEEDED") {
+            get('loading').classList.add('hidden');
+            clearInterval(loadingInterval);
+            alert(currentUiLang === 'tw' ? '您今仔日的 3 次免金鑰額度已經用完矣，請填入您的個人 API Key 繼續使用。' : '您今日的 3 次免金鑰額度已用完，請填入您的個人 API Key 繼續使用。');
+            get('userApiKey').focus();
+            get('userApiKey').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            return;
+        }
+
         bar.style.width = wheel.style.left = '100%';
         setTimeout(() => {
             // 清洗文本：移除常見的前言廢話
@@ -272,6 +333,9 @@ get('btnShowStats').onclick = () => {
 get('step1Text').onclick = () => switchView('editor', 1);
 get('step2Text').onclick = () => currentAnalysis && switchView('report', 2);
 get('step3Text').onclick = () => get('aiOutput').textContent && switchView('result', 3);
+get('thCount').onclick = () => handleSort('count');
+get('thMdRank').onclick = () => handleSort('mdRank');
+get('thTwRank').onclick = () => handleSort('twRank');
 
 async function fetchStats() {
     try {
