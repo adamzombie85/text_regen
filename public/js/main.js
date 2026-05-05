@@ -8,6 +8,7 @@ let currentAnalysis = null;
 let currentUiLang = 'md';
 let loadingInterval = null;
 let currentSort = { col: 'count', dir: 'desc' }; // 預設依出現次數降序
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxzjTTje0BqASPfhXPGDdrR84dEzplbFafbieFZ_SUJcg6UWm5VaEn20LR7B8cCOhY_8g/exec"; // 雲端同步網址
 
 const uiTranslations = {
     md: {
@@ -121,6 +122,10 @@ async function analyzeText() {
     get('uniqueWords').textContent = currentAnalysis.unique;
     
     renderReport(freqMap, parseInt(get('intervalSize').value));
+    
+    // 自動同步到雲端試算表
+    logToGoogleSheets(freqMap, mdMap, twMap);
+    
     switchView('report', 2);
 }
 
@@ -252,6 +257,29 @@ function handleSort(col) {
         currentSort.dir = 'desc';
     }
     renderReport(currentAnalysis.freqMap, parseInt(get('intervalSize').value));
+}
+
+async function logToGoogleSheets(freqMap, mdMap, twMap) {
+    if (!GOOGLE_SHEETS_URL) return;
+    
+    const payload = Object.entries(freqMap).map(([char, count]) => ({
+        char,
+        count,
+        mdRank: mdMap[char] || '',
+        twRank: twMap[char] || ''
+    }));
+
+    try {
+        await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors', // 跨網域存取
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        console.log("數據已發送至 Google 試算表");
+    } catch (e) {
+        console.error("雲端同步失敗:", e);
+    }
 }
 
 async function generateText() {
