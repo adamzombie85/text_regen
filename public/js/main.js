@@ -304,6 +304,11 @@ async function logToGoogleSheets(data, type = 'analysis') {
     } else if (type === 'error') {
         payload.message = data.message;
         payload.details = data.details || '';
+    } else if (type === 'performance') {
+        payload.est_sec = data.estSec;
+        payload.actual_sec = data.actualSec;
+        payload.lang = data.lang;
+        payload.word_count = data.wordCount;
     }
 
     try {
@@ -342,10 +347,14 @@ async function generateText() {
     const statusKey = targetLang === 'tw' ? 'statuses_tw' : 'statuses_md';
     const statusList = uiTranslations[currentUiLang][statusKey];
 
+    get('actualTimeDisplay').textContent = currentUiLang === 'tw' ? "實際經過時間：0 秒" : "實際已過時間：0 秒";
+
     loadingInterval = setInterval(() => {
         secondsElapsed++;
         if (progress < 90) progress += (90 - progress) / (estSec * 0.5); // 動態進度
         bar.style.width = wheel.style.left = Math.min(95, progress) + '%';
+        
+        get('actualTimeDisplay').textContent = currentUiLang === 'tw' ? `實際經過時間：${secondsElapsed} 秒` : `實際已過時間：${secondsElapsed} 秒`;
         
         // 從選定的清單中隨機取樣
         get('loadingStatus').textContent = statusList[Math.floor(Math.random() * statusList.length)];
@@ -408,7 +417,15 @@ async function generateText() {
             let cleanedText = data.text.replace(/^(這是一份|這是一篇|好的|根據您的要求|這份台語教材).*?\n+/i, '');
             cleanedText = cleanedText.trim();
             
-            get('aiOutput').textContent = cleanedText;
+            // 紀錄效能數據到雲端
+        logToGoogleSheets({ 
+            estSec: estSec, 
+            actualSec: secondsElapsed, 
+            lang: get('langSelect').value,
+            wordCount: targetWords
+        }, 'performance');
+
+        get('aiOutput').textContent = cleanedText;
             
             // 更新字數顯示
             const count = cleanedText.length;
