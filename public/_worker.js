@@ -57,11 +57,9 @@ export default {
         const requestedModel = model || "gemini-3.1-flash-lite";
         
         const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
-        const today = new Date().toISOString().split('T')[0];
-        const ipKey = `ip_usage:${today}:${clientIp}`;
         const lockKey = `active_gen:${clientIp}`;
 
-        // 1. 檢查是否有正在進行的任務 (併發控制)
+        // 1. 檢查是否有正在進行的任務
         const isLocked = await env.KV.get(lockKey);
         if (isLocked) {
           return new Response(JSON.stringify({ 
@@ -70,28 +68,18 @@ export default {
           }), { status: 429 });
         }
 
-        // 2. 設定鎖定 (有效期 5 分鐘，避免異常鎖死)
+        // 2. 設定鎖定
         await env.KV.put(lockKey, "true", { expirationTtl: 300 });
 
         let apiKey = (user_api_key || "").trim();
-        let isUsingSystemKey = false;
 
-        // 3. 檢查 IP 額度 (只有在沒提供個人金鑰時才檢查)
+        // 3. 強制檢查個人金鑰
         if (!apiKey) {
-            let usage = parseInt(await env.KV.get(ipKey) || "0");
-            if (usage >= 3) {
-                await env.KV.delete(lockKey); // 釋放鎖
-                return new Response(JSON.stringify({ 
-                    text: "FREE_QUOTA_EXCEEDED", 
-                    error: "您今日的 3 次免金鑰額度已用完，請填入您個人的 API Key 繼續使用。" 
-                }), { status: 403 });
-            }
-            apiKey = (env.GEMINI_API_KEY || "").trim();
-            isUsingSystemKey = true;
-            if (!apiKey) {
-                await env.KV.delete(lockKey); // 釋放鎖
-                return new Response(JSON.stringify({ text: "錯誤：系統金鑰未設定。" }), { status: 500 });
-            }
+            await env.KV.delete(lockKey); // 釋放鎖
+            return new Response(JSON.stringify({ 
+                text: "API_KEY_REQUIRED", 
+                error: "本系統目前僅支援使用個人 API Key，請先填入金鑰。" 
+            }), { status: 401 });
         }
 
         const prompt = `你是一個專業的台語教材改寫專家。
@@ -130,17 +118,15 @@ ${text}`;
 
         const generatedText = data.candidates[0].content.parts[0].text;
         
-        if (isUsingSystemKey) {
-            let usage = parseInt(await env.KV.get(ipKey) || "0") + 1;
-            await env.KV.put(ipKey, usage.toString(), { expirationTtl: 86400 });
-        }
-
         // 任務完成，釋放鎖
         await env.KV.delete(lockKey);
         return new Response(JSON.stringify({ text: generatedText }));
 
       } catch (error) {
-        await env.KV.delete(lockKey); // 發生錯誤也要釋放鎖
+        if (typeof env !== 'undefined' && env.KV) {
+            const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
+            await env.KV.delete(`active_gen:${clientIp}`);
+        }
         return new Response(JSON.stringify({ text: `執行發生錯誤：${error.message}` }), { status: 500 });
       }
     }

@@ -19,8 +19,8 @@ const uiTranslations = {
         view1Title: "第一步：貼上原文", clear: "清除", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "常用字上限", start: "開始文本分析",
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel: "AI 模型選擇", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 文本生成",
-        lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
+        aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel1: "AI 模型選項 1", lblAiModel2: "AI 模型選項 2", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
+        lblUserApiKey: "個人 Gemini API Key",
         lblPrivacyNotice: "您的金鑰僅儲存於本機瀏覽器，系統不會記錄。",
         instr1TitleBtn: "1. 貼上原文",
         instr2TitleBtn: "2. 文本分析",
@@ -29,7 +29,7 @@ const uiTranslations = {
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總累積比(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "返回分析報告", dlTxt: "下載文本", 
         loadingHint: "請稍候，我們正在為您產出道地的文本",
-        regen: "重新生成 (再扣 1 次額度)", lblQuota: "今日剩餘 AI 配額", lblTimes: "次",
+        regen: "重新生成", 
         statuses_md: ["正在調用中語腦...", "正在搜尋中語用詞...", "正在優化中語語法...", "正在提煉、提煉、再提煉..."],
         statuses_tw: ["當咧調用台語腦...", "當咧搜揣台語用詞...", "當咧排除中語語法...", "當咧提煉、提煉、閣再提煉..."]
     },
@@ -39,8 +39,8 @@ const uiTranslations = {
         view1Title: "第一步：貼原文", clear: "清空", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "捷用字上限", start: "開始分析文本",
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel: "AI 模型選擇", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
-        lblUserApiKey: "個人 Gemini API Key (免金鑰限3次)",
+        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel1: "AI 模型選項 1", lblAiModel2: "AI 模型選項 2", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
+        lblUserApiKey: "個人 Gemini API Key",
         lblPrivacyNotice: "你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。",
         instr1TitleBtn: "1. 貼原文",
         instr2TitleBtn: "2. 分析報告",
@@ -49,7 +49,7 @@ const uiTranslations = {
         thRange: "字距範圍", thTotalC: "總字數(C)", thUniqueD: "相異字數(D)", thRatioE: "總字數比(E)", thCumF: "總字數累積(F)", thRatioG: "相異字數比(G)", thCumH: "相異累積比(H)", thLookup: "字庫查詢",
         view3Title: "第三步：AI 生成結果", back: "倒轉去分析報告", dlTxt: "下載文本", 
         loadingHint: "請小等一下，當咧為您產出道地的文本",
-        regen: "重做一遍 (會扣 1 个份額)", lblQuota: "今仔日 AI 份額賰", lblTimes: "个",
+        regen: "重做一遍", 
         statuses_md: ["當咧調用中語腦...", "當咧揣中語的詞...", "當咧調整中語句型...", "當咧提煉、提煉、閣再提煉..."],
         statuses_tw: ["當咧調用台語腦...", "當咧搜揣在地用詞...", "當咧排除中語語法...", "當咧提煉、提煉、閣再提煉..."]
     }
@@ -180,9 +180,8 @@ async function updateQuotaDisplay() {
         const res = await fetch('/api/quota');
         const data = await res.json();
         const t = uiTranslations[currentUiLang];
-        const label = currentUiLang === 'tw' ? `(免金鑰額度賰：${data.remaining} 次)` : `(免金鑰額度剩餘：${data.remaining} 次)`;
         const elQuota = get('quotaInfo');
-        if (elQuota) elQuota.textContent = label;
+        if (elQuota) elQuota.textContent = "";
     } catch (e) {
         console.error("無法取得配額資訊", e);
     }
@@ -277,7 +276,7 @@ function renderReport(freqMap, interval) {
             });
 
             tbody.innerHTML = sortedData.map(item => {
-                const rMd = item.mdRank === 99999 ? 'N/A' : item.mdRank;
+                const rMd = item.mdRank === 99999 ? '-' : item.mdRank;
                 const rTw = item.twRank === 99999 ? '-' : item.twRank;
                 return `<tr>
                     <td>${item.char}</td>
@@ -358,6 +357,15 @@ async function logToGoogleSheets(data, type = 'analysis') {
 async function generateText() {
     const elApiKey = get('userApiKey');
     const userKey = elApiKey ? elApiKey.value.trim() : "";
+    if (!userKey) {
+        alert(currentUiLang === 'tw' ? '請先填入您的個人 API Key 才有法度使用。' : '請先填入您的個人 API Key 才能開始使用。');
+        return;
+    }
+    
+    // 讀取被勾選的模型
+    const selectedChoice = document.querySelector('input[name="modelChoice"]:checked').value;
+    const modelId = get(`aiModel${selectedChoice}`).value;
+    
     const targetWords = Math.round(currentAnalysis.total * (parseInt(get('targetPercent').value) / 100));
     
     // 初始化 AbortController
@@ -431,7 +439,7 @@ async function generateText() {
                     freq_limit: parseInt(get('aiFreqLimit').value), 
                     word_count: targetWords,
                     user_api_key: userKey,
-                    model: get('aiModel').value
+                    model: modelId
                 })
             }),
             timeoutPromise
@@ -446,14 +454,10 @@ async function generateText() {
             throw new Error("伺服器回傳格式錯誤 (可能連線不穩)");
         }
 
-        if (data.text === "FREE_QUOTA_EXCEEDED") {
+        if (data.text === "API_KEY_REQUIRED") {
             clearInterval(loadingInterval);
-            alert(currentUiLang === 'tw' ? '您今仔日的 3 次免金鑰額度已經用完矣，請填入您的個人 API Key 繼續使用。' : '您今日的 3 次免金鑰額度已用完，請填入您的個人 API Key 繼續使用。');
+            alert(currentUiLang === 'tw' ? '請先填入您的個人 API Key。' : '請先填入您的個人 API Key。');
             switchView('report', 2);
-            if (get('userApiKey')) {
-                get('userApiKey').focus();
-                get('userApiKey').scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
             return;
         }
 

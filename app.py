@@ -102,14 +102,14 @@ def quota():
 
 @app.route('/api/generate', methods=['POST'])
 def generate():
-    if not API_KEY:
-        return jsonify({"error": "API Key not configured on server."}), 500
-        
-    usage = get_usage()
-    if usage['count'] >= DAILY_LIMIT:
-        return jsonify({"error": "今日 API 額度已用完，請明天再試。"}), 429
-    
     data = request.json
+    user_api_key = data.get('user_api_key', '')
+    if not user_api_key:
+        return jsonify({"error": "本系統目前僅支援使用個人 API Key，請先填入金鑰。"}), 401
+    
+    # Configure with the user's key for this request
+    genai.configure(api_key=user_api_key)
+    
     text = data.get('text', '')
     lang = data.get('lang', 'tw')
     freq_limit = data.get('freq_limit', 3000)
