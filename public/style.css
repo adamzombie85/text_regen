@@ -101,22 +101,18 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     border-radius: 0.8rem; 
     background: rgba(0,0,0,0.2);
     border: 1px solid var(--card-border);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
-.styled-table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 0.85rem; background: rgba(255,255,255,0.02); }
-.styled-table th { 
-    position: sticky; 
-    top: 0; 
-    z-index: 10;
-    background: #1e1b4b; 
-    color: var(--table-header-text); 
-    padding: 12px; 
-    text-align: center; 
-    border: 1px solid rgba(0,0,0,0.1); 
+.distribution-table-container.collapsed {
+    max-height: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    border-color: transparent !important;
+    opacity: 0 !important;
+    pointer-events: none;
 }
-.styled-table td { padding: 10px; border: 1px solid var(--card-border); text-align: center; }
-.styled-table .word-list-col { text-align: left; min-width: 300px; font-family: monospace; line-height: 1.8; color: #e2e8f0; }
 
-/* Detailed Table */
 .table-container { 
     max-height: 700px; 
     overflow-y: auto; 
@@ -124,13 +120,53 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     border-radius: 0.8rem; 
     background: rgba(255,255,255,0.02);
     border: 1px solid var(--card-border);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
 }
+.table-container.collapsed {
+    max-height: 0 !important;
+    margin-bottom: 0 !important;
+    padding: 0 !important;
+    border-color: transparent !important;
+    opacity: 0 !important;
+    pointer-events: none;
+}
+
+.collapsible-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    padding: 1rem 1.5rem;
+    border-radius: 0.8rem;
+    cursor: pointer;
+    transition: 0.3s;
+    border: 1px solid var(--card-border);
+    margin-bottom: 1rem;
+}
+.collapsible-header:hover {
+    background: rgba(255,255,255,0.1);
+}
+.collapsible-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--secondary);
+}
+.toggle-icon {
+    transition: transform 0.3s;
+    color: var(--text-secondary);
+}
+.active-header .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.styled-table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 0.85rem; background: rgba(255,255,255,0.02); }
 #freqTable { 
     width: 100%; 
     border-collapse: collapse; 
-    table-layout: auto; /* 最適寬度 */
+    table-layout: auto; 
 }
-#freqTable th { 
+#freqTable th, .styled-table th { 
     position: sticky; 
     top: 0; 
     background: #1e1b4b; 

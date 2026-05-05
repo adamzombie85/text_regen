@@ -648,3 +648,17 @@ if (get('downloadExcelBtn')) {
         XLSX.writeFile(wb, `41研究室_文本分析報告_${new Date().getTime()}.xlsx`);
     };
 }
+
+// 折疊功能綁定
+const bindToggle = (btnId, containerId) => {
+    const btn = get(btnId);
+    const container = get(containerId);
+    if (btn && container) {
+        btn.onclick = () => {
+            container.classList.toggle('collapsed');
+            btn.classList.toggle('active-header');
+        };
+    }
+};
+bindToggle('toggleDistTable', 'distTableContainer');
+bindToggle('toggleFreqTable', 'freqTableContainer');
