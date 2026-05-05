@@ -96,7 +96,7 @@
                     </div>
                 </div>
             </div>
-            <button id="analyzeBtn" class="btn-primary full-width ui-start-analyze">開始文本分析</button>
+            <button id="analyzeBtn" class="btn-primary full-width ui-start">開始文本分析</button>
         </section>
 
         <!-- View 2: Analysis Report -->
@@ -105,7 +105,7 @@
                 <h2 id="view2Title">第二步：分析報告</h2>
                 <div class="actions">
                     <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>
-                    <button id="downloadExcelBtn" class="btn-outline ui-dl-report">下載分析報表</button>
+                    <button id="downloadExcelBtn" class="btn-outline ui-dlReport">下載分析報表</button>
                 </div>
             </div>
 
@@ -155,7 +155,7 @@
                         <input type="number" id="aiFreqLimit" value="1000" step="100" min="100" max="5021">
                     </div>
                     <div class="control-group">
-                        <label id="lblUserApiKey">個人 Gemini API Key <span id="quotaInfo" style="font-size: 0.8em; color: var(--secondary); font-weight: normal; margin-left: 0.5rem;"></span></label>
+                        <label for="userApiKey"><span id="lblUserApiKey">個人 Gemini API Key</span> <span id="quotaInfo" style="font-size: 0.8em; color: var(--secondary); font-weight: normal; margin-left: 0.5rem;"></span></label>
                         <input type="password" id="userApiKey" placeholder="在此貼上您的 API Key" 
                                autocomplete="new-password" spellcheck="false" data-lpignore="true"
                                style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.5rem; border-radius: 8px;">
@@ -188,11 +188,11 @@
         <!-- View 3: AI Result -->
         <section id="viewResult" class="view card hidden">
             <div class="card-header">
-                <h2 id="view3Title">第三步：AI 生成結果 <span id="generatedWordCount" style="font-size: 0.7em; font-weight: normal; opacity: 0.8; margin-left: 1rem;"></span></h2>
+                <h2><span id="view3Title">第三步：AI 生成結果</span> <span id="generatedWordCount" style="font-size: 0.7em; font-weight: normal; opacity: 0.8; margin-left: 1rem;"></span></h2>
                 <div class="actions">
-                    <button class="btn-outline back-to-report-btn ui-back-report">返回分析報告</button>
+                    <button class="btn-outline back-to-report-btn ui-back">返回分析報告</button>
                     <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>
-                    <button id="downloadBtn" class="btn-primary ui-dl-txt">下載文本</button>
+                    <button id="downloadBtn" class="btn-primary ui-dlTxt">下載文本</button>
                 </div>
             </div>
             
@@ -223,11 +223,11 @@
 
 
         <footer>
-            <p id="copyright">&copy; 2026 41 研究室 | 版權所有 <span style="margin: 0 10px; color: rgba(255,255,255,0.3);">|</span> <span id="lblFooterVisitors">累積來訪人數</span>: <span id="footerVisitorCount" style="color: var(--secondary); font-weight: 700;">--</span></p>
+            <p id="copyright">&copy; 2026 41 研究室 | 版權所有 <span style="margin: 0 10px; color: rgba(255,255,255,0.3);">|</span> <span id="lblTotalVisitors">累積來訪人數</span>: <span id="footerVisitorCount" style="color: var(--secondary); font-weight: 700;">--</span></p>
             <p id="lastUpdated" style="font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 0.5rem;">網站更新日期：2026-05-05</p>
         </footer>
     </div>
 
-    <script src="js/main.js"></script>
+    <script src="js/main.js?v=20260505_v2"></script>
 </body>
 </html>
