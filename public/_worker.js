@@ -43,29 +43,43 @@ export default {
       const clientIp = request.headers.get("CF-Connecting-IP") || "unknown";
       const today = new Date().toISOString().split('T')[0];
       const ipKey = `ip_usage:${today}:${clientIp}`;
+      const lockKey = `active_gen:${clientIp}`;
 
-      let apiKey = (user_api_key || "").trim();
-      let isUsingSystemKey = false;
-
-      // 如果使用者沒填金鑰，檢查 IP 額度
-      if (!apiKey) {
-        let usage = parseInt(await env.KV.get(ipKey) || "0");
-        if (usage >= 3) {
-          return new Response(JSON.stringify({ 
-            text: "FREE_QUOTA_EXCEEDED", 
-            error: "您今日的 3 次免金鑰額度已用完，請填入您個人的 API Key 繼續使用。" 
-          }), { status: 403 });
-        }
-        // 使用系統預設金鑰
-        apiKey = (env.GEMINI_API_KEY || "").trim();
-        isUsingSystemKey = true;
-
-        if (!apiKey) {
-            return new Response(JSON.stringify({ text: "錯誤：系統金鑰未設定，請填入您的個人 API Key。" }), { status: 500 });
-        }
+      // 1. 檢查是否有正在進行的任務 (併發控制)
+      const isLocked = await env.KV.get(lockKey);
+      if (isLocked) {
+        return new Response(JSON.stringify({ 
+          text: "BUSY", 
+          error: "您目前已有一個生成任務正在進行中，請稍候再試。" 
+        }), { status: 429 });
       }
 
-      const prompt = `你是一個專業的台語教材改寫專家。
+      // 2. 設定鎖定 (有效期 5 分鐘，避免異常鎖死)
+      await env.KV.put(lockKey, "true", { expirationTtl: 300 });
+
+      try {
+        let apiKey = (user_api_key || "").trim();
+        let isUsingSystemKey = false;
+
+        // 3. 檢查 IP 額度
+        if (!apiKey) {
+            let usage = parseInt(await env.KV.get(ipKey) || "0");
+            if (usage >= 3) {
+                await env.KV.delete(lockKey); // 釋放鎖
+                return new Response(JSON.stringify({ 
+                    text: "FREE_QUOTA_EXCEEDED", 
+                    error: "您今日的 3 次免金鑰額度已用完，請填入您個人的 API Key 繼續使用。" 
+                }), { status: 403 });
+            }
+            apiKey = (env.GEMINI_API_KEY || "").trim();
+            isUsingSystemKey = true;
+            if (!apiKey) {
+                await env.KV.delete(lockKey); // 釋放鎖
+                return new Response(JSON.stringify({ text: "錯誤：系統金鑰未設定。" }), { status: 500 });
+            }
+        }
+
+        const prompt = `你是一個專業的台語教材改寫專家。
 請將以下文章改寫為 [${lang}]。
 要求：
 1. 目標字數約為 ${word_count} 字。
@@ -77,9 +91,8 @@ export default {
 原文：
 ${text}`;
 
-      const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
+        const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${apiKey}`;
 
-      try {
         const response = await fetch(targetUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -91,23 +104,28 @@ ${text}`;
         const data = await response.json();
         
         if (!response.ok) {
+            await env.KV.delete(lockKey);
             return new Response(JSON.stringify({ text: `Google AI 報錯：${JSON.stringify(data)}` }), { status: 500 });
         }
 
         if (!data.candidates || !data.candidates[0]) {
+            await env.KV.delete(lockKey);
             return new Response(JSON.stringify({ text: `AI 沒有產生結果。` }), { status: 500 });
         }
 
         const generatedText = data.candidates[0].content.parts[0].text;
         
-        // 如果使用的是系統金鑰，則增加該 IP 的計數
         if (isUsingSystemKey) {
             let usage = parseInt(await env.KV.get(ipKey) || "0") + 1;
             await env.KV.put(ipKey, usage.toString(), { expirationTtl: 86400 });
         }
 
+        // 任務完成，釋放鎖
+        await env.KV.delete(lockKey);
         return new Response(JSON.stringify({ text: generatedText }));
+
       } catch (error) {
+        await env.KV.delete(lockKey); // 發生錯誤也要釋放鎖
         return new Response(JSON.stringify({ text: `執行發生錯誤：${error.message}` }), { status: 500 });
       }
     }

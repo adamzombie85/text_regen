@@ -175,18 +175,6 @@
 
         <!-- View 3: AI Result -->
         <section id="viewResult" class="view card hidden">
-            <div id="loading" class="loading-overlay hidden">
-                <div class="liantng-progress-container">
-                    <div class="progress-track">
-                        <div id="progressBar" class="progress-fill"></div>
-                        <div id="wheelWrapper" class="wheel-progress-wrapper">
-                            <img src="images/wheel2.png" alt="Spinning Wheel" class="liantng-wheel">
-                        </div>
-                    </div>
-                </div>
-                <h3 id="loadingStatus">當咧調用台語腦...</h3>
-                <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
-            </div>
             <div class="card-header">
                 <h2 id="view3Title">第三步：AI 生成結果 <span id="generatedWordCount" style="font-size: 0.7em; font-weight: normal; opacity: 0.8; margin-left: 1rem;"></span></h2>
                 <div class="actions">
@@ -204,28 +192,36 @@
             </div>
         </section>
 
-        <!-- View 4: Statistics -->
+        <!-- View 4: Loading -->
+        <section id="loading" class="view card hidden">
+            <div id="wheelWrapper">
+                <img id="wheel" src="images/wheel2.png" alt="Loading...">
+            </div>
+            <div class="progress-container">
+                <div id="progressBar"></div>
+            </div>
+            <h2 id="loadingStatus">正在調用中語腦...</h2>
+            <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
+            <p id="estTimeDisplay" style="margin-top: 1rem; color: var(--secondary); font-weight: 600;"></p>
+            <button id="cancelGenBtn" class="btn-outline" style="margin-top: 2rem; color: #ef4444; border-color: #ef4444;">取消生成</button>
+        </section>
+
+        <!-- View 5: Statistics -->
         <section id="viewStats" class="view card hidden">
-            <div class="card-header">
-                <h2 id="lblStatsTitle">📊 網站數據統計</h2>
-                <button class="btn-secondary ui-reset ui-start-analyze">開始分析文本</button>
-            </div>
+            <h2 id="lblStatsTitle">📊 網站數據統計</h2>
             <div class="stats-grid">
-                <div class="stats-card">
-                    <h3 id="lblTotalVisitors">累積造訪人次</h3>
-                    <div id="visitorCount" class="stats-num">--</div>
-                </div>
-                <div class="stats-card">
-                    <h3 id="lblRecentHistory">最近分析動態</h3>
-                    <div class="history-list" id="statsHistory">
-                        <!-- History items injected here -->
-                    </div>
+                <div class="stats-item">
+                    <span class="stats-label" id="lblTotalVisitors">累積造訪人次</span>
+                    <span class="stats-value" id="visitorCount">--</span>
                 </div>
             </div>
+            <h3 id="lblRecentHistory" style="margin-top: 2rem; margin-bottom: 1rem;">最近分析動態</h3>
+            <div id="statsHistory"></div>
         </section>
 
         <footer>
             <p id="copyright">&copy; 2026 41 研究室 | 版權所有</p>
+            <p id="lastUpdated" style="font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 0.5rem;">網站更新日期：2026-05-05</p>
         </footer>
     </div>
 

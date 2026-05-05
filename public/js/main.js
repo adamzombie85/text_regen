@@ -8,6 +8,7 @@ let currentAnalysis = null;
 let currentUiLang = 'md';
 let loadingInterval = null;
 let currentSort = { col: 'count', dir: 'desc' }; // 預設依出現次數降序
+let genController = null; // 用於取消生成
 const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxzjTTje0BqASPfhXPGDdrR84dEzplbFafbieFZ_SUJcg6UWm5VaEn20LR7B8cCOhY_8g/exec"; // 雲端同步網址
 
 const uiTranslations = {
@@ -284,40 +285,64 @@ async function logToGoogleSheets(freqMap, mdMap, twMap) {
 
 async function generateText() {
     const userKey = get('userApiKey').value.trim();
-    // 取消強制攔截，讓後端判斷 IP 額度
-    
     const targetWords = Math.round(currentAnalysis.total * (parseInt(get('targetPercent').value) / 100));
-    get('aiOutputContainer').classList.add('hidden');
-    get('loading').classList.remove('hidden');
     
+    // 初始化 AbortController
+    genController = new AbortController();
+    
+    get('aiOutputContainer').classList.add('hidden');
+    switchView('loading', 0); // 切換到載入畫面
+
+    // 預估時間邏輯 (基礎 5s + 每 100 字 2s)
+    const estSec = 5 + Math.ceil(targetWords / 100) * 2;
+    get('estTimeDisplay').textContent = `預估處理時間：約 ${estSec} 秒`;
+
     let progress = 0;
-    const bar = get('progressBar'), wheel = get('wheelWrapper');
+    const bar = get('progressBar');
+    let secondsElapsed = 0;
+
     loadingInterval = setInterval(() => {
-        if (progress < 90) progress += Math.random() * 5;
-        bar.style.width = wheel.style.left = Math.min(90, progress) + '%';
+        secondsElapsed++;
+        if (progress < 90) progress += (90 - progress) / (estSec * 0.5); // 動態進度
+        bar.style.width = Math.min(95, progress) + '%';
+        
         const ss = uiTranslations[currentUiLang].statuses;
         get('loadingStatus').textContent = ss[Math.floor(Math.random()*ss.length)];
-    }, 2000);
+
+        // 30 秒提醒
+        if (secondsElapsed === 30) {
+            get('loadingHint').innerHTML = '<span style="color: #fbbf24;">⚠️ 伺服器回應稍慢，可能是長文本或網路波動，請再稍候...</span>';
+        }
+        // 60 秒提醒
+        if (secondsElapsed === 60) {
+            alert('生成時間已超過一分鐘。這通常是因為 Google API 配額吃緊或文章過長。您可以選擇繼續等待，或是取消後重試。');
+        }
+    }, 1000);
 
     try {
-        const userKey = get('userApiKey').value.trim();
         const res = await fetch('/api/generate', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
+            signal: genController.signal, // 綁定取消信號
             body: JSON.stringify({ 
                 text: get('inputText').value, 
                 lang: get('langSelect').value, 
                 freq_limit: parseInt(get('aiFreqLimit').value), 
                 word_count: targetWords,
-                user_api_key: userKey // 傳遞個人 API Key
+                user_api_key: userKey
             })
         });
+        
         const data = await res.json();
         
+        if (res.status === 429) { // BUSY
+            throw new Error("BUSY");
+        }
+
         if (data.text === "FREE_QUOTA_EXCEEDED") {
-            get('loading').classList.add('hidden');
             clearInterval(loadingInterval);
             alert(currentUiLang === 'tw' ? '您今仔日的 3 次免金鑰額度已經用完矣，請填入您的個人 API Key 繼續使用。' : '您今日的 3 次免金鑰額度已用完，請填入您的個人 API Key 繼續使用。');
+            switchView('report', 2);
             get('userApiKey').focus();
             get('userApiKey').scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
@@ -339,9 +364,34 @@ async function generateText() {
             get('loading').classList.add('hidden');
             clearInterval(loadingInterval);
         }, 500);
-    } catch (e) {
+    } catch (error) {
         get('loading').classList.add('hidden');
+        
+        if (error.name === 'AbortError') {
+            console.log('生成已取消');
+            return;
+        }
+
+        if (error.message === "BUSY") {
+            alert('您目前已有一個生成任務正在進行中。請等待目前的任務完成，或稍後再試。');
+            switchView('report', 2);
+            return;
+        }
+
+        alert(`執行發生錯誤：${error.message}`);
+        switchView('report', 2);
+    } finally {
+        genController = null;
         clearInterval(loadingInterval);
+    }
+}
+
+function cancelGeneration() {
+    if (genController) {
+        genController.abort();
+        clearInterval(loadingInterval);
+        switchView('report', 2);
+        alert('已取消文本生成。');
     }
 }
 
@@ -354,6 +404,7 @@ get('goToGenerateBtn').onclick = () => { switchView('result', 3); generateText()
 document.querySelectorAll('.ui-reset').forEach(b => b.onclick = () => switchView('editor', 1));
 document.querySelectorAll('.ui-back-report').forEach(b => b.onclick = () => switchView('report', 2));
 get('regenerateBtn').onclick = generateText;
+get('cancelGenBtn').onclick = cancelGeneration;
 get('btnShowStats').onclick = () => {
     const isStats = !get('viewStats').classList.contains('hidden');
     isStats ? switchView('editor', 1) : (switchView('stats', 0), fetchStats());
