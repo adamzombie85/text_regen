@@ -2,9 +2,10 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
-    // 新增：偵錯用 - 列出所有可用模型
+    // 新增：偵錯用 - 列出所有可用模型 (需帶入自己的 key)
     if (url.pathname === "/api/list_models") {
-        const apiKey = (env.GEMINI_API_KEY || "").trim();
+        const apiKey = (url.searchParams.get("key") || "").trim();
+        if (!apiKey) return new Response("請提供 API Key (?key=YOUR_KEY)", { status: 401 });
         const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${apiKey}`);
         const data = await res.json();
         return new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json" } });
