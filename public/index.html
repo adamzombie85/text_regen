@@ -6,6 +6,8 @@
     <title>41研究室 文本分析助手</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Import Iansui Font (芫荽體) via CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/iansui@5.0.1/index.css">
     <!-- Import SheetJS for Excel export -->
@@ -18,9 +20,14 @@
     <div class="container">
         <header>
             <div class="header-top">
-                <div class="ui-lang-switch">
-                    <button id="uiLangMd" class="active">中語介面</button>
-                    <button id="uiLangTw">台語介面</button>
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <div class="ui-lang-switch">
+                        <button id="uiLangMd" class="active">中語介面</button>
+                        <button id="uiLangTw">台語介面</button>
+                    </div>
+                    <button id="themeToggle" class="theme-switch" title="切換深淺模式">
+                        <i class="fas fa-moon"></i>
+                    </button>
                 </div>
                 <!-- 使用說明按鈕 -->
                 <button class="ui-stats-btn" onclick="openInstruction(1)">📖 使用說明</button>

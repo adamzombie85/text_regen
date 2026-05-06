@@ -89,9 +89,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 預設語言與初始資訊載入
     switchUiLanguage('md');
+    initTheme();
     updateQuotaDisplay();
     fetchStats();
 });
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+    
+    applyTheme(theme);
+    
+    const toggleBtn = get('themeToggle');
+    if (toggleBtn) {
+        toggleBtn.onclick = () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            applyTheme(newTheme);
+        };
+    }
+}
+
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    
+    const icon = document.querySelector('#themeToggle i');
+    if (icon) {
+        icon.className = theme === 'dark' ? 'fas fa-moon' : 'fas fa-sun';
+    }
+}
 
 function switchUiLanguage(lang) {
     currentUiLang = lang;
