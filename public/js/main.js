@@ -19,7 +19,7 @@ const uiTranslations = {
         view1Title: "第一步：貼上原文", clear: "清除", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "常用字上限", start: "開始文本分析",
         inputText: "在此貼上您的文章...",
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel1: "AI 模型選項 1", lblAiModel2: "AI 模型選項 2", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
+        aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel: "選擇 AI 模型", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblUserApiKey: "個人 Gemini API Key",
         lblPrivacyNotice: "您的金鑰僅儲存於本機瀏覽器，系統不會記錄。",
         instr1TitleBtn: "1. 貼上原文",
@@ -39,7 +39,7 @@ const uiTranslations = {
         view1Title: "第一步：貼原文", clear: "清空", lblLang: "目標語言", lblInterval: "統計字距", lblLimit: "捷用字上限", start: "開始分析文本",
         inputText: "共你的文章貼來遮...",
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
-        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel1: "AI 模型選項 1", lblAiModel2: "AI 模型選項 2", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
+        aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel: "選擇 AI 模型", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblUserApiKey: "個人 Gemini API Key",
         lblPrivacyNotice: "你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。",
         instr1TitleBtn: "1. 貼原文",
@@ -365,11 +365,10 @@ async function generateText() {
         return;
     }
     
-    // 讀取被勾選的模型
-    const selectedChoice = document.querySelector('input[name="modelChoice"]:checked').value;
-    let modelId = get(`aiModel${selectedChoice}`).value;
+    // 讀取選擇的模型
+    let modelId = get('aiModel').value;
     if (modelId === 'manual') {
-        const manualInput = get(`manualModel${selectedChoice}`);
+        const manualInput = get('manualModel');
         if (manualInput && manualInput.value.trim()) {
             modelId = manualInput.value.trim();
         } else {
@@ -729,9 +728,9 @@ const bindToggle = (btnId, containerId) => {
 bindToggle('toggleDistTable', 'distTableContainer');
 bindToggle('toggleFreqTable', 'freqTableContainer');
 
-function checkManualModel(idx) {
-    const sel = get(`aiModel${idx}`);
-    const inp = get(`manualModel${idx}`);
+function checkManualModel() {
+    const sel = get('aiModel');
+    const inp = get('manualModel');
     if (sel && inp) {
         if (sel.value === 'manual') {
             inp.classList.remove('hidden');

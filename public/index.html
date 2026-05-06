@@ -197,27 +197,16 @@
                         </div>
                     </div>
                     <div class="ai-controls-right">
-                        <div class="control-group model-selection-group">
-                            <label><input type="radio" name="modelChoice" value="1" checked> <span id="lblAiModel1">AI 模型選項 1</span></label>
-                            <select id="aiModel1" onchange="checkManualModel(1)">
-                                <option value="gemini-3-flash-preview" selected>Gemini 3 Flash (20 RPD)</option>
-                                <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite (500 RPD)</option>
+                        <div class="control-group">
+                            <label id="lblAiModel">選擇 AI 模型</label>
+                            <select id="aiModel" onchange="checkManualModel()">
+                                <option value="gemini-3.1-flash-lite-preview" selected>Gemini 3.1 Flash Lite (500 RPD)</option>
+                                <option value="gemini-3-flash-preview">Gemini 3 Flash (20 RPD)</option>
                                 <option value="gemini-2.5-flash">Gemini 2.5 Flash (穩定保險)</option>
                                 <option value="gemma-3-27b-it">Gemma 3 27B (1.4萬 RPD)</option>
                                 <option value="manual">-- 手動輸入 ID --</option>
                             </select>
-                            <input type="text" id="manualModel1" class="manual-model-input hidden" placeholder="例如: gemma-3-27b">
-                        </div>
-                        <div class="control-group model-selection-group">
-                            <label><input type="radio" name="modelChoice" value="2"> <span id="lblAiModel2">AI 模型選項 2</span></label>
-                            <select id="aiModel2" onchange="checkManualModel(2)">
-                                <option value="gemini-2.5-flash" selected>Gemini 2.5 Flash (穩定保險)</option>
-                                <option value="gemini-3-flash-preview">Gemini 3 Flash (20 RPD)</option>
-                                <option value="gemini-3.1-flash-lite-preview">Gemini 3.1 Flash Lite (500 RPD)</option>
-                                <option value="gemma-3-27b-it">Gemma 3 27B (1.4萬 RPD)</option>
-                                <option value="manual">-- 手動輸入 ID --</option>
-                            </select>
-                            <input type="text" id="manualModel2" class="manual-model-input hidden" placeholder="例如: gemma-3-27b">
+                            <input type="text" id="manualModel" class="manual-model-input hidden" placeholder="例如: gemma-3-27b">
                         </div>
                         <div class="control-group">
                             <label for="userApiKey">
