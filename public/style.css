@@ -83,8 +83,11 @@ body {
     color: white;
     transform: scale(1.1);
 }
-.ui-stats-btn { background: var(--input-bg); border: 1px solid var(--card-border); padding: 0.6rem 1.2rem; border-radius: 2rem; color: var(--text-primary); cursor: pointer; transition: 0.3s; font-family: inherit; font-size: 0.9rem; }
-.ui-stats-btn:hover { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); }
+.ui-stats-btn:hover { 
+    background: var(--primary); 
+    color: white !important; 
+    box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3); 
+}
 .ui-lang-switch { 
     display: flex; 
     background: var(--input-bg); 
@@ -792,8 +795,15 @@ select:focus, input:focus {
     .styled-table th:first-child, .styled-table td:first-child { width: 80px; padding: 0.5rem; }
 }
 
-.ui-stats-btn { margin-right: 1rem; background: rgba(255,255,255,0.05) !important; border: 1px solid var(--card-border) !important; }
-.ui-stats-btn:hover { background: rgba(255,255,255,0.15) !important; }
+.ui-stats-btn { 
+    margin-right: 1rem; 
+    background: var(--input-bg) !important; 
+    border: 1px solid var(--card-border) !important; 
+}
+.ui-stats-btn:hover { 
+    background: var(--primary) !important; 
+    color: white !important;
+}
 
 /* Stats View */
 .stats-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-top: 1.5rem; }
