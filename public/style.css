@@ -150,6 +150,59 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     transition: 0.3s;
     vertical-align: middle;
 }
+/* Accordion Styles */
+.accordion-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+.accordion-item {
+    border: 1px solid var(--card-border);
+    border-radius: 0.8rem;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.03);
+    transition: 0.3s;
+}
+.accordion-item.active {
+    border-color: var(--secondary);
+    background: rgba(255, 255, 255, 0.05);
+}
+.accordion-header {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    color: var(--text-primary);
+    transition: 0.3s;
+}
+.accordion-header:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+.accordion-item.active .accordion-header {
+    color: var(--secondary);
+    background: rgba(16, 185, 129, 0.1);
+}
+.accordion-header i {
+    transition: transform 0.3s;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+.accordion-item.active .accordion-header i {
+    transform: rotate(180deg);
+    color: var(--secondary);
+}
+.accordion-content {
+    display: none;
+    border-top: 1px solid var(--card-border);
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+.padding-wrapper {
+    padding: 1.2rem 1.5rem;
+}
 .help-btn:hover {
     background: var(--secondary);
     color: white;

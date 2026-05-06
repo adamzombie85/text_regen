@@ -22,9 +22,8 @@
                     <button id="uiLangMd" class="active">中語介面</button>
                     <button id="uiLangTw">台語介面</button>
                 </div>
-                <!-- 使用說明按鈕移至 Header -->
-                <button class="ui-stats-btn" onclick="openInstruction(1)" style="margin-right: 1rem;">📖 使用說明</button>
-                <button id="showStatsBtn" class="ui-stats-btn">📊 統計專區</button>
+                <!-- 使用說明按鈕 -->
+                <button class="ui-stats-btn" onclick="openInstruction(1)">📖 使用說明</button>
             </div>
             <h1 id="mainTitle" style="cursor: pointer; display: inline-block;">41研究室 <span id="uiTitleMain">文本分析助手</span></h1>
             <div class="stepper">
@@ -36,23 +35,18 @@
         
         <!-- 步驟說明已移動至使用說明視窗 -->
 
-        <!-- 統一的使用說明彈出視窗 -->
-        <dialog id="instructionModal" class="modal">
-            <div class="modal-content">
-                <h3 id="modalTitle">使用說明</h3>
-                <div id="modalDesc" class="modal-body">
-                    <!-- 內容由 JS 動態填充 -->
-                </div>
-                <div class="modal-navigation">
-                    <button class="btn-outline" id="prevStepBtn">上一步</button>
-                    <div class="step-dots" id="stepDots"></div>
-                    <button class="btn-outline" id="nextStepBtn">下一步</button>
-                </div>
-                <div class="modal-footer">
-                    <button class="primary-btn" onclick="get('instructionModal').close()">我知道了</button>
-                </div>
+        <!-- 統一的使用說明彈出視窗 (手風琴樣式) -->
+    <dialog id="instructionModal" class="modal">
+        <div class="modal-content">
+            <h3 id="modalMainTitle" style="margin-bottom: 1.5rem; text-align: center; color: var(--secondary);">使用說明</h3>
+            <div id="accordionContainer" class="accordion-container">
+                <!-- 由 JS 動態生成項目 -->
             </div>
-        </dialog>
+            <div class="modal-footer" style="margin-top: 1.5rem; display: flex; justify-content: center;">
+                <button class="primary-btn" onclick="document.getElementById('instructionModal').close()">我了解了</button>
+            </div>
+        </div>
+    </dialog>
 
         <!-- API Key 教學 Modal -->
         <dialog id="apiTutorialModal" class="modal">

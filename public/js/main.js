@@ -546,7 +546,6 @@ if (get('thCount')) get('thCount').onclick = () => handleSort('count');
 if (get('thMdRank')) get('thMdRank').onclick = () => handleSort('mdRank');
 if (get('thTwRank')) get('thTwRank').onclick = () => handleSort('twRank');
 
-let currentInstrStep = 1;
 const modalTranslations = {
     md: [
         { title: "1. 貼上原文", desc: "請在首頁的輸入框中，貼上您準備做為教材或是需要進行難度分析的原始文章。系統目前支援純文字格式，您可以貼上整篇短文或新聞，完成後點擊「開始文本分析」即可進入下一步。" },
@@ -564,39 +563,67 @@ const modalTranslations = {
         { title: "1. 貼原文", desc: "請佇首頁的輸入格仔內，共你準備欲提來做教材，抑是需要分析難度的原始文章貼起去。系統目前支援純文字，你會使共規篇短文抑是新聞貼起去，貼好勢了後，點擊「開始分析文本」就會當落去後一步。" },
         { title: "2. 分析報告", desc: "系統會自動替你的文章做字頻統計，閣會對照「中語 5021 捷用字表」佮「台語 700 捷用字表」落去排順序。你會使透過數據總表佮區間分佈表，快速評估這篇文章對學習者敢會傷困難。表格的順序嘛會當透過點擊頂懸的表頭來重排喔！" },
         { title: "3. AI 改寫", desc: "照頂一步的分析結果，你會使設定你希望 AI 改寫的「目標文本長度百分比」佮「捷用字排名上限」。系統會去調用專屬的 AI 語料庫（中語腦 / 台語腦），替你寫出一篇難度適合而且有在地氣口的文章，替你省落濟濟備課的時間。" },
-        { title: "4. 哪會當提金鎖匙 (API Key)", desc: `
+        { title: "4. 去佗位攑金鎖匙 (API Key)", desc: `
             <div class="tutorial-steps">
-                <div class="t-step"><span class="t-num">1</span><p>去 <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> 登入你的帳號。</p></div>
-                <div class="t-step"><span class="t-num">2</span><p>點左邊的 <strong>"Get API key"</strong>。</p></div>
-                <div class="t-step"><span class="t-num">3</span><p>點 <strong>"Create API key"</strong>。</p></div>
-                <div class="t-step"><span class="t-num">4</span><p>共金鎖匙影印起來，提轉來遮貼起去就會使矣。</p></div>
+                <div class="t-step"><span class="t-num">1</span><p>去 <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> 登入你的口座。</p></div>
+                <div class="t-step"><span class="t-num">2</span><p>點擊倒手爿的 <strong>"Get API key"</strong>。</p></div>
+                <div class="t-step"><span class="t-num">3</span><p>點擊 <strong>"Create API key"</strong>。</p></div>
+                <div class="t-step"><span class="t-num">4</span><p>共金鎖匙khóo-pih起來，提轉來遮貼起去就會使矣。</p></div>
             </div>` }
     ]
 };
 
-function openInstruction(step = 1) {
-    currentInstrStep = step;
-    renderInstruction();
+function openInstruction(activeIdx = null) {
+    renderAccordion(activeIdx);
     get('instructionModal').showModal();
 }
 
-function renderInstruction() {
+function renderAccordion(activeIdx) {
     const list = modalTranslations[currentUiLang];
-    const item = list[currentInstrStep - 1];
-    get('modalTitle').textContent = item.title;
-    get('modalDesc').innerHTML = item.desc;
-
-    // 更新點點
-    const dots = get('stepDots');
-    dots.innerHTML = list.map((_, i) => `<div class="dot ${i + 1 === currentInstrStep ? 'active' : ''}"></div>`).join('');
-
-    // 按鈕狀態
-    get('prevStepBtn').style.visibility = currentInstrStep === 1 ? 'hidden' : 'visible';
-    get('nextStepBtn').style.visibility = currentInstrStep === list.length ? 'hidden' : 'visible';
+    const container = get('accordionContainer');
+    container.innerHTML = '';
+    
+    list.forEach((item, index) => {
+        const stepNum = index + 1;
+        const isActive = activeIdx === stepNum;
+        
+        const accordionItem = document.createElement('div');
+        accordionItem.className = `accordion-item ${isActive ? 'active' : ''}`;
+        accordionItem.innerHTML = `
+            <div class="accordion-header" onclick="toggleAccordion(this)">
+                <span>${item.title}</span>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="accordion-content" style="display: ${isActive ? 'block' : 'none'}">
+                <div class="padding-wrapper">${item.desc}</div>
+            </div>
+        `;
+        container.appendChild(accordionItem);
+    });
 }
 
-get('prevStepBtn').onclick = () => { if (currentInstrStep > 1) { currentInstrStep--; renderInstruction(); } };
-get('nextStepBtn').onclick = () => { if (currentInstrStep < modalTranslations[currentUiLang].length) { currentInstrStep++; renderInstruction(); } };
+function toggleAccordion(header) {
+    const item = header.parentElement;
+    const content = header.nextElementSibling;
+    const isActive = item.classList.contains('active');
+    
+    // 收合其他
+    document.querySelectorAll('.accordion-item').forEach(otherItem => {
+        if (otherItem !== item) {
+            otherItem.classList.remove('active');
+            otherItem.querySelector('.accordion-content').style.display = 'none';
+        }
+    });
+    
+    // 切換自己
+    if (isActive) {
+        item.classList.remove('active');
+        content.style.display = 'none';
+    } else {
+        item.classList.add('active');
+        content.style.display = 'block';
+    }
+}
 if (get('instructionModal')) {
     get('instructionModal').addEventListener('click', (e) => {
         if (e.target === get('instructionModal')) get('instructionModal').close();
