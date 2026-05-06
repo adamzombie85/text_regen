@@ -167,12 +167,15 @@ async function analyzeText() {
 }
 
 function updateWordCountEstimation() {
-    if (!currentAnalysis) return;
     const elPercent = get('targetPercent'), elEst = get('estWordCount');
-    if (!elPercent || !elEst) return;
-    const percent = parseInt(elPercent.value);
-    const est = Math.round(currentAnalysis.total * (percent / 100));
-    elEst.textContent = `(約 ${est} 字)`;
+    if (!elPercent || !elEst || !currentAnalysis) return;
+    const val = elPercent.value;
+    if (val === 'none') {
+        elEst.textContent = `(依原文長度)`;
+    } else {
+        const est = Math.round(currentAnalysis.total * (parseInt(val) / 100));
+        elEst.textContent = `(約 ${est} 字)`;
+    }
 }
 
 async function updateQuotaDisplay() {
@@ -375,7 +378,9 @@ async function generateText() {
         }
     }
     
-    const targetWords = Math.round(currentAnalysis.total * (parseInt(get('targetPercent').value) / 100));
+    const targetPercentVal = get('targetPercent').value;
+    const targetWords = targetPercentVal === 'none' ? null : Math.round(currentAnalysis.total * (parseInt(targetPercentVal) / 100));
+
     
     // 初始化 AbortController
     genController = new AbortController();

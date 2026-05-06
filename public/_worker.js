@@ -83,6 +83,7 @@ export default {
         }
 
         const langName = lang === 'tw' ? "台語 (Taiwanese/Tâi-gí)" : "中語 (Mandarin/Huan-gí)";
+        const lengthPrompt = word_count ? `- 目標長度：約 ${word_count} 字。` : "- 目標長度：請維持與原文相近的長度。";
         const prompt = `你是一位專業的語言教學助理與台語專家。
 任務：將給定的文章「改寫」成更簡單、適合初學者的版本。
 
@@ -94,7 +95,7 @@ export default {
 
 【改寫要求】
 - 目標語言：${langName}。
-- 目標長度：約 ${word_count} 字。
+${lengthPrompt}
 - 詞彙控制：盡量使用常用的基礎詞彙。
 
 【格式要求】
