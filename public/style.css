@@ -278,22 +278,28 @@ select:focus, input:focus {
 
 /* Help Button */
 .help-btn {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: var(--input-bg);
+    border: 1px solid var(--card-border);
     color: var(--secondary);
-    width: 20px;
-    height: 20px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     cursor: pointer;
     margin-left: 0.5rem;
-    transition: 0.3s;
+    transition: all 0.3s ease;
     vertical-align: middle;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
-/* Accordion Styles */
+.help-btn:hover {
+    background: var(--secondary);
+    color: white !important;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
+}
 .accordion-container {
     display: flex;
     flex-direction: column;
@@ -321,7 +327,8 @@ select:focus, input:focus {
     transition: 0.3s;
 }
 .accordion-header:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--card-border);
+    color: var(--primary);
 }
 .accordion-item.active .accordion-header {
     color: var(--primary);
@@ -345,10 +352,6 @@ select:focus, input:focus {
 }
 .padding-wrapper {
     padding: 1.2rem 1.5rem;
-}
-.help-btn:hover {
-    background: var(--secondary);
-    color: white;
 }
 
 /* Tutorial Steps in Modal */
@@ -604,18 +607,20 @@ select:focus, input:focus {
 
 .instruction-btn:hover {
     transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background: var(--input-bg);
+    border-color: var(--primary);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
-
-.instr-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    display: inline-block;
+.instruction-btn:hover h4 {
+    color: var(--primary);
+}
+.instruction-btn:hover .instr-icon {
+    transform: scale(1.1);
+    transition: transform 0.3s;
 }
 
 .instruction-btn h4 {
-    color: #fff;
+    color: var(--text-primary);
     margin-bottom: 0;
     font-size: 1.2rem;
 }

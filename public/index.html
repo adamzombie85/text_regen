@@ -230,7 +230,9 @@
                 </div>
                 <div class="ai-controls-bottom">
                     <button id="goToGenerateBtn" class="btn-secondary ui-goToGenerateBtn" style="min-width: 200px; font-size: 1.1rem; padding: 1rem 2rem;">開始 AI 生成</button>
-                        <i class="fas fa-user-secret"></i> <span id="lblPrivacyNotice">你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。</span>
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                        <i class="fas fa-user-secret" style="font-size: 1.1rem;"></i>
+                        <span id="lblPrivacyNotice">你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。</span>
                     </div>
                 </div>
             </div>
@@ -268,6 +270,10 @@
             <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
             <p id="estTimeDisplay" style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;"></p>
             <p id="actualTimeDisplay" style="margin-top: 0.5rem; color: var(--secondary); font-weight: 700; font-size: 1.2rem;"></p>
+            <div style="margin-top: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                <i class="fas fa-user-secret" style="font-size: 1.2rem;"></i>
+                <span class="ui-lblPrivacyNotice">您的金鑰僅儲存於本機瀏覽器，系統不會記錄。</span>
+            </div>
             <button id="cancelGenBtn" class="btn-outline" style="margin-top: 2rem; color: #ef4444; border-color: #ef4444;">取消生成</button>
         </section>
 
