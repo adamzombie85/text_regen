@@ -21,6 +21,7 @@ const uiTranslations = {
         view2Title: "第二步：分析報告", reset: "分析下一個文本", dlReport: "下載分析報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析完成！準備好進行 AI 改寫了嗎？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel: "選擇 AI 模型", lblAiFreqLimit: "常用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblUserApiKey: "個人 Gemini API Key",
+        btnUnderstand: "我了解了", btnUnderstandApi: "我了解了",
         lblPrivacyNotice: "您的金鑰僅儲存於本機瀏覽器，系統不會記錄。",
         instr1TitleBtn: "1. 貼上原文",
         instr2TitleBtn: "2. 文本分析",
@@ -41,6 +42,7 @@ const uiTranslations = {
         view2Title: "第二步：分析報告", reset: "分析另外一篇", dlReport: "下載報表", lblTotalA: "總字數(A)", lblUniqueB: "相異字數(B)",
         aiBannerMsg: "分析好矣！欲開始 AI 改寫無？", lblTargetLength: "目標長度 (原文的 %)", lblAiModel: "選擇 AI 模型", lblAiFreqLimit: "捷用字上限 (5021排名)", goToGenerateBtn: "開始 AI 生成",
         lblUserApiKey: "個人 Gemini API Key",
+        btnUnderstand: "我了解矣", btnUnderstandApi: "我了解矣",
         lblPrivacyNotice: "你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。",
         instr1TitleBtn: "1. 貼原文",
         instr2TitleBtn: "2. 分析報告",
@@ -142,6 +144,9 @@ function switchUiLanguage(lang) {
             if (el) el.textContent = t[cls] || el.textContent;
         });
     });
+    // 特殊按鈕翻譯 (非 class 模式)
+    if (get('btnUnderstand')) get('btnUnderstand').textContent = t.btnUnderstand;
+    if (get('btnUnderstandApi')) get('btnUnderstandApi').textContent = t.btnUnderstandApi;
 }
 
 function switchView(name, step) {

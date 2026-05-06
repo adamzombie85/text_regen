@@ -295,8 +295,8 @@ select:focus, input:focus {
     transition: 0.3s;
 }
 .accordion-item.active {
-    border-color: var(--secondary);
-    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--primary);
+    background: var(--input-bg);
 }
 .accordion-header {
     padding: 1rem 1.5rem;
@@ -312,8 +312,8 @@ select:focus, input:focus {
     background: rgba(255, 255, 255, 0.05);
 }
 .accordion-item.active .accordion-header {
-    color: var(--secondary);
-    background: rgba(16, 185, 129, 0.1);
+    color: var(--primary);
+    background: var(--input-bg);
 }
 .accordion-header i {
     transition: transform 0.3s;
@@ -603,18 +603,18 @@ select:focus, input:focus {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: rgba(15, 23, 42, 0.85);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 16px;
-    padding: 2rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 20px;
+    padding: 2.5rem;
     width: 90%;
-    max-width: 600px;
-    color: white;
+    max-width: 650px;
+    color: var(--text-primary);
     z-index: 1000;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-    animation: modalFadeIn 0.3s ease forwards;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow: var(--shadow);
+    animation: modalFadeIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .modal::backdrop {
