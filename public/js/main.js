@@ -364,7 +364,16 @@ async function generateText() {
     
     // 讀取被勾選的模型
     const selectedChoice = document.querySelector('input[name="modelChoice"]:checked').value;
-    const modelId = get(`aiModel${selectedChoice}`).value;
+    let modelId = get(`aiModel${selectedChoice}`).value;
+    if (modelId === 'manual') {
+        const manualInput = get(`manualModel${selectedChoice}`);
+        if (manualInput && manualInput.value.trim()) {
+            modelId = manualInput.value.trim();
+        } else {
+            alert('您選擇了手動輸入，請填寫有效的模型 ID。');
+            return;
+        }
+    }
     
     const targetWords = Math.round(currentAnalysis.total * (parseInt(get('targetPercent').value) / 100));
     
@@ -662,3 +671,15 @@ const bindToggle = (btnId, containerId) => {
 };
 bindToggle('toggleDistTable', 'distTableContainer');
 bindToggle('toggleFreqTable', 'freqTableContainer');
+
+function checkManualModel(idx) {
+    const sel = get(`aiModel${idx}`);
+    const inp = get(`manualModel${idx}`);
+    if (sel && inp) {
+        if (sel.value === 'manual') {
+            inp.classList.remove('hidden');
+        } else {
+            inp.classList.add('hidden');
+        }
+    }
+}

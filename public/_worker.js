@@ -106,33 +106,34 @@ ${text}`;
 
         const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/${requestedModel}:generateContent?key=${apiKey}`;
 
-        const response = await fetch(targetUrl, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }]
-          })
-        });
+        try {
+            const response = await fetch(targetUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }]
+              })
+            });
 
-        const data = await response.json();
-        
-        if (!response.ok) {
-            const errMsg = data.error ? data.error.message : JSON.stringify(data);
-            return new Response(JSON.stringify({ 
-                text: `Google AI 報錯 (404/400)：${errMsg}\n\n[診斷資訊]\n呼叫網址: models/${requestedModel}\nAPI 版本: v1beta` 
-            }), { status: 500 });
-        }
+            const data = await response.json();
+            
+            if (!response.ok) {
+                const errMsg = data.error ? data.error.message : JSON.stringify(data);
+                return new Response(JSON.stringify({ 
+                    text: `Google AI 報錯 (404/400)：${errMsg}\n\n[診斷資訊]\n呼叫網址: models/${requestedModel}\nAPI 版本: v1beta` 
+                }), { status: 500 });
+            }
 
-        if (!data.candidates || !data.candidates[0]) {
+            if (!data.candidates || !data.candidates[0]) {
+                return new Response(JSON.stringify({ text: `AI 沒有產生結果。` }), { status: 500 });
+            }
+
+            const generatedText = data.candidates[0].content.parts[0].text;
+            return new Response(JSON.stringify({ text: generatedText }));
+        } finally {
+            // 任務完成或報錯，都絕對釋放鎖
             await env.KV.delete(lockKey);
-            return new Response(JSON.stringify({ text: `AI 沒有產生結果。` }), { status: 500 });
         }
-
-        const generatedText = data.candidates[0].content.parts[0].text;
-        
-        // 任務完成，釋放鎖
-        await env.KV.delete(lockKey);
-        return new Response(JSON.stringify({ text: generatedText }));
 
       } catch (error) {
         if (typeof env !== 'undefined' && env.KV) {
