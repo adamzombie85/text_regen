@@ -572,7 +572,7 @@ if (get('analyzeBtn')) get('analyzeBtn').onclick = analyzeText;
 if (get('clearBtn')) get('clearBtn').onclick = () => { if (get('inputText')) get('inputText').value = ''; };
 if (get('goToGenerateBtn')) get('goToGenerateBtn').onclick = () => { switchView('result', 3); generateText(); };
 document.querySelectorAll('.ui-reset').forEach(b => b.onclick = () => switchView('editor', 1));
-document.querySelectorAll('.ui-back-report').forEach(b => b.onclick = () => switchView('report', 2));
+document.querySelectorAll('.ui-back').forEach(b => b.onclick = () => switchView('report', 2));
 if (get('regenerateBtn')) get('regenerateBtn').onclick = generateText;
 if (get('cancelGenBtn')) get('cancelGenBtn').onclick = cancelGeneration;
 
