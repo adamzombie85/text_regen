@@ -126,28 +126,28 @@ function applyTheme(theme) {
 function switchUiLanguage(lang) {
     currentUiLang = lang;
     const t = uiTranslations[lang];
-    Object.keys(t).forEach(id => {
-        const el = get(id);
-        if (el) {
-            if (el.tagName === 'TEXTAREA') el.placeholder = t[id];
-            else el.innerHTML = t[id]; // 使用 innerHTML 支援換行
-        }
+    Object.keys(t).forEach(key => {
+        // 同時支援 ID 匹配與 Class 匹配
+        const elements = document.querySelectorAll(`#${key}, .ui-${key}`);
+        elements.forEach(el => {
+            if (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT') {
+                el.placeholder = t[key];
+            } else {
+                el.innerHTML = t[key];
+            }
+        });
     });
-    // 強制點亮綠光
+    // 切換按鈕狀態
     const elMd = get('uiLangMd'), elTw = get('uiLangTw');
     if (elMd) elMd.classList.toggle('active', lang === 'md');
     if (elTw) elTw.classList.toggle('active', lang === 'tw');
     
-    const classes = ['clear', 'reset', 'start', 'dlReport', 'back', 'dlTxt', 'regen'];
-    classes.forEach(cls => {
-        document.querySelectorAll(`.ui-${cls}`).forEach(el => {
-            if (el) el.textContent = t[cls] || el.textContent;
-        });
-    });
-    // 特殊按鈕翻譯 (非 class 模式)
-    if (get('btnUnderstand')) get('btnUnderstand').textContent = t.btnUnderstand;
-    if (get('btnUnderstandApi')) get('btnUnderstandApi').textContent = t.btnUnderstandApi;
+    // 更新 Loading 狀態 (如果正在 loading)
+    if (loadingInterval) {
+        updateLoadingStatus(0); 
+    }
 }
+
 
 function switchView(name, step) {
     Object.values(views).forEach(v => {
