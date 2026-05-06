@@ -303,7 +303,7 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     overflow-x: auto !important;
 }
 
-.styled-table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 0.875rem; background: rgba(255,255,255,0.02); }
+.styled-table { width: 100%; border-collapse: collapse; min-width: 1000px; font-size: 0.9rem; background: rgba(255,255,255,0.02); }
 #freqTable { 
     width: 100%; 
     border-collapse: collapse; 
@@ -315,7 +315,7 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
     background: #1e1b4b; 
     padding: 1rem; 
     text-align: center; 
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     z-index: 10;
     border-bottom: 2px solid var(--secondary);
 }
@@ -333,10 +333,10 @@ select, input { background: rgba(0,0,0,0.3); border: 1px solid var(--card-border
 .styled-table .word-list-col { 
     text-align: left; 
     max-width: 50vw;
-    font-family: monospace; 
-    line-height: 2.2; /* 稍微增加行高讓視覺更清晰 */
+    font-family: 'Iansui', 'Noto Sans TC', sans-serif; 
+    line-height: 1.8; 
     color: #e2e8f0; 
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     padding: 1rem !important;
 }
 
