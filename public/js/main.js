@@ -546,32 +546,57 @@ if (get('thCount')) get('thCount').onclick = () => handleSort('count');
 if (get('thMdRank')) get('thMdRank').onclick = () => handleSort('mdRank');
 if (get('thTwRank')) get('thTwRank').onclick = () => handleSort('twRank');
 
+let currentInstrStep = 1;
 const modalTranslations = {
     md: [
         { title: "1. 貼上原文", desc: "請在首頁的輸入框中，貼上您準備做為教材或是需要進行難度分析的原始文章。系統目前支援純文字格式，您可以貼上整篇短文或新聞，完成後點擊「開始文本分析」即可進入下一步。" },
         { title: "2. 文本分析", desc: "系統會自動為您的文章進行字頻統計，並對照「中語 5021 常用字表」及「台語 700 常用字表」進行排名。您可以透過數據總表與區間分佈表，快速評估該文本對於學習者的難易度。表格的表頭也支援點擊排序，方便您找出最艱澀的字彙！" },
-        { title: "3. AI 產出", desc: "根據前一步的分析結果，您可以設定希望 AI 改寫的「目標長度百分比」與「常用字排名上限」。系統將會調用專屬的 AI 語料庫（中語腦 / 台語腦），為您產出符合特定難度且語氣道地的改寫文章，大幅節省備課時間。" }
+        { title: "3. AI 產出", desc: "根據前一步的分析結果，您可以設定希望 AI 改寫的「目標長度百分比」與「常用字排名上限」。系統將會調用專屬的 AI 語料庫（中語腦 / 台語腦），為您產出符合特定難度且語氣道地的改寫文章，大幅節省備課時間。" },
+        { title: "4. 如何取得 API 金鑰", desc: `
+            <div class="tutorial-steps">
+                <div class="t-step"><span class="t-num">1</span><p>前往 <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> 並登入。</p></div>
+                <div class="t-step"><span class="t-num">2</span><p>點擊左側 <strong>"Get API key"</strong>。</p></div>
+                <div class="t-step"><span class="t-num">3</span><p>點擊 <strong>"Create API key"</strong>。</p></div>
+                <div class="t-step"><span class="t-num">4</span><p>複製金鑰並貼回到本網頁輸入框即可。</p></div>
+            </div>` }
     ],
     tw: [
         { title: "1. 貼原文", desc: "請佇首頁的輸入格仔內，共你準備欲提來做教材，抑是需要分析難度的原始文章貼起去。系統目前支援純文字，你會使共規篇短文抑是新聞貼起去，貼好勢了後，點擊「開始分析文本」就會當落去後一步。" },
         { title: "2. 分析報告", desc: "系統會自動替你的文章做字頻統計，閣會對照「中語 5021 捷用字表」佮「台語 700 捷用字表」落去排順序。你會使透過數據總表佮區間分佈表，快速評估這篇文章對學習者敢會傷困難。表格的順序嘛會當透過點擊頂懸的表頭來重排喔！" },
-        { title: "3. AI 改寫", desc: "照頂一步的分析結果，你會使設定你希望 AI 改寫的「目標文本長度百分比」佮「捷用字排名上限」。系統會去調用專屬的 AI 語料庫（中語腦 / 台語腦），替你寫出一篇難度適合而且有在地氣口的文章，替你省落濟濟備課的時間。" }
+        { title: "3. AI 改寫", desc: "照頂一步的分析結果，你會使設定你希望 AI 改寫的「目標文本長度百分比」佮「捷用字排名上限」。系統會去調用專屬的 AI 語料庫（中語腦 / 台語腦），替你寫出一篇難度適合而且有在地氣口的文章，替你省落濟濟備課的時間。" },
+        { title: "4. 哪會當提金鎖匙 (API Key)", desc: `
+            <div class="tutorial-steps">
+                <div class="t-step"><span class="t-num">1</span><p>去 <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> 登入你的帳號。</p></div>
+                <div class="t-step"><span class="t-num">2</span><p>點左邊的 <strong>"Get API key"</strong>。</p></div>
+                <div class="t-step"><span class="t-num">3</span><p>點 <strong>"Create API key"</strong>。</p></div>
+                <div class="t-step"><span class="t-num">4</span><p>共金鎖匙影印起來，提轉來遮貼起去就會使矣。</p></div>
+            </div>` }
     ]
 };
 
-[1, 2, 3].forEach(step => {
-    const elBtn = get(`btnInstr${step}`);
-    if (elBtn) {
-        elBtn.onclick = () => {
-            const t = modalTranslations[currentUiLang][step-1];
-            if (get('modalTitle')) get('modalTitle').textContent = t.title;
-            if (get('modalDesc')) get('modalDesc').innerHTML = t.desc;
-            if (get('instructionModal')) get('instructionModal').showModal();
-        };
-    }
-});
+function openInstruction(step = 1) {
+    currentInstrStep = step;
+    renderInstruction();
+    get('instructionModal').showModal();
+}
 
-if (get('closeModalBtn')) get('closeModalBtn').onclick = () => get('instructionModal').close();
+function renderInstruction() {
+    const list = modalTranslations[currentUiLang];
+    const item = list[currentInstrStep - 1];
+    get('modalTitle').textContent = item.title;
+    get('modalDesc').innerHTML = item.desc;
+
+    // 更新點點
+    const dots = get('stepDots');
+    dots.innerHTML = list.map((_, i) => `<div class="dot ${i + 1 === currentInstrStep ? 'active' : ''}"></div>`).join('');
+
+    // 按鈕狀態
+    get('prevStepBtn').style.visibility = currentInstrStep === 1 ? 'hidden' : 'visible';
+    get('nextStepBtn').style.visibility = currentInstrStep === list.length ? 'hidden' : 'visible';
+}
+
+get('prevStepBtn').onclick = () => { if (currentInstrStep > 1) { currentInstrStep--; renderInstruction(); } };
+get('nextStepBtn').onclick = () => { if (currentInstrStep < modalTranslations[currentUiLang].length) { currentInstrStep++; renderInstruction(); } };
 if (get('instructionModal')) {
     get('instructionModal').addEventListener('click', (e) => {
         if (e.target === get('instructionModal')) get('instructionModal').close();

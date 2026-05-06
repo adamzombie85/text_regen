@@ -22,6 +22,9 @@
                     <button id="uiLangMd" class="active">中語介面</button>
                     <button id="uiLangTw">台語介面</button>
                 </div>
+                <!-- 使用說明按鈕移至 Header -->
+                <button class="ui-stats-btn" onclick="openInstruction(1)" style="margin-right: 1rem;">📖 使用說明</button>
+                <button id="showStatsBtn" class="ui-stats-btn">📊 統計專區</button>
             </div>
             <h1 id="mainTitle" style="cursor: pointer; display: inline-block;">41研究室 <span id="uiTitleMain">文本分析助手</span></h1>
             <div class="stepper">
@@ -31,31 +34,50 @@
             </div>
         </header>
         
-        <!-- 視覺化使用說明 (改為按鈕) -->
-        <div class="instruction-section">
-            <button class="instruction-btn" id="btnInstr1">
-                <div class="instr-icon">📋</div>
-                <h4 id="instr1TitleBtn">1. 貼上原文</h4>
-            </button>
-            <button class="instruction-btn" id="btnInstr2">
-                <div class="instr-icon">📊</div>
-                <h4 id="instr2TitleBtn">2. 文本分析</h4>
-            </button>
-            <button class="instruction-btn" id="btnInstr3">
-                <div class="instr-icon">✨</div>
-                <h4 id="instr3TitleBtn">3. AI 產出</h4>
-            </button>
-        </div>
+        <!-- 步驟說明已移動至使用說明視窗 -->
 
-        <!-- 詳細說明彈出視窗 -->
+        <!-- 統一的使用說明彈出視窗 -->
         <dialog id="instructionModal" class="modal">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h3 id="modalTitle">操作說明</h3>
-                    <button id="closeModalBtn" class="close-btn">&times;</button>
+                <h3 id="modalTitle">使用說明</h3>
+                <div id="modalDesc" class="modal-body">
+                    <!-- 內容由 JS 動態填充 -->
                 </div>
-                <div class="modal-body">
-                    <p id="modalDesc" style="line-height: 1.8; font-size: 1.1rem; color: var(--text-secondary);"></p>
+                <div class="modal-navigation">
+                    <button class="btn-outline" id="prevStepBtn">上一步</button>
+                    <div class="step-dots" id="stepDots"></div>
+                    <button class="btn-outline" id="nextStepBtn">下一步</button>
+                </div>
+                <div class="modal-footer">
+                    <button class="primary-btn" onclick="get('instructionModal').close()">我知道了</button>
+                </div>
+            </div>
+        </dialog>
+
+        <!-- API Key 教學 Modal -->
+        <dialog id="apiTutorialModal" class="modal">
+            <div class="modal-content">
+                <h3 id="apiTutorialTitle">如何取得 Gemini API Key？</h3>
+                <div class="tutorial-steps">
+                    <div class="t-step">
+                        <span class="t-num">1</span>
+                        <p>前往 <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> 並登入您的 Google 帳號。</p>
+                    </div>
+                    <div class="t-step">
+                        <span class="t-num">2</span>
+                        <p>點擊左側選單的 <strong>"Get API key"</strong>。</p>
+                    </div>
+                    <div class="t-step">
+                        <span class="t-num">3</span>
+                        <p>點擊 <strong>"Create API key"</strong> 按鈕並選擇一個專案。</p>
+                    </div>
+                    <div class="t-step">
+                        <span class="t-num">4</span>
+                        <p>複製產生的金鑰字串，回到本網頁貼上即可！</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="primary-btn" onclick="document.getElementById('apiTutorialModal').close()">我了解了</button>
                 </div>
             </div>
         </dialog>
@@ -203,16 +225,18 @@
                             <input type="text" id="manualModel2" class="manual-model-input hidden" placeholder="例如: gemma-3-27b">
                         </div>
                         <div class="control-group">
-                            <label for="userApiKey"><span id="lblUserApiKey">個人 Gemini API Key</span> <span id="quotaInfo" style="font-size: 0.8em; color: var(--secondary); font-weight: normal; margin-left: 0.5rem;"></span></label>
-                            <input type="password" id="userApiKey" placeholder="在此貼上您的 API Key" 
-                                   autocomplete="new-password" spellcheck="false" data-lpignore="true"
-                                   style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 0.5rem; border-radius: 8px;">
+                            <label for="userApiKey">
+                                <span id="lblUserApiKey">個人 Gemini API Key</span>
+                                <button type="button" class="help-btn" onclick="openInstruction(4)" title="如何取得金鑰？">?</button>
+                                <span id="quotaInfo" style="font-size: 0.8em; color: var(--secondary); font-weight: normal; margin-left: 0.5rem;"></span>
+                            </label>
+                            <input type="password" id="userApiKey" placeholder="在此填入您的 API Key (AI 產出必填)" autocomplete="off">
+                            <p class="hint-text"><i class="fas fa-shield-alt"></i> <span id="lblPrivacyNotice">金鑰僅儲存於瀏覽器，系統不會記錄。</span></p>
                         </div>
                     </div>
                 </div>
                 <div class="ai-controls-bottom">
                     <button id="goToGenerateBtn" class="btn-secondary ui-goToGenerateBtn" style="min-width: 200px; font-size: 1.1rem; padding: 1rem 2rem;">開始 AI 生成</button>
-                    <div id="privacyHint" style="font-size: 0.75rem; color: rgba(255,255,255,0.5); margin-top: 1rem; line-height: 1.4;">
                         <i class="fas fa-user-secret"></i> <span id="lblPrivacyNotice">你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。</span>
                     </div>
                 </div>
