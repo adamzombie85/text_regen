@@ -1,288 +1,237 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>41研究室 文本分析助手</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Import Iansui Font (芫荽體) via CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/iansui@5.0.1/index.css">
-    <!-- Import SheetJS for Excel export -->
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📖</text></svg>">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>41研究室 文本分析助手</title>
+<meta name="description" content="貼上教材文本，看每個字有多常見，也找出超出常用字範圍的字。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap">
+<link rel="stylesheet" href="css/ds.css">
+<link rel="stylesheet" href="css/app.css?v=2">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M21 9c9 1 15 8 14 17-1 7-8 11-15 10C11 35 5 29 6 21c1-8 7-13 15-12z' fill='%23F6A21E'/%3E%3Cpath d='M26 11c6 3 10 9 8 16-2 6-8 9-14 9 8-3 11-10 6-25z' fill='%23C8323C'/%3E%3C/svg%3E">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="js/i18n.js?v=2" defer></script>
+<script src="js/main.js?v=2" defer></script>
 </head>
-<body>
-    <div class="glass-bg"></div>
-    
-    <div class="container">
-        <header>
-            <div class="header-top">
-                <div style="display: flex; gap: 1rem; align-items: center;">
-                    <div class="ui-lang-switch">
-                        <button id="uiLangMd" class="active">中語介面</button>
-                        <button id="uiLangTw">台語介面</button>
-                    </div>
-                    <button id="themeToggle" class="theme-switch" title="切換深淺模式">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </div>
-                <!-- 使用說明按鈕 -->
-                <button class="ui-stats-btn" onclick="openInstruction(1)">📖 使用說明</button>
-            </div>
-            <h1 id="mainTitle" style="cursor: pointer; display: inline-block;">41研究室 <span id="uiTitleMain">文本分析助手</span></h1>
-            <div class="stepper">
-                <div class="step active" id="step1Text">1. 輸入文本</div>
-                <div class="step" id="step2Text">2. 分析報告</div>
-                <div class="step" id="step3Text">3. AI 改寫結果</div>
-            </div>
-        </header>
-        
-        <!-- 步驟說明已移動至使用說明視窗 -->
+<body class="theme">
+<script>
+// 先套用上次選的主題，避免閃白（預設淺色）
+try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark'); document.documentElement.classList.add('dark'); } } catch (e) {}
+</script>
 
-        <!-- 統一的使用說明彈出視窗 (手風琴樣式) -->
-    <dialog id="instructionModal" class="modal">
-        <div class="modal-content">
-            <h3 id="modalMainTitle" style="margin-bottom: 1.5rem; text-align: center; color: var(--secondary);">使用說明</h3>
-            <div id="accordionContainer" class="accordion-container">
-                <!-- 由 JS 動態生成項目 -->
-            </div>
-            <div class="modal-footer" style="margin-top: 1.5rem; display: flex; justify-content: center;">
-                <button id="btnUnderstand" class="btn-primary" onclick="document.getElementById('instructionModal').close()">我了解了</button>
-            </div>
+<div class="wrap">
+
+<header class="site-head">
+  <a class="logo" href="./">
+    <svg class="logo-mark" width="46" height="46" viewBox="0 0 40 40" aria-hidden="true"><path d="M21 9c9 1 15 8 14 17-1 7-8 11-15 10C11 35 5 29 6 21c1-8 7-13 15-12z" fill="#F6A21E"/><path d="M26 11c6 3 10 9 8 16-2 6-8 9-14 9 8-3 11-10 6-25z" fill="#C8323C"/><path d="M21 9c-.5-3 0-5 2-7" stroke="#4A6F24" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M23 6c3-3 7-3 10-1-2 3-6 4-10 1z" fill="#5E8C31"/></svg>
+    <span class="fd logo-text">41研究室</span>
+  </a>
+  <div class="head-tools">
+    <div class="seg" role="group" data-i-label="aria.uiLang">
+      <button type="button" id="langMd" aria-pressed="true">中語</button>
+      <button type="button" id="langTw" aria-pressed="false">台語</button>
+    </div>
+    <div class="seg only-wide" role="group" data-i-label="aria.theme">
+      <button type="button" id="themeLight" aria-pressed="true" data-i-label="aria.light"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button>
+      <button type="button" id="themeDark" aria-pressed="false" data-i-label="aria.dark"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg></button>
+    </div>
+    <button type="button" class="ib only-narrow" id="themeToggle" aria-label="切換深淺模式">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<noscript><div class="notice"><span class="ic" aria-hidden="true">!</span><span>此網站需要啟用 JavaScript 才能使用。</span></div></noscript>
+
+<div id="dbError" class="notice" role="alert" hidden style="margin-bottom:24px">
+  <span class="ic" aria-hidden="true">!</span><span data-i="err.db">字庫載入失敗，請重新整理頁面。</span>
+</div>
+
+<!-- 首頁主視覺（只在文本分析輸入畫面顯示） -->
+<section id="hero" class="hero">
+  <div class="hero-text">
+    <span class="pat hero-pat" data-i="hero.pat">給特教與台語老師的教學工具</span>
+    <h1 class="fd hero-title" data-i="hero.title">文本分析助手</h1>
+    <p class="s-3 muted hero-sub" data-i="hero.sub">貼上教材文本，看每個字有多常見，也找出超出常用字範圍的字。</p>
+  </div>
+  <div class="card card-lg counter-card">
+    <div class="counter-head">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M17.5 14.5c2.4.1 3.8 1.6 4 4.5"/></svg>
+      <span class="s-3 b" data-i="counter.title">造訪人次</span>
+    </div>
+    <div id="visitorDigits" class="digits" role="img" aria-label="">
+      <b>–</b>
+    </div>
+  </div>
+</section>
+
+<div class="tabs" role="tablist" data-i-label="aria.tabs">
+  <button type="button" class="tab" role="tab" id="tabAnalysis" aria-controls="panelAnalysis" aria-selected="true" data-i="tab.analysis">文本分析</button>
+  <button type="button" class="tab" role="tab" id="tabPrompt" aria-controls="panelPrompt" aria-selected="false" data-i="tab.prompt">提示詞產生器</button>
+  <button type="button" class="tab" role="tab" id="tabExam" aria-controls="panelExam" aria-selected="false" data-i="tab.exam">識字量測驗</button>
+</div>
+
+<!-- ============ 文本分析 ============ -->
+<section id="panelAnalysis" role="tabpanel" aria-labelledby="tabAnalysis" class="panel">
+
+  <!-- 輸入 -->
+  <div id="anaInput" class="card card-lg ana-input">
+    <label class="label" for="inputText" style="font-size:16px" data-i="input.label">貼上或輸入要分析的文本</label>
+    <textarea id="inputText" class="input" style="min-height:200px" data-i-ph="input.ph" placeholder="例如：小明今天在校園裡發現一隻蟋蟀……"></textarea>
+    <div id="limitSlotInput" class="limit-slot">
+<!-- 常用字上限：全站唯一一個欄位，標色與提示詞共用 -->
+    <div id="limitCard" class="card limit-card">
+      <div class="limit-row">
+        <div class="limit-field">
+          <label class="label" for="freqLimit" data-i="limit.label">常用字上限</label>
+          <input id="freqLimit" class="input" type="number" min="1" max="5021" step="1" value="1000" inputmode="numeric">
         </div>
-    </dialog>
+        <p id="limitHint" class="hint limit-hint" data-i="limit.hint">只用字頻排名前幾名的字（1–5021）。超出的字會在原文標紅，也會寫進提示詞。</p>
+      </div>
+    </div>
+    </div>
+    <div class="input-foot">
+      <span id="charCount" class="s-sm muted">已輸入 0 字</span>
+      <div class="input-actions">
+        <button type="button" id="clearBtn" class="btn btn-ghost" data-i="input.clear">清除</button>
+        <button type="button" id="analyzeBtn" class="btn btn-primary btn-lg" data-i="input.start">開始分析</button>
+      </div>
+    </div>
+  </div>
 
-        <!-- API Key 教學 Modal -->
-        <dialog id="apiTutorialModal" class="modal">
-            <div class="modal-content">
-                <h3 id="apiTutorialTitle">如何取得 Gemini API Key？</h3>
-                <div class="tutorial-steps">
-                    <div class="t-step">
-                        <span class="t-num">1</span>
-                        <p>前往 <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> 並登入您的 Google 帳號。</p>
-                    </div>
-                    <div class="t-step">
-                        <span class="t-num">2</span>
-                        <p>點擊左側選單的 <strong>"Get API key"</strong>。</p>
-                    </div>
-                    <div class="t-step">
-                        <span class="t-num">3</span>
-                        <p>點擊 <strong>"Create API key"</strong> 按鈕並選擇一個專案。</p>
-                    </div>
-                    <div class="t-step">
-                        <span class="t-num">4</span>
-                        <p>複製產生的金鑰字串，回到本網頁貼上即可！</p>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="btnUnderstandApi" class="btn-primary" onclick="document.getElementById('apiTutorialModal').close()">我了解了</button>
-                </div>
-            </div>
-        </dialog>
-
-        <!-- View 1: Editor -->
-        <section id="viewEditor" class="view card">
-            <div class="card-header">
-                <h2 id="view1Title">第一步：貼上原文</h2>
-                <button id="clearBtn" class="btn-outline ui-clear">清除</button>
-            </div>
-            <textarea id="inputText" placeholder="在此貼上您的文章..."></textarea>
-            
-            <div class="controls">
-                <div class="control-group">
-                    <label id="lblLang">目標語言</label>
-                    <select id="langSelect">
-                        <option value="tw" id="optTw">台語 (Taiwanese)</option>
-                        <option value="md" id="optMd">中語 (Mandarin)</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label id="lblInterval">統計字距</label>
-                    <select id="intervalSize">
-                        <option value="50">50</option>
-                        <option value="100" selected>100</option>
-                        <option value="150">150</option>
-                        <option value="200">200</option>
-                        <option value="250">250</option>
-                        <option value="500">500</option>
-                        <option value="1000">1000</option>
-                    </select>
-                </div>
-                <div class="control-group">
-                    <label id="lblLimit">常用字上限</label>
-                    <div class="input-with-hint">
-                        <input type="number" id="freqLimit" value="5021" min="1" max="10000">
-                        <span id="limitHint" class="est-hint">(中語 5021 基準)</span>
-                    </div>
-                </div>
-            </div>
-            <div style="display: flex; justify-content: center; margin-top: 2rem;">
-                <button id="analyzeBtn" class="btn-primary ui-start" style="min-width: 280px; font-size: 1.1rem; padding: 1rem 2.5rem;">開始文本分析</button>
-            </div>
-        </section>
-
-        <!-- View 2: Analysis Report -->
-        <section id="viewReport" class="view card hidden">
-            <div class="card-header">
-                <h2 id="view2Title">第二步：分析報告</h2>
-                <div class="actions">
-                    <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>
-                    <button id="downloadExcelBtn" class="btn-outline ui-dlReport">下載分析報表</button>
-                </div>
-            </div>
-
-            <div class="report-summary-box">
-                <div class="summary-item"><span id="lblTotalA">總字數(A)</span>: <span id="totalWords">0</span></div>
-                <div class="summary-item"><span id="lblUniqueB">相異字數(B)</span>: <span id="uniqueWords">0</span></div>
-            </div>
-
-            <div class="collapsible-header" id="toggleDistTable">
-                <h3 id="lblDistTableTitle">分段字頻分佈表</h3>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="distribution-table-container collapsed" id="distTableContainer">
-                <table id="distTable" class="styled-table">
-                    <thead>
-                        <tr>
-                            <th id="thRange">字距範圍</th>
-                            <th id="thTotalC">總字數(C)</th>
-                            <th id="thUniqueD">相異字數(D)</th>
-                            <th id="thRatioE">總字數佔全文比 (E=C/A)%</th>
-                            <th id="thCumF">總字數累積比 (F)%</th>
-                            <th id="thRatioG">相異字數佔全文比 (G=D/B)%</th>
-                            <th id="thCumH">相異字數累積比 (H)%</th>
-                            <th id="thLookup" class="word-list-col">字庫查詢 (出現次數)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="distTableBody"></tbody>
-                </table>
-            </div>
-
-
-            <div class="collapsible-header" id="toggleFreqTable" style="margin-top: 3rem;">
-                <h3 id="lblDetailList">詳細字頻清單</h3>
-                <span class="toggle-icon">▼</span>
-            </div>
-            <div class="table-container collapsed" id="freqTableContainer">
-                <table id="freqTable">
-                    <thead>
-                        <tr>
-                            <th id="thChar">字</th>
-                            <th id="thCount" class="sortable">出現次數 <i class="fas fa-sort"></i></th>
-                            <th id="thMdRank" class="sortable">中語 5021 <i class="fas fa-sort"></i></th>
-                            <th id="thTwRank" class="sortable">台語 700 <i class="fas fa-sort"></i></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-
-            <div class="ai-trigger-banner" style="margin-top: 4rem;">
-                <p id="aiBannerMsg">分析完成！準備好進行 AI 改寫了嗎？</p>
-                <div class="ai-controls-grid">
-                    <div class="ai-controls-left">
-                        <div class="control-group">
-                            <label id="lblTargetLength">目標長度 (原文的 %)</label>
-                            <div class="percentage-input-group">
-                                <select id="targetPercent">
-                                    <option value="none">不調整文本長度</option>
-                                    <option value="30">30%</option>
-                                    <option value="40">40%</option>
-                                    <option value="50" selected>50%</option>
-                                    <option value="60">60%</option>
-                                    <option value="70">70%</option>
-                                    <option value="80">80%</option>
-                                    <option value="90">90%</option>
-                                </select>
-                                <span id="estWordCount" class="est-hint">(約 0 字)</span>
-                            </div>
-                        </div>
-                        <div class="control-group">
-                            <label id="lblAiFreqLimit">常用字上限 (5021排名)</label>
-                            <input type="number" id="aiFreqLimit" value="1000" step="100" min="100" max="5021">
-                        </div>
-                    </div>
-                    <div class="ai-controls-right">
-                        <div class="control-group">
-                            <label id="lblAiModel">選擇 AI 模型</label>
-                            <select id="aiModel" onchange="checkManualModel()">
-                                <option value="gemini-3.1-flash-lite-preview" selected>Gemini 3.1 Flash Lite (500 RPD)</option>
-                                <option value="gemini-3-flash-preview">Gemini 3 Flash (20 RPD)</option>
-                                <option value="gemini-2.5-flash">Gemini 2.5 Flash (穩定保險)</option>
-                                <option value="manual">-- 手動輸入 ID --</option>
-                            </select>
-                            <input type="text" id="manualModel" class="manual-model-input hidden" placeholder="例如: gemma-3-27b">
-                        </div>
-                        <div class="control-group">
-                            <label for="userApiKey">
-                                <span id="lblUserApiKey">個人 Gemini API Key</span>
-                                <button type="button" class="help-btn" onclick="openInstruction(4)" title="如何取得金鑰？">?</button>
-                            </label>
-                            <input type="password" id="userApiKey" placeholder="在此填入您的 API Key (AI 產出必填)" autocomplete="off">
-                            <p class="hint-text"><i class="fas fa-shield-alt"></i> <span id="lblPrivacyNotice">金鑰僅儲存於瀏覽器，系統不會記錄。</span></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="ai-controls-bottom">
-                    <button id="goToGenerateBtn" class="btn-secondary ui-goToGenerateBtn" style="min-width: 200px; font-size: 1.1rem; padding: 1rem 2rem;">開始 AI 生成</button>
-                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                        <i class="fas fa-user-secret" style="font-size: 1.1rem;"></i>
-                        <span class="ui-lblPrivacyNotice">你的金鎖匙干焦會儉佇你的瀏覽器內底，系統袂留紀錄。</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- View 3: AI Result -->
-        <section id="viewResult" class="view card hidden">
-            <div class="card-header">
-                <h2><span id="view3Title">第三步：AI 生成結果</span> <span id="generatedWordCount" style="font-size: 0.7em; font-weight: normal; opacity: 0.8; margin-left: 1rem;"></span></h2>
-                <div class="actions">
-
-                    <button class="btn-outline reset-app-btn ui-reset">分析下一個文本</button>
-                    <button id="downloadBtn" class="btn-primary ui-dlTxt">下載文本</button>
-                </div>
-            </div>
-            
-            <div id="aiOutputContainer" class="hidden">
-                <pre id="aiOutput" class="output-box"></pre>
-                <div class="output-footer" style="text-align: right; margin-top: 1rem;">
-                    <button id="regenerateBtn" class="btn-outline ui-regen">重新生成</button>
-                </div>
-            </div>
-        </section>
-
-        <section id="loading" class="view card hidden">
-            <h2 id="loadingStatus">正在調用中語腦...</h2>
-            <div class="loading-progress-box">
-                <div id="wheelWrapper">
-                    <img id="wheel" src="images/wheel2.png" alt="Loading...">
-                </div>
-                <div class="progress-container">
-                    <div id="progressBar"></div>
-                </div>
-            </div>
-            <p id="loadingHint">請稍候，我們正在為您產出道地的文本</p>
-            <p id="estTimeDisplay" style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;"></p>
-            <p id="actualTimeDisplay" style="margin-top: 0.5rem; color: var(--secondary); font-weight: 700; font-size: 1.2rem;"></p>
-            <div style="margin-top: 1rem; text-align: center; color: var(--text-secondary); font-size: 0.85rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
-                <i class="fas fa-user-secret" style="font-size: 1.2rem;"></i>
-                <span class="ui-lblPrivacyNotice">您的金鑰僅儲存於本機瀏覽器，系統不會記錄。</span>
-            </div>
-            <button id="cancelGenBtn" class="btn-outline" style="margin-top: 2rem; color: #ef4444; border-color: #ef4444;">取消生成</button>
-        </section>
-
-
-
-        <footer>
-            <p id="copyright">&copy; 2026 41 研究室 | 版權所有 <span style="margin: 0 10px; color: rgba(255,255,255,0.3);">|</span> <span id="lblTotalVisitors">累積來訪人數</span>: <span id="footerVisitorCount" style="color: var(--secondary); font-weight: 700;">--</span></p>
-            <p id="lastUpdated" style="font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-top: 0.5rem;">網站更新日期：2026-05-05</p>
-        </footer>
+  <!-- 結果 -->
+  <div id="anaResult" hidden>
+    <div class="res-head">
+      <h1 class="fd s-1" data-i="res.title">文本分析結果</h1>
+      <div class="res-actions">
+        <button type="button" id="reanalyzeBtn" class="btn btn-secondary" data-i="res.again">重新分析</button>
+        <button type="button" id="excelBtn" class="btn btn-brand">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg><span data-i="res.excel">下載 Excel</span>
+        </button>
+      </div>
     </div>
 
-    <script src="js/main.js?v=20260505_v2"></script>
+    <div id="limitSlotResult" class="limit-slot"></div>
+
+    <section id="summaryCards" class="summary"></section>
+
+    <section class="card card-lg sect">
+      <div class="sect-head">
+        <div>
+          <h2 class="fd s-2" data-i="band.title">分段字頻</h2>
+          <p class="s-sm muted" data-i="band.sub">依字頻排名區間分組。點選任一列，展開該區間的字卡。</p>
+        </div>
+        <div class="legend" data-legend></div>
+      </div>
+      <div class="bhead">
+        <span></span>
+        <span data-i="band.colRange">排名區間</span>
+        <span data-i="band.colBar">佔全文比例（刻度 0–60%）</span>
+        <span class="r" data-i="band.colCount">字數</span>
+        <span class="r" data-i="band.colPct">百分比</span>
+      </div>
+      <div id="bandList"></div>
+    </section>
+
+    <section class="card card-lg sect">
+      <div class="sect-head">
+        <h2 class="fd s-2" data-i="cards.title">字卡</h2>
+        <div class="legend" data-legend><span class="s-sm muted" data-i="cards.note">角標＝出現次數</span></div>
+      </div>
+      <div id="charCards" class="chars cards-grid"></div>
+    </section>
+
+    <section class="card card-lg sect">
+      <div class="sect-head">
+        <h2 class="fd s-2" data-i="src.title">原文標色檢視</h2>
+        <span class="lg"><span class="sw over sw-over" data-i="src.red">紅字</span><span id="srcLegend"></span></span>
+      </div>
+      <p id="srcText" class="src"></p>
+    </section>
+
+    <details class="card card-lg sect adv" id="advanced">
+      <summary class="adv-sum"><span class="fd s-2" data-i="adv.title">進階</span><span class="s-sm muted" data-i="adv.sub">完整區間統計、詳細字頻清單、台語推薦用字</span></summary>
+
+      <h3 class="fd s-3" data-i="adv.bands">區間統計（完整欄位）</h3>
+      <div class="tbl-wrap"><table class="tbl" id="advBandTable"></table></div>
+
+      <h3 class="fd s-3" data-i="adv.chars">詳細字頻清單</h3>
+      <div class="tbl-wrap scroll"><table class="tbl" id="advCharTable"></table></div>
+
+      <h3 class="fd s-3" data-i="adv.tw">原文中的台語推薦用字（詞）⭐</h3>
+      <div id="twWords"></div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 提示詞產生器 ============ -->
+<section id="panelPrompt" role="tabpanel" aria-labelledby="tabPrompt" class="panel" hidden>
+  <h1 class="fd s-1 panel-title" data-i="tab.prompt">提示詞產生器</h1>
+  <div class="prompt-layout">
+    <section class="card card-lg prompt-settings">
+      <h2 class="fd s-2" data-i="prompt.settings">設定</h2>
+      <div>
+        <label class="label" for="pLang" data-i="prompt.lang">目標語言</label>
+        <select id="pLang" class="input"><option value="tw" data-i="prompt.langTw">台語</option><option value="md" data-i="prompt.langMd">中語</option></select>
+      </div>
+      <div>
+        <label class="label" for="pLen" data-i="prompt.len">目標長度</label>
+        <select id="pLen" class="input">
+          <option value="none" data-i="prompt.lenNone">不調整</option>
+          <option value="30">30%</option><option value="40">40%</option><option value="50">50%</option><option value="60">60%</option><option value="70">70%</option><option value="80" selected>80%</option><option value="90">90%</option>
+        </select>
+        <div id="pLenHint" class="hint"></div>
+      </div>
+      <div>
+        <div class="label" data-i="limit.label">常用字上限</div>
+        <div class="limit-readout">
+          <span class="fd s-2" id="pLimit">1000</span>
+          <button type="button" id="pLimitEdit" class="btn btn-secondary" style="min-height:40px;padding:0 16px" data-i="prompt.limitEdit">到文本分析修改</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card card-lg prompt-out">
+      <h2 class="fd s-2" data-i="prompt.preview">提示詞預覽</h2>
+      <div id="promptPreview" class="code" role="textbox" aria-readonly="true" tabindex="0" data-i-label="prompt.preview"></div>
+      <button type="button" id="copyBtn" class="btn btn-primary btn-lg btn-block">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg><span id="copyLabel" data-i="prompt.copy">複製提示詞</span>
+      </button>
+      <p class="s-sm paste-back">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg><span data-i="prompt.pasteBack">AI 改寫完成後，把文章貼回本站再分析一次</span>
+      </p>
+      <div>
+        <div class="s-sm b muted" style="margin-bottom:10px" data-i="prompt.goAi">複製後，到你慣用的 AI 貼上</div>
+        <div class="ai-links">
+          <a class="btn btn-secondary" href="https://chatgpt.com/" target="_blank" rel="noopener noreferrer">ChatGPT<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+          <a class="btn btn-secondary" href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Gemini<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+          <a class="btn btn-secondary" href="https://claude.ai/" target="_blank" rel="noopener noreferrer">Claude<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></a>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>
+
+<!-- ============ 識字量測驗（階段 3 實作） ============ -->
+<section id="panelExam" role="tabpanel" aria-labelledby="tabExam" class="panel" hidden>
+  <h1 class="fd s-1 panel-title" data-i="tab.exam">識字量測驗</h1>
+  <div class="card card-lg">
+    <p class="s-3" data-i="exam.soon">自編識字量估計測驗即將開放。</p>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-foot">
+  <hr class="hr">
+  <p class="s-sm muted">&copy; 2026 41 研究室 | <span data-i="foot.rights">版權所有</span></p>
+</footer>
+
+</div>
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>
