@@ -1,51 +1,47 @@
 # 41 研究室 - 文本分析助手 (Text Regen)
 
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Python](https://img.shields.io/badge/python-3.8+-blue)
 
-這是一款專為台語教學設計的「雙軸識字分析與 AI 改寫工具」。旨在協助老師針對不同識字程度的學生，精確調整教材的閱讀難度，並確保台語漢字書寫的規範性。
+為台語教學設計的純前端工具：分析文本字頻、對照中語 5021 常用字，並協助老師調整教材的閱讀難度。
 
-## 🌟 核心理念
+線上網址：https://text-regen.pages.dev/
 
-### 1. 識字難度控制 (中語 5021 基準)
-不同於傳統的難易度區分，本工具採用 **中語 5021 常用字頻表** 作為學生的「識字量門檻」。老師可以設定上限（例如：前 500 字），AI 在改寫時便會避開超出該範圍的漢字，確保教材與學生的華語閱讀能力接軌。
+## 功能
 
-### 2. 用字規範性 (台語 700 推薦字)
-系統優先採用 **教育部 700 個台語推薦用字**，確保改寫後的文本具備規範且道地的台語書寫風格，並在分析報表中自動標註（⭐）屬於推薦用字的詞彙。
+- **文本分析**：統計字頻，對照中語字頻排名，標示超出常用字上限的字；可匯出 Excel。
+- **提示詞產生器**：依分析結果產生可貼到 ChatGPT／Gemini／Claude 的改寫提示詞（改版中）。
+- **自編識字量估計測驗**：內建自編題目，估計值僅供教學參考（改版中）。
+- 造訪人次計數（同一瀏覽器分頁工作階段只計 1 次）。
 
-## 🚀 主要功能
+> 改版進度與規格見 `revamp` 分支。
 
-- **文本字頻分析**：即時統計文本中的字頻分佈，並對照中語字頻排名。
-- **AI 智慧改寫**：支援「中語 -> 中語」、「中語 -> 台語」等多種改寫模式，自動優化語法與用詞。
-- **輾轉進度系統**：視覺化的腳踏車進度條，象徵文章改寫得愈來愈「輾轉 (Fluent)」。
-- **數據統計專區**：追蹤造訪流量與分析動態，掌握教學應用軌跡。
+## 技術架構
 
-## 🛠 技術架構
+- 純靜態前端（HTML、CSS、Vanilla JS），部署於 Cloudflare Pages。
+- `public/_worker.js`：只負責造訪人次計數（`/api/visits`），使用 KV 綁定 `KV`（命名空間 `TEXT_REGEN_DB`）。
+- 字型：芫荽體 (Iansui)、Noto Sans TC。
 
-- **Backend**: Python (Flask)
-- **AI Engine**: Google Gemini API (Flash/Pro)
-- **Frontend**: HTML5, Vanilla CSS, Vanilla JS
-- **Typography**: 芫荽體 (Iansui Font)
+## 專案結構
 
-## 📦 安裝與執行
+```
+public/
+  index.html
+  style.css
+  js/main.js
+  data/word_db.json   字頻資料
+  images/
+  _worker.js          造訪人次計數
+台語推薦用字700.csv    台語推薦用字來源資料
+```
 
-1. 克隆專案：
-   ```bash
-   git clone https://github.com/adamzombie85/text_regen.git
-   ```
-2. 安裝依賴：
-   ```bash
-   pip install -r requirements.txt
-   ```
-3. 設定 API Key：
-   在根目錄建立 `api_key.txt` 並貼入您的 Gemini API Key。
-4. 啟動伺服器：
-   ```bash
-   python app.py
-   ```
+## 本機預覽
 
-## 📄 授權協議
-本專案採用 **MIT License** 授權。歡迎教學社群自由推廣、二次開發。
+```bash
+npx wrangler pages dev public --kv KV
+```
 
----
+## 授權
+
+MIT License。
+
 **© 2026 41 研究室 | 版權所有**

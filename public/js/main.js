@@ -10,7 +10,6 @@ let currentUiLang = 'md';
 let loadingInterval = null;
 let currentSort = { col: 'count', dir: 'desc' }; // 預設依出現次數降序
 let genController = null; // 用於取消生成
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbxzjTTje0BqASPfhXPGDdrR84dEzplbFafbieFZ_SUJcg6UWm5VaEn20LR7B8cCOhY_8g/exec"; // 雲端同步網址
 
 const uiTranslations = {
     md: {
@@ -92,7 +91,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 預設語言與初始資訊載入
     switchUiLanguage('md');
     initTheme();
-    updateQuotaDisplay();
     fetchStats();
 });
 
@@ -188,11 +186,7 @@ async function analyzeText() {
         
         renderReport(freqMap, parseInt(get('intervalSize').value));
         
-        // 非同步同步到雲端，不等待它完成以免卡住 UI
-        logToGoogleSheets(freqMap, 'analysis').catch(e => console.error(e));
-        
         switchView('report', 2);
-        updateQuotaDisplay();
         updateWordCountEstimation(); // 分析完立刻算出預估字數
     } catch (e) {
         alert("分析過程發生錯誤: " + e.message);
@@ -208,18 +202,6 @@ function updateWordCountEstimation() {
     } else {
         const est = Math.round(currentAnalysis.total * (parseInt(val) / 100));
         elEst.textContent = `(約 ${est} 字)`;
-    }
-}
-
-async function updateQuotaDisplay() {
-    try {
-        const res = await fetch('/api/quota');
-        const data = await res.json();
-        const t = uiTranslations[currentUiLang];
-        const elQuota = get('quotaInfo');
-        if (elQuota) elQuota.textContent = "";
-    } catch (e) {
-        console.error("無法取得配額資訊", e);
     }
 }
 
@@ -355,41 +337,6 @@ function handleSort(col) {
     if (currentAnalysis) renderReport(currentAnalysis.freqMap, parseInt(get('intervalSize').value));
 }
 
-async function logToGoogleSheets(data, type = 'analysis') {
-    if (!GOOGLE_SHEETS_URL) return;
-    
-    let payload = { type: type, timestamp: new Date().toISOString() };
-    
-    if (type === 'analysis') {
-        payload.data = Object.entries(data).map(([char, count]) => ({
-            char,
-            count,
-            mdRank: mdMap[char] || '',
-            twRank: twMap[char] || ''
-        }));
-    } else if (type === 'error') {
-        payload.message = data.message;
-        payload.details = data.details || '';
-    } else if (type === 'performance') {
-        payload.est_sec = data.estSec;
-        payload.actual_sec = data.actualSec;
-        payload.lang = data.lang;
-        payload.word_count = data.wordCount;
-    }
-
-    try {
-        await fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        console.log(`數據(${type})已發送至 Google 試算表`);
-    } catch (e) {
-        console.error("雲端同步失敗:", e);
-    }
-}
-
 async function generateText() {
     const elApiKey = get('userApiKey');
     const userKey = elApiKey ? elApiKey.value.trim() : "";
@@ -512,8 +459,6 @@ async function generateText() {
         
         let cleanedText = data.text.replace(/^(這是一份|這是一篇|好的|根據您的要求|這份台語教材).*?\n+/i, '');
         cleanedText = cleanedText.trim();
-        
-        logToGoogleSheets({ estSec, actualSec: secondsElapsed, lang: get('langSelect').value, wordCount: targetWords }, 'performance');
 
         const elAiOutput = get('aiOutput');
         if (elAiOutput) elAiOutput.textContent = cleanedText;
@@ -525,7 +470,6 @@ async function generateText() {
         if (elOutContainer) elOutContainer.classList.remove('hidden');
         switchView('result', 3);
     } catch (error) {
-        logToGoogleSheets({ message: `生成失敗: ${error.message}`, details: `目標字數: ${targetWords}, 語言: ${get('langSelect').value}` }, 'error');
 
         if (error.name === 'AbortError') return;
 
@@ -675,7 +619,11 @@ if (get('instructionModal')) {
 
 async function fetchStats() {
     try {
-        const res = await fetch('/api/stats');
+        // 同一個瀏覽器分頁工作階段只計 1 次
+        let counted = false;
+        try { counted = sessionStorage.getItem('visitCounted') === '1'; } catch (e) {}
+        const res = await fetch('/api/visits', { method: counted ? 'GET' : 'POST' });
+        if (!counted) { try { sessionStorage.setItem('visitCounted', '1'); } catch (e) {} }
         const data = await res.json();
         const elVisitors = get('footerVisitorCount');
         if (elVisitors) elVisitors.textContent = data.visitors;
