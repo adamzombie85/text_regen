@@ -9,8 +9,8 @@
 ## 功能
 
 - **文本分析**：統計字頻，對照中語字頻排名，標示超出常用字上限的字；可匯出 Excel。
-- **提示詞產生器**：依分析結果產生可貼到 ChatGPT／Gemini／Claude 的改寫提示詞（改版中）。
-- **自編識字量估計測驗**：內建自編題目，估計值僅供教學參考（改版中）。
+- **提示詞產生器**：依分析結果產生可貼到 ChatGPT／Gemini／Claude 的改寫提示詞。
+- **自編識字量估計測驗**：內建 200 題自編題目（`public/data/literacy-items.json`），可列印 A4 施測記錄表、下載結果 PDF；估計值僅供教學參考，施測資料不上傳也不保存。
 - 造訪人次計數（同一瀏覽器分頁工作階段只計 1 次）。
 
 > 改版進度與規格見 `revamp` 分支。
@@ -28,8 +28,9 @@ public/
   index.html
   style.css
   js/main.js
-  data/word_db.json   字頻資料
-  images/
+  data/word_db.json           字頻資料
+  data/literacy-items.json    識字量測驗題目（v3）
+  images/                     芒果 logo、favicon
   _worker.js          造訪人次計數
 台語推薦用字700.csv    台語推薦用字來源資料
 ```

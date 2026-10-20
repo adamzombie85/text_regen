@@ -10,10 +10,14 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap">
 <link rel="stylesheet" href="css/ds.css">
 <link rel="stylesheet" href="css/app.css?v=2">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M21 9c9 1 15 8 14 17-1 7-8 11-15 10C11 35 5 29 6 21c1-8 7-13 15-12z' fill='%23F6A21E'/%3E%3Cpath d='M26 11c6 3 10 9 8 16-2 6-8 9-14 9 8-3 11-10 6-25z' fill='%23C8323C'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="css/exam.css?v=1">
+<link rel="icon" type="image/png" href="images/favicon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
 <script src="js/i18n.js?v=2" defer></script>
 <script src="js/main.js?v=2" defer></script>
+<script src="js/exam.js?v=1" defer></script>
 </head>
 <body class="theme">
 <script>
@@ -25,7 +29,7 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
 
 <header class="site-head">
   <a class="logo" href="./">
-    <svg class="logo-mark" width="46" height="46" viewBox="0 0 40 40" aria-hidden="true"><path d="M21 9c9 1 15 8 14 17-1 7-8 11-15 10C11 35 5 29 6 21c1-8 7-13 15-12z" fill="#F6A21E"/><path d="M26 11c6 3 10 9 8 16-2 6-8 9-14 9 8-3 11-10 6-25z" fill="#C8323C"/><path d="M21 9c-.5-3 0-5 2-7" stroke="#4A6F24" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M23 6c3-3 7-3 10-1-2 3-6 4-10 1z" fill="#5E8C31"/></svg>
+    <img class="logo-mark" src="images/mango.png" width="46" height="46" alt="" aria-hidden="true">
     <span class="fd logo-text">41研究室</span>
   </a>
   <div class="head-tools">
@@ -216,12 +220,69 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
   </div>
 </section>
 
-<!-- ============ 識字量測驗（階段 3 實作） ============ -->
+<!-- ============ 自編識字量估計測驗 ============ -->
 <section id="panelExam" role="tabpanel" aria-labelledby="tabExam" class="panel" hidden>
-  <h1 class="fd s-1 panel-title" data-i="tab.exam">識字量測驗</h1>
-  <div class="card card-lg">
-    <p class="s-3" data-i="exam.soon">自編識字量估計測驗即將開放。</p>
+
+  <!-- 開始頁 -->
+  <div id="exStart">
+    <div class="ex-intro">
+      <h1 class="fd ex-h1" data-i="ex.title">自編識字量估計測驗</h1>
+      <p class="s-3 muted" data-i="ex.intro">共 200 題，由易到難；學生連續答錯 5 題以上時，由施測者決定是否停止。</p>
+      <p class="s-sm muted" data-i="ex.disclaimer">結果為估計值，僅供教學參考；不提供常模、PR 或年級分數。</p>
+    </div>
+    <section class="card card-lg ex-card">
+      <h2 class="fd s-2" data-i="ex.dataTitle">施測資料</h2>
+      <div class="ex-fields">
+        <div><label class="label" for="exDate"><span data-i="ex.date">測驗日期</span><span class="req" data-i="ex.req">必填</span></label><input id="exDate" class="input" type="date" required aria-required="true"></div>
+        <div><label class="label" for="exStudent"><span data-i="ex.student">學生姓名</span><span class="req" data-i="ex.req">必填</span></label><input id="exStudent" class="input" type="text" autocomplete="off" required aria-required="true"></div>
+        <div><label class="label" for="exTester"><span data-i="ex.tester">施測者姓名</span><span class="req" data-i="ex.req">必填</span></label><input id="exTester" class="input" type="text" autocomplete="off" required aria-required="true"></div>
+      </div>
+      <p id="exStartErr" class="hint err" role="alert" hidden></p>
+      <p class="hint" data-i="ex.privacy">施測資料只留在這個畫面，不會上傳，也不會保存在瀏覽器。</p>
+      <div class="ex-actions">
+        <button type="button" id="exPrintBtn" class="btn btn-secondary btn-lg"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9V4h10v5M7 18H5a1 1 0 0 1-1-1v-6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v6a1 1 0 0 1-1 1h-2M7 14h10v6H7z"/></svg><span data-i="ex.print">列印施測記錄表</span></button>
+        <button type="button" id="exStartBtn" class="btn btn-primary btn-lg" data-i="ex.start">開始施測</button>
+      </div>
+    </section>
   </div>
+
+  <!-- 錯題輸入 -->
+  <div id="exEntry" hidden>
+    <div class="ex-intro">
+      <span class="pat" data-i="ex.entry.badge">錯題輸入</span>
+      <h1 class="fd ex-h1" data-i="ex.title">自編識字量估計測驗</h1>
+    </div>
+    <section class="card card-lg ex-card">
+      <div class="ex-meta" id="exEntryMeta"></div>
+      <div class="ex-lastrow">
+        <div>
+          <label class="label" for="exLast" data-i="ex.last">最後作答題號</label>
+          <input id="exLast" class="input" type="number" min="1" max="200" step="1" inputmode="numeric">
+          <p id="exLastErr" class="hint err" hidden></p>
+        </div>
+        <span class="auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span data-i="ex.auto">自動帶入，可修改</span></span>
+      </div>
+    </section>
+    <section class="card card-lg ex-card" style="margin-top:20px">
+      <h2 class="fd s-2" data-i="ex.wrong.title">錯題</h2>
+      <div class="ex-lastrow">
+        <div>
+          <label class="label" for="exWrong" data-i="ex.wrong.label">錯題題號</label>
+          <input id="exWrong" class="input" type="text" autocomplete="off" data-i-ph="ex.wrong.ph" placeholder="例如 3, 15, 22-25">
+        </div>
+        <span class="auto"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span data-i="ex.auto">自動帶入，可修改</span></span>
+      </div>
+      <p id="exWrongHint" class="hint"></p>
+      <div id="exRows" class="ex-rows"></div>
+      <div class="ex-actions">
+        <button type="button" id="exBackBtn" class="btn btn-secondary btn-lg" data-i="ex.back">回到施測畫面</button>
+        <button type="button" id="exResultBtn" class="btn btn-primary btn-lg" data-i="ex.viewResult">查看識字量結果</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- 結果 -->
+  <div id="exResult" hidden></div>
 </section>
 
 </main>
@@ -232,6 +293,40 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
 </footer>
 
 </div>
+<!-- 施測畫面（全螢幕，給學生看） -->
+<div id="exScreen" class="ex-screen" role="dialog" aria-label="自編識字量估計測驗" hidden>
+  <div class="ex-top">
+    <button type="button" id="exEndBtn" class="btn btn-ghost ex-end" data-i="ex.end">結束施測</button>
+    <span class="ex-count"><span id="exNum" class="ex-num"></span><span id="exMark" class="mk" role="status"></span></span>
+  </div>
+  <div id="exStage" class="ex-stage"><div id="exChar" class="fd ex-char" role="img"></div></div>
+  <div class="ex-bottom">
+    <div class="ex-rec">
+      <button type="button" id="exUp" class="rb ex-rb" aria-pressed="false">↑</button>
+      <button type="button" id="exDown" class="rb ex-rb" aria-pressed="false">↓</button>
+    </div>
+    <button type="button" id="exPrev" class="btn btn-secondary btn-lg ex-nav" data-i="ex.prev">上一題</button>
+    <button type="button" id="exNext" class="btn btn-primary btn-lg ex-nav" data-i="ex.next">下一題</button>
+    <span class="ex-kbd" data-i="ex.kbd"></span>
+  </div>
+</div>
+
+<!-- 結束施測確認 -->
+<dialog id="exConfirm" class="ex-dialog" aria-labelledby="exConfirmTitle" aria-describedby="exConfirmBody">
+  <h2 id="exConfirmTitle" class="fd s-1" data-i="ex.confirm.title">要結束施測嗎？</h2>
+  <p id="exConfirmBody" class="ex-confirm-list"></p>
+  <p class="muted ex-confirm-note" data-i="ex.confirm.note">未記錄的題目會先以錯誤計算。最後作答題號之後的題目也全部以錯誤計算。</p>
+  <div class="ex-actions ex-confirm-actions">
+    <button type="button" id="exConfirmBack" class="btn btn-primary btn-lg" data-i="ex.confirm.back">回去補記</button>
+    <button type="button" id="exConfirmEnd" class="btn btn-secondary btn-lg" data-i="ex.confirm.end">仍要結束</button>
+  </div>
+</dialog>
+
+<!-- 列印用施測記錄表（平常隱藏） -->
+<div id="printSheet" aria-hidden="true"></div>
+<!-- 結果 PDF 用頁面（平常隱藏於畫面之外） -->
+<div id="pdfStage" aria-hidden="true"></div>
+
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 </body>
 </html>

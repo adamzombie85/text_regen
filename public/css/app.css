@@ -10,6 +10,8 @@ select.input{appearance:auto}
 
 /* 頁首 */
 .site-head{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;padding:24px 0}
+.logo-mark{display:block;object-fit:contain}
+.logo-mark{object-fit:contain;display:block}
 .logo-text{font-size:28px;line-height:1.2}
 .head-tools{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 .only-narrow{display:none}

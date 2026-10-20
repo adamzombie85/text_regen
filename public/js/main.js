@@ -30,6 +30,8 @@ const state = {
   dbFailed: false,
 };
 
+const langListeners = [];
+
 /* ---------- 工具 ---------- */
 function t(key, vars) {
   const dict = window.I18N[state.lang] || {};
@@ -86,6 +88,7 @@ function setLang(lang) {
   updateCharCount();
   if (state.analysis) renderResults();
   renderPrompt();
+  langListeners.forEach(fn => fn(lang));
 }
 
 function setTheme(theme) {
@@ -537,6 +540,9 @@ async function init() {
   state.dbReady = loadDb();
   await Promise.all([state.dbReady, fetchVisits()]);
 }
+
+// 提供給 exam.js 使用
+window.App = { t, toast, fmt, esc, getLang: () => state.lang, onLang: fn => langListeners.push(fn) };
 
 init();
 })();
