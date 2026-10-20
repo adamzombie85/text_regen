@@ -9,7 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Iansui&amp;family=Noto+Sans+TC:wght@400;500;700&amp;display=swap">
 <link rel="stylesheet" href="css/ds.css">
-<link rel="stylesheet" href="css/app.css?v=3">
+<link rel="stylesheet" href="css/app.css?v=5">
 <link rel="stylesheet" href="css/exam.css?v=4">
 <link rel="icon" type="image/png" href="images/favicon.png">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
@@ -55,29 +55,18 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
   <span class="ic" aria-hidden="true">!</span><span data-i="err.db">字庫載入失敗，請重新整理頁面。</span>
 </div>
 
-<!-- 首頁主視覺（只在文本分析輸入畫面顯示） -->
-<section id="hero" class="hero">
-  <div class="hero-text">
-    <span class="pat hero-pat" data-i="hero.pat">給特教與台語老師的教學工具</span>
-    <h1 class="fd hero-title" data-i="hero.title">文本分析助手</h1>
-    <p class="s-3 muted hero-sub" data-i="hero.sub">貼上教材文本，看每個字有多常見，也找出超出常用字範圍的字。</p>
-  </div>
-  <div class="card card-lg counter-card">
-    <div class="counter-head">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M17.5 14.5c2.4.1 3.8 1.6 4 4.5"/></svg>
-      <span class="s-3 b" data-i="counter.title">造訪人次</span>
-    </div>
-    <div id="visitorDigits" class="digits" role="img" aria-label="">
-      <b>–</b>
-    </div>
-  </div>
-</section>
-
 <div class="tabs" role="tablist" data-i-label="aria.tabs">
   <button type="button" class="tab" role="tab" id="tabAnalysis" aria-controls="panelAnalysis" aria-selected="true" data-i="tab.analysis">文本分析</button>
   <button type="button" class="tab" role="tab" id="tabPrompt" aria-controls="panelPrompt" aria-selected="false" data-i="tab.prompt">提示詞產生器</button>
   <button type="button" class="tab" role="tab" id="tabExam" aria-controls="panelExam" aria-selected="false" data-i="tab.exam">識字量測驗</button>
 </div>
+
+<!-- 首頁主視覺（只在文本分析輸入畫面顯示；放在分頁切換列下方，讓三個分頁的切換列位置一致） -->
+<section id="hero" class="hero">
+  <span class="pat hero-pat" data-i="hero.pat">給特教與台語老師的教學工具</span>
+  <h1 class="fd hero-title" data-i="hero.title">文本分析助手</h1>
+  <p class="s-3 muted hero-sub" data-i="hero.sub">貼上教材文本，看每個字有多常見，也找出超出常用字範圍的字。</p>
+</section>
 
 <!-- ============ 文本分析 ============ -->
 <section id="panelAnalysis" role="tabpanel" aria-labelledby="tabAnalysis" class="panel">
@@ -288,8 +277,14 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
 </main>
 
 <footer class="site-foot">
-  <hr class="hr">
-  <p class="s-sm muted">&copy; 2026 41 研究室 | <span data-i="foot.rights">版權所有</span></p>
+  <div class="foot-inner">
+    <div class="foot-counter-title">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c.6-3.6 3.2-5.5 6.5-5.5s5.9 1.9 6.5 5.5"/><circle cx="17.5" cy="9.5" r="2.5"/><path d="M17.5 14.5c2.4.1 3.8 1.6 4 4.5"/></svg>
+      <span class="b" data-i="counter.title">造訪人次</span>
+    </div>
+    <div id="visitorDigits" class="digits ft-digits" role="img" aria-label=""><b>–</b></div>
+    <p class="muted foot-copy">&copy; 2026 41 研究室｜<span data-i="foot.rights">版權所有</span></p>
+  </div>
 </footer>
 
 </div>
