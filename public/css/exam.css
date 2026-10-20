@@ -19,6 +19,7 @@
 .qc{background:var(--surface-2);border:1px solid var(--line);border-radius:14px;padding:16px}
 .qc .hd{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:12px}
 .qc .tgs{display:flex;gap:8px}
+.qc .tg{white-space:nowrap}
 .qc .two{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;margin-top:12px;align-items:end}
 .qc .label{font-size:12px;margin-bottom:4px}
 .qc .opt{font-weight:400;color:var(--muted);margin-left:4px}
@@ -114,6 +115,8 @@ body.ex-lock{overflow:hidden}
   .ex-confirm-actions{flex-direction:column}
   .ex-dialog{padding:24px}
   .qc .two{grid-template-columns:84px minmax(0,1fr)}
+  .qc .tgs{gap:6px}
+  .qc .tg{font-size:15px;padding:0 2px}
   .ex-res-meta{padding:14px 16px;gap:8px 24px}
   .ex-est{padding:24px}
   .ex-est-num .n{font-size:68px}.ex-est-num .a{font-size:26px}.ex-est-num .u{font-size:28px}
@@ -121,7 +124,8 @@ body.ex-lock{overflow:hidden}
   .ex-ok-num{font-size:56px}
   .ex-dl{padding:16px;gap:12px}
   .ex-dl .btn{width:100%}
-  .hb.lvl,.hb.pt{grid-template-columns:minmax(0,1fr) 64px;gap:4px 10px}
+  .hb.lvl{grid-template-columns:minmax(0,1fr) 64px;gap:4px 10px}
+  .hb.pt{grid-template-columns:minmax(0,1fr) 100px;gap:4px 10px}
   .hb.lvl .tr,.hb.pt .tr{grid-column:1 / -1;grid-row:2}
   .hb.lvl .nm,.hb.pt .nm{grid-row:1}
   .hb.lvl .vl,.hb.pt .vl{grid-row:1;grid-column:2;font-size:18px}
