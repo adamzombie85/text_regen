@@ -143,7 +143,8 @@ body.ex-lock{overflow:hidden}
 .pp-cell .r1{display:flex;align-items:flex-end;gap:4px}
 .pp-cell .n{font-size:13px;font-weight:700;line-height:1;min-width:24px;padding-bottom:4px}
 .pp-cell .c{font-family:'Iansui','Noto Sans TC',serif;font-size:24px;line-height:1;min-width:26px;text-align:center}
-.pp-cell .ln{flex:1;border-bottom:1px solid #000;height:18px;margin-left:6px}
+.pp-cell .z{font-size:12px;line-height:1;white-space:nowrap;padding-bottom:5px;margin-left:1px}
+.pp-cell .ln{flex:1;min-width:8px;border-bottom:1px solid #000;height:18px;margin-left:6px}
 .pp-cell .r2{display:flex;align-items:center;gap:7px;height:18px;padding-bottom:3px;font-size:12px;line-height:1}
 .pp-cell .r2 span{display:inline-flex;align-items:center;gap:2px}
 .pp-cell .r2 i{width:12px;height:12px;border:1px solid #000;display:inline-block}
@@ -185,3 +186,6 @@ body.ex-lock{overflow:hidden}
 .pdf-page .ex-tbl td{padding:4px 12px;font-size:14px}
 .pdf-page .ex-tbl .t{font-size:22px;line-height:1.1}
 .pdf-page .ex-tbl .q{width:70px}
+
+.ex-again{margin-left:auto}
+@media (max-width:600px){.ex-again{margin-left:0;width:100%}}

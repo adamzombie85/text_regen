@@ -69,1201 +69,1401 @@
    "n": 1,
    "level": 1,
    "rank": 6,
-   "char": "我"
+   "char": "我",
+   "zhuyin": "ㄨㄛˇ"
   },
   {
    "n": 2,
    "level": 1,
    "rank": 46,
-   "char": "多"
+   "char": "多",
+   "zhuyin": "ㄉㄨㄛ"
   },
   {
    "n": 3,
    "level": 1,
    "rank": 51,
-   "char": "去"
+   "char": "去",
+   "zhuyin": "ㄑㄩˋ"
   },
   {
    "n": 4,
    "level": 1,
    "rank": 57,
-   "char": "很"
+   "char": "很",
+   "zhuyin": "ㄏㄣˇ"
   },
   {
    "n": 5,
    "level": 1,
    "rank": 61,
-   "char": "物"
+   "char": "物",
+   "zhuyin": "ㄨˋ"
   },
   {
    "n": 6,
    "level": 1,
    "rank": 123,
-   "char": "活"
+   "char": "活",
+   "zhuyin": "ㄏㄨㄛˊ"
   },
   {
    "n": 7,
    "level": 1,
    "rank": 129,
-   "char": "點"
+   "char": "點",
+   "zhuyin": "ㄉㄧㄢˇ"
   },
   {
    "n": 8,
    "level": 1,
    "rank": 148,
-   "char": "題"
+   "char": "題",
+   "zhuyin": "ㄊㄧˊ"
   },
   {
    "n": 9,
    "level": 1,
    "rank": 150,
-   "char": "請"
+   "char": "請",
+   "zhuyin": "ㄑㄧㄥˇ"
   },
   {
    "n": 10,
    "level": 1,
    "rank": 179,
-   "char": "海"
+   "char": "海",
+   "zhuyin": "ㄏㄞˇ"
   },
   {
    "n": 11,
    "level": 1,
    "rank": 216,
-   "char": "望"
+   "char": "望",
+   "zhuyin": "ㄨㄤˋ"
   },
   {
    "n": 12,
    "level": 1,
    "rank": 252,
-   "char": "書"
+   "char": "書",
+   "zhuyin": "ㄕㄨ"
   },
   {
    "n": 13,
    "level": 1,
    "rank": 276,
-   "char": "完"
+   "char": "完",
+   "zhuyin": "ㄨㄢˊ"
   },
   {
    "n": 14,
    "level": 1,
    "rank": 281,
-   "char": "流"
+   "char": "流",
+   "zhuyin": "ㄌㄧㄡˊ"
   },
   {
    "n": 15,
    "level": 1,
    "rank": 301,
-   "char": "目"
+   "char": "目",
+   "zhuyin": "ㄇㄨˋ"
   },
   {
    "n": 16,
    "level": 1,
    "rank": 351,
-   "char": "熱"
+   "char": "熱",
+   "zhuyin": "ㄖㄜˋ"
   },
   {
    "n": 17,
    "level": 1,
    "rank": 371,
-   "char": "草"
+   "char": "草",
+   "zhuyin": "ㄘㄠˇ"
   },
   {
    "n": 18,
    "level": 1,
    "rank": 375,
-   "char": "跟"
+   "char": "跟",
+   "zhuyin": "ㄍㄣ"
   },
   {
    "n": 19,
    "level": 1,
    "rank": 453,
-   "char": "苦"
+   "char": "苦",
+   "zhuyin": "ㄎㄨˇ"
   },
   {
    "n": 20,
    "level": 1,
    "rank": 457,
-   "char": "步"
+   "char": "步",
+   "zhuyin": "ㄅㄨˋ"
   },
   {
    "n": 21,
    "level": 2,
    "rank": 513,
-   "char": "忙"
+   "char": "忙",
+   "zhuyin": "ㄇㄤˊ"
   },
   {
    "n": 22,
    "level": 2,
    "rank": 526,
-   "char": "植"
+   "char": "植",
+   "zhuyin": "ㄓˊ"
   },
   {
    "n": 23,
    "level": 2,
    "rank": 547,
-   "char": "視"
+   "char": "視",
+   "zhuyin": "ㄕˋ"
   },
   {
    "n": 24,
    "level": 2,
    "rank": 573,
-   "char": "恐"
+   "char": "恐",
+   "zhuyin": "ㄎㄨㄥˇ"
   },
   {
    "n": 25,
    "level": 2,
    "rank": 615,
-   "char": "圓"
+   "char": "圓",
+   "zhuyin": "ㄩㄢˊ"
   },
   {
    "n": 26,
    "level": 2,
    "rank": 633,
-   "char": "漸"
+   "char": "漸",
+   "zhuyin": "ㄐㄧㄢˋ"
   },
   {
    "n": 27,
    "level": 2,
    "rank": 717,
-   "char": "永"
+   "char": "永",
+   "zhuyin": "ㄩㄥˇ"
   },
   {
    "n": 28,
    "level": 2,
    "rank": 718,
-   "char": "田"
+   "char": "田",
+   "zhuyin": "ㄊㄧㄢˊ"
   },
   {
    "n": 29,
    "level": 2,
    "rank": 747,
-   "char": "睛"
+   "char": "睛",
+   "zhuyin": "ㄐㄧㄥ"
   },
   {
    "n": 30,
    "level": 2,
    "rank": 760,
-   "char": "村"
+   "char": "村",
+   "zhuyin": "ㄘㄨㄣ"
   },
   {
    "n": 31,
    "level": 2,
    "rank": 763,
-   "char": "救"
+   "char": "救",
+   "zhuyin": "ㄐㄧㄡˋ"
   },
   {
    "n": 32,
    "level": 2,
    "rank": 766,
-   "char": "顧"
+   "char": "顧",
+   "zhuyin": "ㄍㄨˋ"
   },
   {
    "n": 33,
    "level": 2,
    "rank": 769,
-   "char": "寒"
+   "char": "寒",
+   "zhuyin": "ㄏㄢˊ"
   },
   {
    "n": 34,
    "level": 2,
    "rank": 784,
-   "char": "配"
+   "char": "配",
+   "zhuyin": "ㄆㄟˋ"
   },
   {
    "n": 35,
    "level": 2,
    "rank": 795,
-   "char": "忘"
+   "char": "忘",
+   "zhuyin": "ㄨㄤˋ"
   },
   {
    "n": 36,
    "level": 2,
    "rank": 800,
-   "char": "敬"
+   "char": "敬",
+   "zhuyin": "ㄐㄧㄥˋ"
   },
   {
    "n": 37,
    "level": 2,
    "rank": 831,
-   "char": "爬"
+   "char": "爬",
+   "zhuyin": "ㄆㄚˊ"
   },
   {
    "n": 38,
    "level": 2,
    "rank": 864,
-   "char": "吹"
+   "char": "吹",
+   "zhuyin": "ㄔㄨㄟ"
   },
   {
    "n": 39,
    "level": 2,
    "rank": 945,
-   "char": "灰"
+   "char": "灰",
+   "zhuyin": "ㄏㄨㄟ"
   },
   {
    "n": 40,
    "level": 2,
    "rank": 949,
-   "char": "秋"
+   "char": "秋",
+   "zhuyin": "ㄑㄧㄡ"
   },
   {
    "n": 41,
    "level": 3,
    "rank": 1018,
-   "char": "醒"
+   "char": "醒",
+   "zhuyin": "ㄒㄧㄥˇ"
   },
   {
    "n": 42,
    "level": 3,
    "rank": 1063,
-   "char": "勝"
+   "char": "勝",
+   "zhuyin": "ㄕㄥˋ"
   },
   {
    "n": 43,
    "level": 3,
    "rank": 1129,
-   "char": "舊"
+   "char": "舊",
+   "zhuyin": "ㄐㄧㄡˋ"
   },
   {
    "n": 44,
    "level": 3,
    "rank": 1151,
-   "char": "抽"
+   "char": "抽",
+   "zhuyin": "ㄔㄡ"
   },
   {
    "n": 45,
    "level": 3,
    "rank": 1163,
-   "char": "均"
+   "char": "均",
+   "zhuyin": "ㄐㄩㄣ"
   },
   {
    "n": 46,
    "level": 3,
    "rank": 1185,
-   "char": "付"
+   "char": "付",
+   "zhuyin": "ㄈㄨˋ"
   },
   {
    "n": 47,
    "level": 3,
    "rank": 1222,
-   "char": "溶"
+   "char": "溶",
+   "zhuyin": "ㄖㄨㄥˊ"
   },
   {
    "n": 48,
    "level": 3,
    "rank": 1223,
-   "char": "滅"
+   "char": "滅",
+   "zhuyin": "ㄇㄧㄝˋ"
   },
   {
    "n": 49,
    "level": 3,
    "rank": 1234,
-   "char": "郵"
+   "char": "郵",
+   "zhuyin": "ㄧㄡˊ"
   },
   {
    "n": 50,
    "level": 3,
    "rank": 1239,
-   "char": "沿"
+   "char": "沿",
+   "zhuyin": "ㄧㄢˊ"
   },
   {
    "n": 51,
    "level": 3,
    "rank": 1246,
-   "char": "掌"
+   "char": "掌",
+   "zhuyin": "ㄓㄤˇ"
   },
   {
    "n": 52,
    "level": 3,
    "rank": 1251,
-   "char": "抬"
+   "char": "抬",
+   "zhuyin": "ㄊㄞˊ"
   },
   {
    "n": 53,
    "level": 3,
    "rank": 1268,
-   "char": "尖"
+   "char": "尖",
+   "zhuyin": "ㄐㄧㄢ"
   },
   {
    "n": 54,
    "level": 3,
    "rank": 1280,
-   "char": "閱"
+   "char": "閱",
+   "zhuyin": "ㄩㄝˋ"
   },
   {
    "n": 55,
    "level": 3,
    "rank": 1286,
-   "char": "擦"
+   "char": "擦",
+   "zhuyin": "ㄘㄚ"
   },
   {
    "n": 56,
    "level": 3,
    "rank": 1287,
-   "char": "丟"
+   "char": "丟",
+   "zhuyin": "ㄉㄧㄡ"
   },
   {
    "n": 57,
    "level": 3,
    "rank": 1332,
-   "char": "飄"
+   "char": "飄",
+   "zhuyin": "ㄆㄧㄠ"
   },
   {
    "n": 58,
    "level": 3,
    "rank": 1355,
-   "char": "蝶"
+   "char": "蝶",
+   "zhuyin": "ㄉㄧㄝˊ"
   },
   {
    "n": 59,
    "level": 3,
    "rank": 1393,
-   "char": "匹"
+   "char": "匹",
+   "zhuyin": "ㄆㄧˇ"
   },
   {
    "n": 60,
    "level": 3,
    "rank": 1466,
-   "char": "椅"
+   "char": "椅",
+   "zhuyin": "ㄧˇ"
   },
   {
    "n": 61,
    "level": 4,
    "rank": 1501,
-   "char": "擇"
+   "char": "擇",
+   "zhuyin": "ㄗㄜˊ"
   },
   {
    "n": 62,
    "level": 4,
    "rank": 1503,
-   "char": "筒"
+   "char": "筒",
+   "zhuyin": "ㄊㄨㄥˇ"
   },
   {
    "n": 63,
    "level": 4,
    "rank": 1508,
-   "char": "瓦"
+   "char": "瓦",
+   "zhuyin": "ㄨㄚˇ"
   },
   {
    "n": 64,
    "level": 4,
    "rank": 1523,
-   "char": "羽"
+   "char": "羽",
+   "zhuyin": "ㄩˇ"
   },
   {
    "n": 65,
    "level": 4,
    "rank": 1533,
-   "char": "井"
+   "char": "井",
+   "zhuyin": "ㄐㄧㄥˇ"
   },
   {
    "n": 66,
    "level": 4,
    "rank": 1580,
-   "char": "刷"
+   "char": "刷",
+   "zhuyin": "ㄕㄨㄚ"
   },
   {
    "n": 67,
    "level": 4,
    "rank": 1594,
-   "char": "幕"
+   "char": "幕",
+   "zhuyin": "ㄇㄨˋ"
   },
   {
    "n": 68,
    "level": 4,
    "rank": 1600,
-   "char": "閉"
+   "char": "閉",
+   "zhuyin": "ㄅㄧˋ"
   },
   {
    "n": 69,
    "level": 4,
    "rank": 1633,
-   "char": "廚"
+   "char": "廚",
+   "zhuyin": "ㄔㄨˊ"
   },
   {
    "n": 70,
    "level": 4,
    "rank": 1637,
-   "char": "塵"
+   "char": "塵",
+   "zhuyin": "ㄔㄣˊ"
   },
   {
    "n": 71,
    "level": 4,
    "rank": 1638,
-   "char": "棄"
+   "char": "棄",
+   "zhuyin": "ㄑㄧˋ"
   },
   {
    "n": 72,
    "level": 4,
    "rank": 1661,
-   "char": "爆"
+   "char": "爆",
+   "zhuyin": "ㄅㄠˋ"
   },
   {
    "n": 73,
    "level": 4,
    "rank": 1746,
-   "char": "笨"
+   "char": "笨",
+   "zhuyin": "ㄅㄣˋ"
   },
   {
    "n": 74,
    "level": 4,
    "rank": 1798,
-   "char": "粽"
+   "char": "粽",
+   "zhuyin": "ㄗㄨㄥˋ"
   },
   {
    "n": 75,
    "level": 4,
    "rank": 1813,
-   "char": "瓷"
+   "char": "瓷",
+   "zhuyin": "ㄘˊ"
   },
   {
    "n": 76,
    "level": 4,
    "rank": 1833,
-   "char": "陷"
+   "char": "陷",
+   "zhuyin": "ㄒㄧㄢˋ"
   },
   {
    "n": 77,
    "level": 4,
    "rank": 1883,
-   "char": "蕉"
+   "char": "蕉",
+   "zhuyin": "ㄐㄧㄠ"
   },
   {
    "n": 78,
    "level": 4,
    "rank": 1916,
-   "char": "哀"
+   "char": "哀",
+   "zhuyin": "ㄞ"
   },
   {
    "n": 79,
    "level": 4,
    "rank": 1973,
-   "char": "賺"
+   "char": "賺",
+   "zhuyin": "ㄗㄨㄢˋ"
   },
   {
    "n": 80,
    "level": 4,
    "rank": 1982,
-   "char": "眠"
+   "char": "眠",
+   "zhuyin": "ㄇㄧㄢˊ"
   },
   {
    "n": 81,
    "level": 5,
    "rank": 2014,
-   "char": "肢"
+   "char": "肢",
+   "zhuyin": "ㄓ"
   },
   {
    "n": 82,
    "level": 5,
    "rank": 2055,
-   "char": "截"
+   "char": "截",
+   "zhuyin": "ㄐㄧㄝˊ"
   },
   {
    "n": 83,
    "level": 5,
    "rank": 2077,
-   "char": "宅"
+   "char": "宅",
+   "zhuyin": "ㄓㄞˊ"
   },
   {
    "n": 84,
    "level": 5,
    "rank": 2082,
-   "char": "兼"
+   "char": "兼",
+   "zhuyin": "ㄐㄧㄢ"
   },
   {
    "n": 85,
    "level": 5,
    "rank": 2115,
-   "char": "烤"
+   "char": "烤",
+   "zhuyin": "ㄎㄠˇ"
   },
   {
    "n": 86,
    "level": 5,
    "rank": 2156,
-   "char": "嬰"
+   "char": "嬰",
+   "zhuyin": "ㄧㄥ"
   },
   {
    "n": 87,
    "level": 5,
    "rank": 2157,
-   "char": "謀"
+   "char": "謀",
+   "zhuyin": "ㄇㄡˊ"
   },
   {
    "n": 88,
    "level": 5,
    "rank": 2181,
-   "char": "霜"
+   "char": "霜",
+   "zhuyin": "ㄕㄨㄤ"
   },
   {
    "n": 89,
    "level": 5,
    "rank": 2193,
-   "char": "慎"
+   "char": "慎",
+   "zhuyin": "ㄕㄣˋ"
   },
   {
    "n": 90,
    "level": 5,
    "rank": 2214,
-   "char": "禍"
+   "char": "禍",
+   "zhuyin": "ㄏㄨㄛˋ"
   },
   {
    "n": 91,
    "level": 5,
    "rank": 2259,
-   "char": "墊"
+   "char": "墊",
+   "zhuyin": "ㄉㄧㄢˋ"
   },
   {
    "n": 92,
    "level": 5,
    "rank": 2280,
-   "char": "飼"
+   "char": "飼",
+   "zhuyin": "ㄙˋ"
   },
   {
    "n": 93,
    "level": 5,
    "rank": 2295,
-   "char": "秤"
+   "char": "秤",
+   "zhuyin": "ㄔㄥˋ"
   },
   {
    "n": 94,
    "level": 5,
    "rank": 2307,
-   "char": "熄"
+   "char": "熄",
+   "zhuyin": "ㄒㄧˊ"
   },
   {
    "n": 95,
    "level": 5,
    "rank": 2355,
-   "char": "鋸"
+   "char": "鋸",
+   "zhuyin": "ㄐㄩˋ"
   },
   {
    "n": 96,
    "level": 5,
    "rank": 2395,
-   "char": "脾"
+   "char": "脾",
+   "zhuyin": "ㄆㄧˊ"
   },
   {
    "n": 97,
    "level": 5,
    "rank": 2401,
-   "char": "柄"
+   "char": "柄",
+   "zhuyin": "ㄅㄧㄥˇ"
   },
   {
    "n": 98,
    "level": 5,
    "rank": 2402,
-   "char": "棟"
+   "char": "棟",
+   "zhuyin": "ㄉㄨㄥˋ"
   },
   {
    "n": 99,
    "level": 5,
    "rank": 2449,
-   "char": "蛾"
+   "char": "蛾",
+   "zhuyin": "ㄜˊ"
   },
   {
    "n": 100,
    "level": 5,
    "rank": 2481,
-   "char": "窄"
+   "char": "窄",
+   "zhuyin": "ㄓㄞˇ"
   },
   {
    "n": 101,
    "level": 6,
    "rank": 2518,
-   "char": "倉"
+   "char": "倉",
+   "zhuyin": "ㄘㄤ"
   },
   {
    "n": 102,
    "level": 6,
    "rank": 2524,
-   "char": "頒"
+   "char": "頒",
+   "zhuyin": "ㄅㄢ"
   },
   {
    "n": 103,
    "level": 6,
    "rank": 2525,
-   "char": "盞"
+   "char": "盞",
+   "zhuyin": "ㄓㄢˇ"
   },
   {
    "n": 104,
    "level": 6,
    "rank": 2571,
-   "char": "惹"
+   "char": "惹",
+   "zhuyin": "ㄖㄜˇ"
   },
   {
    "n": 105,
    "level": 6,
    "rank": 2588,
-   "char": "杖"
+   "char": "杖",
+   "zhuyin": "ㄓㄤˋ"
   },
   {
    "n": 106,
    "level": 6,
    "rank": 2597,
-   "char": "拌"
+   "char": "拌",
+   "zhuyin": "ㄅㄢˋ"
   },
   {
    "n": 107,
    "level": 6,
    "rank": 2606,
-   "char": "盲"
+   "char": "盲",
+   "zhuyin": "ㄇㄤˊ"
   },
   {
    "n": 108,
    "level": 6,
    "rank": 2612,
-   "char": "媳"
+   "char": "媳",
+   "zhuyin": "ㄒㄧˊ"
   },
   {
    "n": 109,
    "level": 6,
    "rank": 2620,
-   "char": "槌"
+   "char": "槌",
+   "zhuyin": "ㄔㄨㄟˊ"
   },
   {
    "n": 110,
    "level": 6,
    "rank": 2673,
-   "char": "醬"
+   "char": "醬",
+   "zhuyin": "ㄐㄧㄤˋ"
   },
   {
    "n": 111,
    "level": 6,
    "rank": 2713,
-   "char": "葦"
+   "char": "葦",
+   "zhuyin": "ㄨㄟˇ"
   },
   {
    "n": 112,
    "level": 6,
    "rank": 2723,
-   "char": "憾"
+   "char": "憾",
+   "zhuyin": "ㄏㄢˋ"
   },
   {
    "n": 113,
    "level": 6,
    "rank": 2773,
-   "char": "拭"
+   "char": "拭",
+   "zhuyin": "ㄕˋ"
   },
   {
    "n": 114,
    "level": 6,
    "rank": 2793,
-   "char": "蝠"
+   "char": "蝠",
+   "zhuyin": "ㄈㄨˊ"
   },
   {
    "n": 115,
    "level": 6,
    "rank": 2803,
-   "char": "燙"
+   "char": "燙",
+   "zhuyin": "ㄊㄤˋ"
   },
   {
    "n": 116,
    "level": 6,
    "rank": 2848,
-   "char": "晝"
+   "char": "晝",
+   "zhuyin": "ㄓㄡˋ"
   },
   {
    "n": 117,
    "level": 6,
    "rank": 2887,
-   "char": "盔"
+   "char": "盔",
+   "zhuyin": "ㄎㄨㄟ"
   },
   {
    "n": 118,
    "level": 6,
    "rank": 2931,
-   "char": "垢"
+   "char": "垢",
+   "zhuyin": "ㄍㄡˋ"
   },
   {
    "n": 119,
    "level": 6,
    "rank": 2946,
-   "char": "腕"
+   "char": "腕",
+   "zhuyin": "ㄨㄢˋ"
   },
   {
    "n": 120,
    "level": 6,
    "rank": 2991,
-   "char": "陋"
+   "char": "陋",
+   "zhuyin": "ㄌㄡˋ"
   },
   {
    "n": 121,
    "level": 7,
    "rank": 3003,
-   "char": "鏟"
+   "char": "鏟",
+   "zhuyin": "ㄔㄢˇ"
   },
   {
    "n": 122,
    "level": 7,
    "rank": 3014,
-   "char": "瀉"
+   "char": "瀉",
+   "zhuyin": "ㄒㄧㄝˋ"
   },
   {
    "n": 123,
    "level": 7,
    "rank": 3049,
-   "char": "隧"
+   "char": "隧",
+   "zhuyin": "ㄙㄨㄟˋ"
   },
   {
    "n": 124,
    "level": 7,
    "rank": 3058,
-   "char": "橇"
+   "char": "橇",
+   "zhuyin": "ㄑㄧㄠ"
   },
   {
    "n": 125,
    "level": 7,
    "rank": 3063,
-   "char": "瞄"
+   "char": "瞄",
+   "zhuyin": "ㄇㄧㄠˊ"
   },
   {
    "n": 126,
    "level": 7,
    "rank": 3082,
-   "char": "椿"
+   "char": "椿",
+   "zhuyin": "ㄔㄨㄣ"
   },
   {
    "n": 127,
    "level": 7,
    "rank": 3092,
-   "char": "枉"
+   "char": "枉",
+   "zhuyin": "ㄨㄤˇ"
   },
   {
    "n": 128,
    "level": 7,
    "rank": 3111,
-   "char": "鎚"
+   "char": "鎚",
+   "zhuyin": "ㄔㄨㄟˊ"
   },
   {
    "n": 129,
    "level": 7,
    "rank": 3112,
-   "char": "滯"
+   "char": "滯",
+   "zhuyin": "ㄓˋ"
   },
   {
    "n": 130,
    "level": 7,
    "rank": 3158,
-   "char": "瓢"
+   "char": "瓢",
+   "zhuyin": "ㄆㄧㄠˊ"
   },
   {
    "n": 131,
    "level": 7,
    "rank": 3168,
-   "char": "簇"
+   "char": "簇",
+   "zhuyin": "ㄘㄨˋ"
   },
   {
    "n": 132,
    "level": 7,
    "rank": 3178,
-   "char": "繳"
+   "char": "繳",
+   "zhuyin": "ㄐㄧㄠˇ"
   },
   {
    "n": 133,
    "level": 7,
    "rank": 3229,
-   "char": "梗"
+   "char": "梗",
+   "zhuyin": "ㄍㄥˇ"
   },
   {
    "n": 134,
    "level": 7,
    "rank": 3256,
-   "char": "銜"
+   "char": "銜",
+   "zhuyin": "ㄒㄧㄢˊ"
   },
   {
    "n": 135,
    "level": 7,
    "rank": 3271,
-   "char": "撰"
+   "char": "撰",
+   "zhuyin": "ㄓㄨㄢˋ"
   },
   {
    "n": 136,
    "level": 7,
    "rank": 3277,
-   "char": "滌"
+   "char": "滌",
+   "zhuyin": "ㄉㄧˊ"
   },
   {
    "n": 137,
    "level": 7,
    "rank": 3286,
-   "char": "籽"
+   "char": "籽",
+   "zhuyin": "ㄗˇ"
   },
   {
    "n": 138,
    "level": 7,
    "rank": 3289,
-   "char": "柿"
+   "char": "柿",
+   "zhuyin": "ㄕˋ"
   },
   {
    "n": 139,
    "level": 7,
    "rank": 3332,
-   "char": "嘯"
+   "char": "嘯",
+   "zhuyin": "ㄒㄧㄠˋ"
   },
   {
    "n": 140,
    "level": 7,
    "rank": 3496,
-   "char": "蠕"
+   "char": "蠕",
+   "zhuyin": "ㄖㄨˊ"
   },
   {
    "n": 141,
    "level": 8,
    "rank": 3534,
-   "char": "沌"
+   "char": "沌",
+   "zhuyin": "ㄉㄨㄣˋ"
   },
   {
    "n": 142,
    "level": 8,
    "rank": 3536,
-   "char": "帛"
+   "char": "帛",
+   "zhuyin": "ㄅㄛˊ"
   },
   {
    "n": 143,
    "level": 8,
    "rank": 3552,
-   "char": "矽"
+   "char": "矽",
+   "zhuyin": "ㄒㄧˋ"
   },
   {
    "n": 144,
    "level": 8,
    "rank": 3555,
-   "char": "挪"
+   "char": "挪",
+   "zhuyin": "ㄋㄨㄛˊ"
   },
   {
    "n": 145,
    "level": 8,
    "rank": 3591,
-   "char": "遁"
+   "char": "遁",
+   "zhuyin": "ㄉㄨㄣˋ"
   },
   {
    "n": 146,
    "level": 8,
    "rank": 3613,
-   "char": "瞳"
+   "char": "瞳",
+   "zhuyin": "ㄊㄨㄥˊ"
   },
   {
    "n": 147,
    "level": 8,
    "rank": 3635,
-   "char": "蹋"
+   "char": "蹋",
+   "zhuyin": "ㄊㄚˋ"
   },
   {
    "n": 148,
    "level": 8,
    "rank": 3637,
-   "char": "霎"
+   "char": "霎",
+   "zhuyin": "ㄕㄚˋ"
   },
   {
    "n": 149,
    "level": 8,
    "rank": 3639,
-   "char": "篤"
+   "char": "篤",
+   "zhuyin": "ㄉㄨˇ"
   },
   {
    "n": 150,
    "level": 8,
    "rank": 3641,
-   "char": "駿"
+   "char": "駿",
+   "zhuyin": "ㄐㄩㄣˋ"
   },
   {
    "n": 151,
    "level": 8,
    "rank": 3683,
-   "char": "盹"
+   "char": "盹",
+   "zhuyin": "ㄉㄨㄣˇ"
   },
   {
    "n": 152,
    "level": 8,
    "rank": 3686,
-   "char": "齣"
+   "char": "齣",
+   "zhuyin": "ㄔㄨ"
   },
   {
    "n": 153,
    "level": 8,
    "rank": 3793,
-   "char": "糙"
+   "char": "糙",
+   "zhuyin": "ㄘㄠ"
   },
   {
    "n": 154,
    "level": 8,
    "rank": 3796,
-   "char": "墟"
+   "char": "墟",
+   "zhuyin": "ㄒㄩ"
   },
   {
    "n": 155,
    "level": 8,
    "rank": 3800,
-   "char": "箸"
+   "char": "箸",
+   "zhuyin": "ㄓㄨˋ"
   },
   {
    "n": 156,
    "level": 8,
    "rank": 3848,
-   "char": "犁"
+   "char": "犁",
+   "zhuyin": "ㄌㄧˊ"
   },
   {
    "n": 157,
    "level": 8,
    "rank": 3874,
-   "char": "粟"
+   "char": "粟",
+   "zhuyin": "ㄙㄨˋ"
   },
   {
    "n": 158,
    "level": 8,
    "rank": 3894,
-   "char": "瘟"
+   "char": "瘟",
+   "zhuyin": "ㄨㄣ"
   },
   {
    "n": 159,
    "level": 8,
    "rank": 3949,
-   "char": "虜"
+   "char": "虜",
+   "zhuyin": "ㄌㄨˇ"
   },
   {
    "n": 160,
    "level": 8,
    "rank": 3984,
-   "char": "璽"
+   "char": "璽",
+   "zhuyin": "ㄒㄧˇ"
   },
   {
    "n": 161,
    "level": 9,
    "rank": 4021,
-   "char": "抉"
+   "char": "抉",
+   "zhuyin": "ㄐㄩㄝˊ"
   },
   {
    "n": 162,
    "level": 9,
    "rank": 4031,
-   "char": "腑"
+   "char": "腑",
+   "zhuyin": "ㄈㄨˇ"
   },
   {
    "n": 163,
    "level": 9,
    "rank": 4063,
-   "char": "瑕"
+   "char": "瑕",
+   "zhuyin": "ㄒㄧㄚˊ"
   },
   {
    "n": 164,
    "level": 9,
    "rank": 4064,
-   "char": "羔"
+   "char": "羔",
+   "zhuyin": "ㄍㄠ"
   },
   {
    "n": 165,
    "level": 9,
    "rank": 4065,
-   "char": "醞"
+   "char": "醞",
+   "zhuyin": "ㄩㄣˋ"
   },
   {
    "n": 166,
    "level": 9,
    "rank": 4067,
-   "char": "黝"
+   "char": "黝",
+   "zhuyin": "ㄧㄡˇ"
   },
   {
    "n": 167,
    "level": 9,
    "rank": 4086,
-   "char": "憧"
+   "char": "憧",
+   "zhuyin": "ㄔㄨㄥ"
   },
   {
    "n": 168,
    "level": 9,
    "rank": 4104,
-   "char": "鍬"
+   "char": "鍬",
+   "zhuyin": "ㄑㄧㄠ"
   },
   {
    "n": 169,
    "level": 9,
    "rank": 4132,
-   "char": "蜈"
+   "char": "蜈",
+   "zhuyin": "ㄨˊ"
   },
   {
    "n": 170,
    "level": 9,
    "rank": 4148,
-   "char": "瞥"
+   "char": "瞥",
+   "zhuyin": "ㄆㄧㄝ"
   },
   {
    "n": 171,
    "level": 9,
    "rank": 4156,
-   "char": "瘍"
+   "char": "瘍",
+   "zhuyin": "ㄧㄤˊ"
   },
   {
    "n": 172,
    "level": 9,
    "rank": 4179,
-   "char": "瘴"
+   "char": "瘴",
+   "zhuyin": "ㄓㄤˋ"
   },
   {
    "n": 173,
    "level": 9,
    "rank": 4186,
-   "char": "睫"
+   "char": "睫",
+   "zhuyin": "ㄐㄧㄝˊ"
   },
   {
    "n": 174,
    "level": 9,
    "rank": 4235,
-   "char": "虱"
+   "char": "虱",
+   "zhuyin": "ㄕ"
   },
   {
    "n": 175,
    "level": 9,
    "rank": 4248,
-   "char": "紉"
+   "char": "紉",
+   "zhuyin": "ㄖㄣˋ"
   },
   {
    "n": 176,
    "level": 9,
    "rank": 4291,
-   "char": "廄"
+   "char": "廄",
+   "zhuyin": "ㄐㄧㄡˋ"
   },
   {
    "n": 177,
    "level": 9,
    "rank": 4313,
-   "char": "榆"
+   "char": "榆",
+   "zhuyin": "ㄩˊ"
   },
   {
    "n": 178,
    "level": 9,
    "rank": 4365,
-   "char": "餌"
+   "char": "餌",
+   "zhuyin": "ㄦˇ"
   },
   {
    "n": 179,
    "level": 9,
    "rank": 4476,
-   "char": "詰"
+   "char": "詰",
+   "zhuyin": "ㄐㄧㄝˊ"
   },
   {
    "n": 180,
    "level": 9,
    "rank": 4498,
-   "char": "瀾"
+   "char": "瀾",
+   "zhuyin": "ㄌㄢˊ"
   },
   {
    "n": 181,
    "level": 10,
    "rank": 4514,
-   "char": "咫"
+   "char": "咫",
+   "zhuyin": "ㄓˇ"
   },
   {
    "n": 182,
    "level": 10,
    "rank": 4524,
-   "char": "悖"
+   "char": "悖",
+   "zhuyin": "ㄅㄟˋ"
   },
   {
    "n": 183,
    "level": 10,
    "rank": 4572,
-   "char": "嵐"
+   "char": "嵐",
+   "zhuyin": "ㄌㄢˊ"
   },
   {
    "n": 184,
    "level": 10,
    "rank": 4580,
-   "char": "捫"
+   "char": "捫",
+   "zhuyin": "ㄇㄣˊ"
   },
   {
    "n": 185,
    "level": 10,
    "rank": 4626,
-   "char": "堰"
+   "char": "堰",
+   "zhuyin": "ㄧㄢˋ"
   },
   {
    "n": 186,
    "level": 10,
    "rank": 4638,
-   "char": "盅"
+   "char": "盅",
+   "zhuyin": "ㄓㄨㄥ"
   },
   {
    "n": 187,
    "level": 10,
    "rank": 4678,
-   "char": "漾"
+   "char": "漾",
+   "zhuyin": "ㄧㄤˋ"
   },
   {
    "n": 188,
    "level": 10,
    "rank": 4691,
-   "char": "蝟"
+   "char": "蝟",
+   "zhuyin": "ㄨㄟˋ"
   },
   {
    "n": 189,
    "level": 10,
    "rank": 4698,
-   "char": "犒"
+   "char": "犒",
+   "zhuyin": "ㄎㄠˋ"
   },
   {
    "n": 190,
    "level": 10,
    "rank": 4730,
-   "char": "蔑"
+   "char": "蔑",
+   "zhuyin": "ㄇㄧㄝˋ"
   },
   {
    "n": 191,
    "level": 10,
    "rank": 4732,
-   "char": "遛"
+   "char": "遛",
+   "zhuyin": "ㄌㄧㄡˊ"
   },
   {
    "n": 192,
    "level": 10,
    "rank": 4734,
-   "char": "赭"
+   "char": "赭",
+   "zhuyin": "ㄓㄜˇ"
   },
   {
    "n": 193,
    "level": 10,
    "rank": 4780,
-   "char": "瞼"
+   "char": "瞼",
+   "zhuyin": "ㄐㄧㄢˇ"
   },
   {
    "n": 194,
    "level": 10,
    "rank": 4794,
-   "char": "囈"
+   "char": "囈",
+   "zhuyin": "ㄧˋ"
   },
   {
    "n": 195,
    "level": 10,
    "rank": 4822,
-   "char": "鶉"
+   "char": "鶉",
+   "zhuyin": "ㄔㄨㄣˊ"
   },
   {
    "n": 196,
    "level": 10,
    "rank": 4849,
-   "char": "捅"
+   "char": "捅",
+   "zhuyin": "ㄊㄨㄥˇ"
   },
   {
    "n": 197,
    "level": 10,
    "rank": 4938,
-   "char": "嫗"
+   "char": "嫗",
+   "zhuyin": "ㄩˋ"
   },
   {
    "n": 198,
    "level": 10,
    "rank": 4972,
-   "char": "繕"
+   "char": "繕",
+   "zhuyin": "ㄕㄢˋ"
   },
   {
    "n": 199,
    "level": 10,
    "rank": 5000,
-   "char": "榷"
+   "char": "榷",
+   "zhuyin": "ㄑㄩㄝˋ"
   },
   {
    "n": 200,
    "level": 10,
    "rank": 5013,
-   "char": "蘚"
+   "char": "蘚",
+   "zhuyin": "ㄒㄧㄢˇ"
   }
  ]
 }

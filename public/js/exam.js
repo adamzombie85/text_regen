@@ -359,7 +359,8 @@ function renderResult() {
     <div><div class="prog"><i class="c" style="width:${r.wrongN ? (n / r.wrongN * 100).toFixed(1) : 0}%"></i></div><div class="s-sm muted" style="margin-top:6px">${esc(t('ex.res.of', { a: n, b: r.wrongN }))}</div></div></div>`;
   const note = levelNote(r);
   $('exResult').innerHTML = `
-    <div class="ex-res-head"><h1 class="fd s-1">${esc(t('ex.title'))}</h1><span class="pat">${esc(t('ex.res.badge'))}</span></div>
+    <div class="ex-res-head"><h1 class="fd s-1">${esc(t('ex.title'))}</h1><span class="pat">${esc(t('ex.res.badge'))}</span>
+      <button type="button" class="btn btn-secondary ex-again" data-again>${esc(t('ex.again'))}</button></div>
     ${metaHtml(r.info, 'ex-res-meta')}
     <div class="ex-res-top">
       <section class="card card-lg ex-est"><h2 class="s-3 b">${esc(t('ex.res.est'))}</h2>
@@ -380,8 +381,10 @@ function renderResult() {
       <div class="ex-bars">${patternRowsHtml(r)}</div></section>
     <section class="card card-lg ex-sect"><div class="ex-sect-head"><h2 class="fd s-2">${esc(t('ex.list.title'))}</h2><span class="s-sm muted">${esc(t('ex.list.sub', { n: r.wrongN }))}</span></div>
       ${r.wrongN ? `<div style="overflow-x:auto">${wrongTableHtml(r.rows)}</div>` : `<p class="muted">${esc(t('ex.res.noWrong'))}</p>`}</section>
-    <p class="s-sm muted ex-foot-note">${esc(t('ex.res.afterLast'))}</p>`;
+    <p class="s-sm muted ex-foot-note">${esc(t('ex.res.afterLast'))}</p>
+    <div class="ex-actions" style="justify-content:flex-start"><button type="button" class="btn btn-secondary btn-lg ex-again" data-again>${esc(t('ex.again'))}</button></div>`;
   $('exDlBtn').onclick = downloadPdf;
+  $('exResult').querySelectorAll('[data-again]').forEach(b => { b.onclick = restart; });
 }
 
 function showResult() {
@@ -390,6 +393,27 @@ function showResult() {
   ex.result = computeResult();
   renderResult();
   showView('result');
+}
+
+/* ---------- 回到開始頁（清除這次施測資料） ---------- */
+function restart() {
+  if (!window.confirm(t('ex.again.confirm'))) return;
+  ex.records = [];
+  ex.details = new Map();
+  ex.result = null;
+  ex.wrongList = [];
+  ex.unrec = [];
+  ex.last = 0;
+  ex.cur = 0;
+  ex.info = { date: '', student: '', tester: '' };
+  ex.dirty = false; // 資料已清掉，不需要再提醒
+  $('exDate').value = today();
+  $('exStudent').value = '';
+  $('exTester').value = '';
+  $('exStartErr').hidden = true;
+  ['exDate', 'exStudent', 'exTester'].forEach(id => $(id).classList.remove('err'));
+  $('exResult').innerHTML = '';
+  showView('start');
 }
 
 /* ---------- 結果 PDF（在頁面外繪製後輸出，不依賴列印視窗） ---------- */
@@ -473,7 +497,7 @@ async function downloadPdf() {
 /* ---------- 列印：A4 施測記錄表（固定用中語） ---------- */
 function sheetCells(from, to) {
   return ex.data.items.filter(i => i.n >= from && i.n <= to).map(i => `<div class="pp-cell">
-    <div class="r1"><span class="n">${i.n}</span><span class="c">${esc(i.char)}</span><span class="ln"></span></div>
+    <div class="r1"><span class="n">${i.n}</span><span class="c">${esc(i.char)}</span><span class="z">${esc(i.zhuyin || '')}</span><span class="ln"></span></div>
     <div class="r2"><span>形<i></i></span><span>音<i></i></span><span>義<i></i></span><span>？<i></i></span></div></div>`).join('');
 }
 
@@ -489,6 +513,7 @@ function buildSheet() {
     <div style="margin:10px 0 14px;border:1px solid #000;padding:8px 12px;font-size:13px;line-height:1.7"><b>操作說明</b><br>
       網站操作：← → 翻頁；↑ 正確、↓ 錯誤；要修改時，按 ← 回到該題，再按 ↑ 或 ↓。<br>
       對錯在網站上記錄；紙本只寫錯題的學生念法，組型可以等施測結束後再勾。<br>
+      題號旁的小字是標準注音，供評分時對照。<br>
       <span style="font-size:12px">形＝字形　音＝字音　義＝字義　？＝不明</span></div>
     <div class="pp-cells">${sheetCells(1, 56)}</div></div>`;
   const later = (p, a, b) => `<div class="pp">
