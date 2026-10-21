@@ -15,7 +15,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
-<script src="js/i18n.js?v=4" defer></script>
+<script src="js/i18n.js?v=6" defer></script>
 <script src="js/main.js?v=3" defer></script>
 <script src="js/exam.js?v=3" defer></script>
 </head>
@@ -56,8 +56,8 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
 </div>
 
 <div class="tabs" role="tablist" data-i-label="aria.tabs">
-  <button type="button" class="tab" role="tab" id="tabAnalysis" aria-controls="panelAnalysis" aria-selected="true" data-i="tab.analysis">文本分析</button>
-  <button type="button" class="tab" role="tab" id="tabPrompt" aria-controls="panelPrompt" aria-selected="false" data-i="tab.prompt">提示詞產生器</button>
+  <button type="button" class="tab" role="tab" id="tabAnalysis" aria-controls="panelAnalysis" aria-selected="true" data-i="tab.analysis">文本字頻分析</button>
+  <button type="button" class="tab" role="tab" id="tabPrompt" aria-controls="panelPrompt" aria-selected="false" data-i="tab.prompt">文本簡化提示詞產生器</button>
   <button type="button" class="tab" role="tab" id="tabExam" aria-controls="panelExam" aria-selected="false" data-i="tab.exam">識字量測驗</button>
 </div>
 
@@ -163,7 +163,7 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
 
 <!-- ============ 提示詞產生器 ============ -->
 <section id="panelPrompt" role="tabpanel" aria-labelledby="tabPrompt" class="panel" hidden>
-  <h1 class="fd s-1 panel-title" data-i="tab.prompt">提示詞產生器</h1>
+  <h1 class="fd s-1 panel-title" data-i="tab.prompt">文本簡化提示詞產生器</h1>
   <div class="prompt-layout">
     <section class="card card-lg prompt-settings">
       <h2 class="fd s-2" data-i="prompt.settings">設定</h2>
@@ -183,7 +183,7 @@ try { if (localStorage.getItem('theme') === 'dark') { document.body.classList.ad
         <div class="label" data-i="limit.label">常用字上限</div>
         <div class="limit-readout">
           <span class="fd s-2" id="pLimit">1000</span>
-          <button type="button" id="pLimitEdit" class="btn btn-secondary" style="min-height:40px;padding:0 16px" data-i="prompt.limitEdit">到文本分析修改</button>
+          <button type="button" id="pLimitEdit" class="btn btn-secondary" style="min-height:40px;padding:0 16px" data-i="prompt.limitEdit">到文本字頻分析修改</button>
         </div>
       </div>
     </section>
